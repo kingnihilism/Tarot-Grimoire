@@ -1,0 +1,3772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marcy's Deck Grimoire</title>
+<style>
+/* System font stacks — no internet required */
+:root {
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-elegant: Georgia, serif;
+}
+
+:root {
+  --blush: #f2d4d0;
+  --blush-deep: #e8b5af;
+  --rose: #c97b84;
+  --rose-dark: #a85a64;
+  --lavender: #d4cde8;
+  --lavender-deep: #b8aed4;
+  --lavender-dark: #8a7fad;
+  --gold: #c9a87c;
+  --gold-light: #ecdfc8;
+  --cream: #fdf8f5;
+  --parchment: #f7f0ea;
+  --text: #3d2f35;
+  --text-muted: #8a7a80;
+  --text-light: #b5a8ae;
+  --surface: rgba(255,255,255,0.7);
+  --surface2: rgba(242,212,208,0.3);
+  --border: rgba(201,168,124,0.25);
+  --shadow: rgba(169,90,100,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(212,205,232,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(242,212,208,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(253,248,245,0.8) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* floral deco */
+body::after {
+  content: '✿ ❀ ✿';
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  font-size: 12px;
+  color: var(--blush-deep);
+  opacity: 0.5;
+  letter-spacing: 8px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 100px; }
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 40px 0 28px;
+  position: relative;
+}
+.header-deco {
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-family: var(--font-body);
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.15;
+}
+header h1 em { color: var(--rose); font-style: italic; }
+.header-sub {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+.header-rule {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px auto 0;
+  max-width: 300px;
+}
+.header-rule::before, .header-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.header-rule span { color: var(--gold); font-size: 14px; }
+
+/* NAV */
+.nav-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 0;
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(253,248,245,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 16px rgba(169,90,100,0.07);
+}
+.nav-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 7px 16px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+.nav-btn:hover { background: var(--blush); color: var(--rose-dark); border-color: var(--blush-deep); }
+.nav-btn.active { background: var(--rose); color: white; border-color: var(--rose); font-weight: 500; }
+
+/* BACK TO TOP */
+.back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--rose);
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px var(--shadow);
+  transition: all 0.2s;
+  z-index: 99;
+}
+.back-to-top.visible { display: flex; }
+.back-to-top:hover { background: var(--rose-dark); transform: translateY(-2px); }
+
+/* SECTIONS */
+.section { display: none; }
+.section.active { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+/* CARDS / BLOCKS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px var(--shadow);
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--rose-dark);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.card-sub { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; }
+
+/* DECK OVERVIEW GRID */
+.deck-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.deck-thumb {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.deck-thumb::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+.deck-thumb.sailor::before { background: linear-gradient(90deg, #f9c5d1, #f4a0b0); }
+.deck-thumb.erotic::before { background: linear-gradient(90deg, #c97b84, #e8a87c); }
+.deck-thumb.agr::before { background: linear-gradient(90deg, #8a7fad, #b8aed4); }
+.deck-thumb.kimbition::before { background: linear-gradient(90deg, #a85a64, #c97b84); }
+.deck-thumb.hh::before { background: linear-gradient(90deg, #7a8fad, #adbfd4); }
+.deck-thumb:hover { transform: translateY(-4px); box-shadow: 0 12px 32px var(--shadow); border-color: var(--blush-deep); }
+.deck-icon { font-size: 28px; margin-bottom: 10px; }
+.deck-name { font-family: var(--font-display); font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.deck-type { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+.deck-count { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-size: 10px; background: var(--surface2); color: var(--rose); border: 1px solid var(--border); }
+
+/* SEARCH BAR */
+.search-wrap { position: relative; margin-bottom: 24px; }
+.search-input {
+  width: 100%;
+  padding: 14px 20px 14px 46px;
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--rose); }
+.search-input::placeholder { color: var(--text-light); }
+.search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
+
+/* FILTER PILLS */
+.filter-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.filter-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.filter-pill:hover { background: var(--blush); color: var(--rose-dark); }
+.filter-pill.active { background: var(--lavender); color: var(--lavender-dark); border-color: var(--lavender-deep); }
+.filter-pill.f-sailor.active { background: #fce8ec; color: #c97b84; border-color: #f4a0b0; }
+.filter-pill.f-erotic.active { background: #fde8e0; color: #a85a64; border-color: #e8a87c; }
+.filter-pill.f-agr.active { background: #eae8f5; color: #8a7fad; border-color: #b8aed4; }
+.filter-pill.f-kimbition.active { background: #fce8ec; color: #a85a64; border-color: #c97b84; }
+.filter-pill.f-hh.active { background: #e8ecf5; color: #5a6a8a; border-color: #adbfd4; }
+
+/* CARD LIST */
+.card-list { display: grid; gap: 10px; }
+.card-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.card-item:hover { border-color: var(--blush-deep); background: rgba(255,255,255,0.9); transform: translateX(4px); }
+.card-item-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.badge-sailor { background: #fce8ec; }
+.badge-erotic { background: #fde8e0; }
+.badge-agr { background: #eae8f5; }
+.badge-kimbition { background: #fce8ec; }
+.badge-hh { background: #e8ecf5; }
+.card-item-name { font-family: var(--font-display); font-size: 15px; color: var(--text); flex: 1; }
+.card-item-sub { font-size: 11px; color: var(--text-muted); }
+.card-item-deck { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-light); }
+.card-item-arrow { color: var(--text-light); font-size: 14px; }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(61,47,53,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(61,47,53,0.2);
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn { from { opacity:0; transform: scale(0.95) translateY(20px); } to { opacity:1; transform: scale(1) translateY(0); } }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.modal-close:hover { background: var(--blush); color: var(--rose-dark); }
+.modal-deck-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.modal-card-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.modal-card-alt {
+  font-family: var(--font-elegant);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--rose);
+  margin-bottom: 20px;
+}
+.modal-divider { height: 1px; background: var(--border); margin: 18px 0; }
+.modal-section-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.modal-meaning { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+.modal-rx { font-size: 14px; color: var(--rose); line-height: 1.7; font-style: italic; }
+.modal-notes {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.modal-notes:focus { border-color: var(--rose); }
+.modal-notes::placeholder { color: var(--text-light); }
+
+/* PULL TRACKER */
+.pull-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.form-select, .form-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--cream);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-select:focus, .form-input:focus { border-color: var(--rose); }
+.form-textarea {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--cream);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.form-textarea:focus { border-color: var(--rose); }
+.form-textarea::placeholder, .form-input::placeholder { color: var(--text-light); }
+
+.btn-primary {
+  background: var(--rose);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 16px;
+}
+.btn-primary:hover { background: var(--rose-dark); transform: translateY(-1px); box-shadow: 0 6px 20px var(--shadow); }
+
+.spread-card-row {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface2);
+  position: relative;
+}
+
+.spread-move-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.btn-move {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+.btn-move:hover { background: var(--blush); color: var(--rose-dark); border-color: var(--blush-deep); }
+
+.spread-section-header {
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border: 1px dashed var(--lavender-deep);
+  border-radius: 10px;
+  background: rgba(212,205,232,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.spread-section-header input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--lavender-deep);
+  color: var(--lavender-dark);
+  font-family: var(--font-display);
+  font-size: 14px;
+  padding: 2px 6px;
+  outline: none;
+}
+.spread-section-header input::placeholder { color: var(--lavender-deep); font-style: italic; }
+.spread-section-header input:focus { border-bottom-color: var(--lavender-dark); }
+.spread-section-label-icon { color: var(--lavender-deep); font-size: 12px; flex-shrink: 0; }
+
+/* Section grouping in pull history */
+.pull-section-group { margin-bottom: 14px; }
+.pull-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0 6px;
+  border-bottom: 1px solid var(--lavender-deep);
+  margin-bottom: 8px;
+  user-select: none;
+}
+.pull-section-title-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--lavender-dark);
+  flex: 1;
+}
+.pull-section-chevron {
+  font-size: 12px;
+  color: var(--lavender-deep);
+  transition: transform 0.2s;
+}
+.pull-section-group.open .pull-section-chevron { transform: rotate(90deg); }
+.pull-section-cards { display: none; }
+.pull-section-group.open .pull-section-cards { display: block; }
+
+.spread-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn-remove {
+  background: transparent;
+  color: var(--rose);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background: #fce8ec;
+}
+
+.keyword-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 16px;
+}
+.keyword-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--lavender-dark);
+}
+
+/* PULL LOG */
+.pull-log { display: grid; gap: 12px; }
+.pull-entry {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 22px;
+  position: relative;
+  transition: all 0.2s;
+}
+.pull-entry:hover { border-color: var(--blush-deep); }
+.pull-entry-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.pull-entry-card { font-family: var(--font-display); font-size: 17px; color: var(--text); }
+.pull-entry-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.meta-pill {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.pill-deck { background: var(--surface2); color: var(--rose); border: 1px solid var(--border); }
+.pill-rx { background: #fce8ec; color: #c97b84; border: 1px solid #f4a0b0; }
+.pill-upright { background: #eae8f5; color: #8a7fad; border: 1px solid #b8aed4; }
+.pill-date { background: var(--gold-light); color: var(--gold); border: 1px solid var(--border); }
+.pull-entry-notes { font-size: 13px; color: var(--text-muted); line-height: 1.6; font-style: italic; }
+.pull-entry-delete {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.pull-entry-delete:hover { color: var(--rose); }
+
+/* SCROLLER */
+
+.pull-entry-summary {
+  cursor: pointer;
+}
+
+.pull-entry-details {
+  display: none;
+  margin-top: 10px;
+}
+
+.pull-entry.open .pull-entry-details {
+  display: block;
+}
+
+.pull-entry-chevron {
+  font-size: 14px;
+  color: var(--text-light);
+  transition: transform 0.2s ease;
+  margin-left: 8px;
+}
+
+.pull-entry.open .pull-entry-chevron {
+  transform: rotate(90deg);
+}
+
+/* SYNTHESIS */
+.synthesis-wrap {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.btn-synthesis {
+  background: transparent;
+  border: 1px solid var(--lavender-deep);
+  color: var(--lavender-dark);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-synthesis:hover { background: var(--lavender); color: var(--lavender-dark); }
+.btn-synthesis:disabled { opacity: 0.5; cursor: not-allowed; }
+.synthesis-output {
+  margin-top: 14px;
+  background: linear-gradient(135deg, rgba(212,205,232,0.2), rgba(242,212,208,0.15));
+  border: 1px solid var(--lavender-deep);
+  border-radius: 14px;
+  padding: 20px 22px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  font-family: var(--font-elegant);
+  font-size: 15px;
+}
+.synthesis-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 12px;
+}
+.synthesis-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--lavender-dark);
+  animation: synthPulse 1.2s ease-in-out infinite;
+}
+.synthesis-dot:nth-child(2) { animation-delay: 0.2s; }
+.synthesis-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes synthPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* SPREAD QUESTION */
+.pull-question { font-size: 12px; color: var(--lavender-dark); font-style: italic; margin-bottom: 6px; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state .es-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-family: var(--font-elegant); font-size: 18px; font-style: italic; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: center;
+}
+.stat-number { font-family: var(--font-display); font-size: 28px; color: var(--rose); }
+.stat-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+
+/* HH SPECIFIC */
+.hh-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(201,168,124,0.1); cursor: pointer; transition: background 0.15s; }
+.hh-item:hover { background: var(--surface2); border-radius: 8px; padding-left: 6px; }
+.hh-item:last-child { border-bottom: none; }
+.hh-angel { flex: 1; }
+.hh-demon { flex: 1; }
+.hh-name { font-family: var(--font-display); font-size: 13px; }
+.hh-name.angel { color: var(--lavender-dark); }
+.hh-name.demon { color: var(--rose); }
+.hh-theme { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.hh-divider { width: 1px; background: var(--border); flex-shrink: 0; }
+.hh-num { width: 28px; text-align: center; font-size: 11px; color: var(--text-light); flex-shrink: 0; padding-top: 2px; }
+
+/* AGR Temple headers */
+.temple-header {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--lavender-dark);
+  padding: 10px 0 6px;
+  margin-top: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* TRANSLATION TABLE */
+.trans-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.trans-table th { background: var(--surface2); padding: 10px 14px; text-align: left; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--rose-dark); border-bottom: 1px solid var(--border); }
+.trans-table td { padding: 9px 14px; font-size: 13px; border-bottom: 1px solid rgba(201,168,124,0.08); }
+.trans-table tr:last-child td { border-bottom: none; }
+.trans-table .original { color: var(--text-muted); font-style: italic; }
+.trans-table .standard { color: var(--text); font-weight: 500; }
+
+/* RESPONSIVE */
+@media (max-width: 500px) {
+  .card { padding: 20px 18px; }
+  header h1 { font-size: 32px; }
+}
+
+/* TOOLTIP */
+.tooltip { position: relative; }
+.tooltip-text {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 10;
+}
+.tooltip:hover .tooltip-text { display: block; }
+
+footer {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+}
+
+/* TAGS */
+.tag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  user-select: none;
+}
+.tag-chip.selected { font-weight: 500; }
+.tag-love    { background: #fce8ec; color: #c97b84; border-color: #f4a0b0; }
+.tag-love.selected { background: #c97b84; color: white; }
+.tag-shadow  { background: #2e2540; color: #b8aed4; border-color: #8a7fad; }
+.tag-shadow.selected { background: #8a7fad; color: white; }
+.tag-career  { background: #ecdfc8; color: #a07840; border-color: #c9a87c; }
+.tag-career.selected { background: #c9a87c; color: white; }
+.tag-spirit  { background: #eae8f5; color: #8a7fad; border-color: #b8aed4; }
+.tag-spirit.selected { background: #6a5f9a; color: white; }
+.tag-body    { background: #e8f5ee; color: #4a8a6a; border-color: #8ac4a8; }
+.tag-body.selected { background: #4a8a6a; color: white; }
+.tag-ancestors { background: #f5ede8; color: #8a5a40; border-color: #c4a088; }
+.tag-ancestors.selected { background: #8a5a40; color: white; }
+.tag-timing  { background: #e8ecf5; color: #5a6a8a; border-color: #8aadc4; }
+.tag-timing.selected { background: #5a6a8a; color: white; }
+.tag-general { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+.tag-general.selected { background: var(--text-muted); color: white; }
+.tag-fun     { background: #fff3e0; color: #c47a20; border-color: #f4b860; }
+.tag-fun.selected { background: #e07820; color: white; }
+.tag-social  { background: #fce8f5; color: #a04080; border-color: #d880c0; }
+.tag-social.selected { background: #a04080; color: white; }
+.tag-travel  { background: #e8f4f0; color: #2a7a60; border-color: #70c4a8; }
+.tag-travel.selected { background: #2a7a60; color: white; }
+.tag-fantasy { background: #f0e8ff; color: #6040a0; border-color: #a080e0; }
+.tag-fantasy.selected { background: #6040a0; color: white; }
+.tag-erotic  { background: #fff0f3; color: #c03060; border-color: #f080a0; }
+.tag-erotic.selected { background: #c03060; color: white; }
+.tag-grief   { background: #e8eaf0; color: #404880; border-color: #8890c0; }
+.tag-grief.selected { background: #404880; color: white; }
+.tag-money   { background: #f0f4e0; color: #507020; border-color: #90b840; }
+.tag-money.selected { background: #507020; color: white; }
+.tag-health  { background: #e8f8f0; color: #208060; border-color: #60c090; }
+.tag-health.selected { background: #208060; color: white; }
+.tag-past    { background: #f4f0e8; color: #806040; border-color: #c0a070; }
+.tag-past.selected { background: #806040; color: white; }
+.tag-future  { background: #e8f0f8; color: #204880; border-color: #6090c8; }
+.tag-future.selected { background: #204880; color: white; }
+.tag-dream   { background: #f4e8ff; color: #7030b0; border-color: #c070f0; }
+.tag-dream.selected { background: #7030b0; color: white; }
+
+.deck-desc-content { font-size: 13px; color: var(--text); line-height: 1.8; }
+.deck-desc-content h4 { font-family: var(--font-display); font-size: 14px; color: var(--rose-dark); margin: 12px 0 6px; }
+.deck-desc-content ul { padding-left: 18px; margin: 0 0 10px; }
+.deck-desc-content li { margin-bottom: 3px; color: var(--text-muted); }
+.deck-desc-content p { margin-bottom: 8px; }
+.deck-desc-content .deck-system-role { font-family: var(--font-elegant); font-style: italic; font-size: 14px; color: var(--lavender-dark); border-left: 2px solid var(--lavender-deep); padding-left: 12px; margin: 10px 0; }
+
+.deck-jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+.deck-jump-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.deck-jump-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.deck-jump-btn:hover { background: var(--blush); color: var(--rose-dark); border-color: var(--blush-deep); }
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.page-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.page-btn:hover { background: var(--blush); color: var(--rose-dark); border-color: var(--blush-deep); }
+.page-btn.active { background: var(--rose); color: white; border-color: var(--rose); font-weight: 500; }
+.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-info { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 6px; }
+
+/* TEMPLATE PICKER */
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.template-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.template-card:hover { border-color: var(--rose); background: #fce8ec; }
+.template-card-name { font-family: var(--font-display); font-size: 14px; color: var(--text); margin-bottom: 4px; }
+.template-card-count { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+
+/* MOST PULLED */
+.most-pulled-list { display: grid; gap: 8px; margin-top: 8px; }
+.mp-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); }
+.mp-rank { font-family: var(--font-display); font-size: 18px; color: var(--blush-deep); width: 24px; text-align: center; flex-shrink: 0; }
+.mp-name { font-size: 13px; color: var(--text); flex: 1; }
+.mp-deck { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+.mp-count { font-family: var(--font-display); font-size: 16px; color: var(--rose); flex-shrink: 0; }
+.mp-bar-wrap { height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; }
+.mp-bar { height: 3px; background: linear-gradient(90deg, var(--blush-deep), var(--rose)); border-radius: 2px; }
+</style>
+<script>
+// Stub functions available immediately for inline onclick handlers.
+// Real implementations in main script override window.* after load.
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  const ids = ['home','lookup','tracker','sailor','erotic','agr','kimbition','hh'];
+  const idx = ids.indexOf(id);
+  if(idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleTag(el, tag)    { if(window._toggleTag) window._toggleTag(el, tag); }
+function filterTag(el, tag)    { if(window._filterTag) window._filterTag(el, tag); }
+function filterLog(el, filter) { if(window._filterLog) window._filterLog(el, filter); }
+function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(el, f); }
+</script>
+</head>
+<body>
+<div class="wrapper">
+
+<header>
+  <div class="header-deco">✦ personal grimoire ✦</div>
+  <h1>Marcy's <em>Deck</em> Companion</h1>
+  <div class="header-sub">Five Decks · Reference · Pull Tracker · Personal Notes</div>
+  <div class="header-rule"><span>❀</span></div>
+</header>
+
+<nav class="nav-wrap">
+  <button class="nav-btn active" onclick="showSection('home')">✿ Home</button>
+  <button class="nav-btn" onclick="showSection('lookup')">☽ Card Lookup</button>
+  <button class="nav-btn" onclick="showSection('tracker')">✦ Pull Tracker</button>
+  <button class="nav-btn" onclick="showSection('sailor')">🌙 Sailor Moon</button>
+  <button class="nav-btn" onclick="showSection('erotic')">🌹 Erotic Tarot</button>
+  <button class="nav-btn" onclick="showSection('agr')">🌺 AGR Oracle</button>
+  <button class="nav-btn" onclick="showSection('kimbition')">🔥 Kimbition</button>
+  <button class="nav-btn" onclick="showSection('hh')">⚖️ Heaven & Hell</button>
+</nav>
+
+<!-- ======== HOME ======== -->
+<div id="home" class="section active">
+  <div class="deck-grid">
+    <div class="deck-thumb sailor" onclick="showSection('sailor')">
+      <div class="deck-icon">🌙</div>
+      <div class="deck-name">Sailor Moon Tarot</div>
+      <div class="deck-type">Tarot · 78 Cards</div>
+      <span class="deck-count">Full RWS Reference</span>
+    </div>
+    <div class="deck-thumb erotic" onclick="showSection('erotic')">
+      <div class="deck-icon">🌹</div>
+      <div class="deck-name">Erotic Tarot</div>
+      <div class="deck-type">Tarot · 78 Cards</div>
+      <span class="deck-count">Full RWS Reference</span>
+    </div>
+    <div class="deck-thumb agr" onclick="showSection('agr')">
+      <div class="deck-icon">🌺</div>
+      <div class="deck-name">African Goddess Rising</div>
+      <div class="deck-type">Oracle · 44 Cards</div>
+      <span class="deck-count">9 Temples</span>
+    </div>
+    <div class="deck-thumb kimbition" onclick="showSection('kimbition')">
+      <div class="deck-icon">🔥</div>
+      <div class="deck-name">Kimbition Oracle</div>
+      <div class="deck-type">Oracle · 45 Cards</div>
+      <span class="deck-count">Kink Archetypes</span>
+    </div>
+    <div class="deck-thumb hh" onclick="showSection('hh')">
+      <div class="deck-icon">⚖️</div>
+      <div class="deck-name">Heaven & Hell Oracle</div>
+      <div class="deck-type">Oracle · 72 Cards</div>
+      <span class="deck-count">Angel / Demon Pairs</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Quick Pull Log</div>
+    <div id="home-recent-log"></div>
+  </div>
+</div>
+
+<!-- ======== CARD LOOKUP ======== -->
+<div id="lookup" class="section">
+  <div class="card">
+    <div class="card-title">Card Lookup</div>
+    <div class="card-sub">Search by name or browse by deck</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="lookupSearch" placeholder="Search any card, angel, goddess, archetype..." oninput="filterLookup()" />
+    </div>
+    <div class="filter-wrap">
+      <span class="filter-pill active" onclick="toggleFilter(this,'all')">All Decks</span>
+      <span class="filter-pill f-sailor" onclick="toggleFilter(this,'sailor')">🌙 Sailor Moon</span>
+      <span class="filter-pill f-erotic" onclick="toggleFilter(this,'erotic')">🌹 Erotic</span>
+      <span class="filter-pill f-agr" onclick="toggleFilter(this,'agr')">🌺 AGR</span>
+      <span class="filter-pill f-kimbition" onclick="toggleFilter(this,'kimbition')">🔥 Kimbition</span>
+      <span class="filter-pill f-hh" onclick="toggleFilter(this,'hh')">⚖️ Heaven & Hell</span>
+    </div>
+    <div class="card-list" id="lookupResults"></div>
+  </div>
+</div>
+
+<!-- ======== PULL TRACKER ======== -->
+<div id="tracker" class="section">
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="pull-form card">
+  <div class="card-title">Log a Spread</div>
+
+  <!-- TEMPLATE PICKER -->
+  <div class="card-sub" style="margin-bottom:10px;">Quick Templates</div>
+  <div class="template-grid" id="templateGrid"></div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="pullDate" />
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Spread Name</label>
+      <input class="form-input" id="spreadName" placeholder="e.g. Love Check-In, Decision Spread, FS Spread" />
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Overall Question</label>
+      <input class="form-input" id="pullQuestion" placeholder="e.g. What do I need to know about this connection?" />
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Tags</label>
+      <div class="tag-wrap" id="spreadTagWrap">
+        <span class="tag-chip tag-love"      onclick="toggleTag(this,'love')">💗 Love</span>
+        <span class="tag-chip tag-shadow"    onclick="toggleTag(this,'shadow')">🌑 Shadow</span>
+        <span class="tag-chip tag-career"    onclick="toggleTag(this,'career')">✨ Career</span>
+        <span class="tag-chip tag-spirit"    onclick="toggleTag(this,'spirit')">🌸 Spirit</span>
+        <span class="tag-chip tag-body"      onclick="toggleTag(this,'body')">🌿 Body</span>
+        <span class="tag-chip tag-ancestors" onclick="toggleTag(this,'ancestors')">🌊 Ancestors</span>
+        <span class="tag-chip tag-timing"    onclick="toggleTag(this,'timing')">⏳ Timing</span>
+        <span class="tag-chip tag-general"   onclick="toggleTag(this,'general')">🔮 General</span>
+        <span class="tag-chip tag-fun"       onclick="toggleTag(this,'fun')">🎉 Fun</span>
+        <span class="tag-chip tag-social"    onclick="toggleTag(this,'social')">🤝 Social</span>
+        <span class="tag-chip tag-travel"    onclick="toggleTag(this,'travel')">✈ Travel</span>
+        <span class="tag-chip tag-fantasy"   onclick="toggleTag(this,'fantasy')">🌙 Fantasy</span>
+        <span class="tag-chip tag-erotic"    onclick="toggleTag(this,'erotic')">🌹 Erotic</span>
+        <span class="tag-chip tag-grief"     onclick="toggleTag(this,'grief')">🤍 Grief</span>
+        <span class="tag-chip tag-money"     onclick="toggleTag(this,'money')">💰 Money</span>
+        <span class="tag-chip tag-health"    onclick="toggleTag(this,'health')">🌱 Health</span>
+        <span class="tag-chip tag-past"      onclick="toggleTag(this,'past')">📋 Past</span>
+        <span class="tag-chip tag-future"    onclick="toggleTag(this,'future')">🌠 Future</span>
+        <span class="tag-chip tag-dream"     onclick="toggleTag(this,'dream')">💜 Dream</span>
+      </div>
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Spread Cards</label>
+      <div id="spreadCards"></div>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+        <button type="button" class="btn-primary" onclick="addSpreadCard()">+ Add Card</button>
+        <button type="button" class="btn-primary" onclick="addSpreadSection()" style="background:var(--lavender-dark);border-color:var(--lavender-dark);">+ Add Section</button>
+      </div>
+    </div>
+
+    <div class="form-group full">
+      <label class="form-label">Overall Synthesis</label>
+      <textarea class="form-textarea" id="spreadSynthesis" style="min-height:120px;" placeholder="What does this spread mean as a whole? What through-line do you see across all the cards? Write your personal reading of the full spread here..."></textarea>
+    </div>
+  </div>
+
+  <button class="btn-primary" id="saveSpreadBtn" onclick="logPull()">✦ Log This Spread</button>
+</div>
+
+  <div class="card">
+    <div class="card-title">Most Pulled Cards</div>
+    <div class="most-pulled-list" id="mostPulledList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Card History Search</div>
+    <div class="card-sub">Find every spread a specific card appeared in</div>
+    <div class="search-wrap">
+      <span class="search-icon">🃏</span>
+      <input class="search-input" id="cardHistorySearch" placeholder="Type a card name to see all spreads it appeared in..." oninput="renderCardHistory()" />
+    </div>
+    <div id="cardHistoryResults"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pull History</div>
+
+<div class="form-group" style="max-width:220px;margin-bottom:16px;">
+  <label class="form-label">Sort</label>
+  <select class="form-select" id="pullSort" onchange="updatePullSort()">
+    <option value="newest">Newest First</option>
+    <option value="oldest">Oldest First</option>
+    <option value="mostCards">Most Cards</option>
+    <option value="leastCards">Least Cards</option>
+  </select>
+</div>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        id="pullHistorySearch"
+        placeholder="Search spreads, questions, cards, notes, positions, decks..."
+        oninput="currentPage=1; renderPullLog()"
+      />
+    </div>
+
+    <div class="filter-wrap">
+      <span class="filter-pill active" onclick="filterLog(this,'all')">All</span>
+      <span class="filter-pill f-sailor" onclick="filterLog(this,'sailor')">🌙 Sailor Moon</span>
+      <span class="filter-pill f-erotic" onclick="filterLog(this,'erotic')">🌹 Erotic</span>
+      <span class="filter-pill f-agr" onclick="filterLog(this,'agr')">🌺 AGR</span>
+      <span class="filter-pill f-kimbition" onclick="filterLog(this,'kimbition')">🔥 Kimbition</span>
+      <span class="filter-pill f-hh" onclick="filterLog(this,'hh')">⚖️ H&H</span>
+    </div>
+
+    <div class="filter-wrap" style="margin-top:-8px;">
+      <span style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);align-self:center;">Tags:</span>
+      <span class="filter-pill" onclick="filterTag(this,'')">All</span>
+      <span class="filter-pill tag-chip tag-love"      onclick="filterTag(this,'love')">💗 Love</span>
+      <span class="filter-pill tag-chip tag-shadow"    onclick="filterTag(this,'shadow')">🌑 Shadow</span>
+      <span class="filter-pill tag-chip tag-career"    onclick="filterTag(this,'career')">✨ Career</span>
+      <span class="filter-pill tag-chip tag-spirit"    onclick="filterTag(this,'spirit')">🌸 Spirit</span>
+      <span class="filter-pill tag-chip tag-body"      onclick="filterTag(this,'body')">🌿 Body</span>
+      <span class="filter-pill tag-chip tag-ancestors" onclick="filterTag(this,'ancestors')">🌊 Ancestors</span>
+      <span class="filter-pill tag-chip tag-timing"    onclick="filterTag(this,'timing')">⏳ Timing</span>
+      <span class="filter-pill tag-chip tag-general"   onclick="filterTag(this,'general')">🔮 General</span>
+      <span class="filter-pill tag-chip tag-fun"       onclick="filterTag(this,'fun')">🎉 Fun</span>
+      <span class="filter-pill tag-chip tag-social"    onclick="filterTag(this,'social')">🤝 Social</span>
+      <span class="filter-pill tag-chip tag-travel"    onclick="filterTag(this,'travel')">✈ Travel</span>
+      <span class="filter-pill tag-chip tag-fantasy"   onclick="filterTag(this,'fantasy')">🌙 Fantasy</span>
+      <span class="filter-pill tag-chip tag-erotic"    onclick="filterTag(this,'erotic')">🌹 Erotic</span>
+      <span class="filter-pill tag-chip tag-grief"     onclick="filterTag(this,'grief')">🤍 Grief</span>
+      <span class="filter-pill tag-chip tag-money"     onclick="filterTag(this,'money')">💰 Money</span>
+      <span class="filter-pill tag-chip tag-health"    onclick="filterTag(this,'health')">🌱 Health</span>
+      <span class="filter-pill tag-chip tag-past"      onclick="filterTag(this,'past')">📋 Past</span>
+      <span class="filter-pill tag-chip tag-future"    onclick="filterTag(this,'future')">🌠 Future</span>
+      <span class="filter-pill tag-chip tag-dream"     onclick="filterTag(this,'dream')">💜 Dream</span>
+    </div>
+    <div class="pull-log" id="pullLog"></div>
+    <div id="pullPagination"></div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;margin-bottom:20px;">
+    <button type="button" class="btn-primary" onclick="exportData()">Export Data</button>
+    <label class="btn-primary" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;">
+      Import Data
+      <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none;">
+    </label>
+    <button type="button" class="btn-primary" onclick="clearAllData()">Clear All Data</button>
+  </div>
+</div>
+
+<!-- ======== SAILOR MOON ======== -->
+<div id="sailor" class="section">
+  <div class="card">
+    <div class="card-title">Sailor Moon Tarot</div>
+    <div class="card-sub">Tarot · 78 Cards · Suit & Court Translations</div>
+    <div class="card" style="background:rgba(249,197,209,0.15);border-color:rgba(244,160,176,0.4);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div id="deckDesc-sailor" class="deck-desc-content"></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Suit Translations</p>
+        <table class="trans-table">
+          <tr><th>Sailor Moon</th><th>Standard</th></tr>
+          <tr><td class="original">Crescent</td><td class="standard">Cups</td></tr>
+          <tr><td class="original">Talisman</td><td class="standard">Swords</td></tr>
+          <tr><td class="original">Rods</td><td class="standard">Wands</td></tr>
+          <tr><td class="original">Crystals</td><td class="standard">Pentacles</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Court Card Translations</p>
+        <table class="trans-table">
+          <tr><th>Sailor Moon</th><th>Standard</th></tr>
+          <tr><td class="original">Guardian</td><td class="standard">Knight</td></tr>
+          <tr><td class="original">Maiden</td><td class="standard">Page</td></tr>
+          <tr><td class="original">Princess</td><td class="standard">Queen</td></tr>
+          <tr><td class="original">Queen</td><td class="standard">King</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="deck-jump-nav">
+    <span class="deck-jump-label">Jump to:</span>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-sailorMajor')">Major Arcana</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-sailorCups')">Crescent (Cups)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-sailorSwords')">Talisman (Swords)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-sailorWands')">Rods (Wands)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-sailorPentacles')">Crystals (Pentacles)</button>
+  </div>
+
+  <div class="card" id="anchor-sailorMajor">
+    <div class="card-title">Major Arcana</div>
+    <div class="card-list" id="sailorMajor"></div>
+  </div>
+  <div class="card" id="anchor-sailorCups">
+    <div class="card-title">Cups (Crescent)</div>
+    <div class="card-list" id="sailorCups"></div>
+  </div>
+  <div class="card" id="anchor-sailorSwords">
+    <div class="card-title">Swords (Talisman)</div>
+    <div class="card-list" id="sailorSwords"></div>
+  </div>
+  <div class="card" id="anchor-sailorWands">
+    <div class="card-title">Wands (Rods)</div>
+    <div class="card-list" id="sailorWands"></div>
+  </div>
+  <div class="card" id="anchor-sailorPentacles">
+    <div class="card-title">Pentacles (Crystals)</div>
+    <div class="card-list" id="sailorPentacles"></div>
+  </div>
+</div>
+
+<!-- ======== EROTIC TAROT ======== -->
+<div id="erotic" class="section">
+  <div class="card">
+    <div class="card-title">Erotic Tarot</div>
+    <div class="card-sub">Tarot · 78 Cards · Suit Translations</div>
+    <div class="card" style="background:rgba(201,123,132,0.1);border-color:rgba(201,123,132,0.3);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div id="deckDesc-erotic" class="deck-desc-content"></div>
+    </div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Suit Translations</p>
+        <table class="trans-table">
+          <tr><th>Erotic Tarot</th><th>Standard</th></tr>
+          <tr><td class="original">Shells</td><td class="standard">Cups</td></tr>
+          <tr><td class="original">Feathers</td><td class="standard">Swords</td></tr>
+          <tr><td class="original">Candles</td><td class="standard">Wands</td></tr>
+          <tr><td class="original">Roses</td><td class="standard">Pentacles/Coins</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Special Major Arcana</p>
+        <table class="trans-table">
+          <tr><th>Erotic Tarot</th><th>Standard</th></tr>
+          <tr><td class="original">The Awakening</td><td class="standard">Judgement</td></tr>
+          <tr><td class="original">The High Priest</td><td class="standard">The Hierophant</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="deck-jump-nav">
+    <span class="deck-jump-label">Jump to:</span>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-eroticMajor')">Major Arcana</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-eroticCups')">Shells (Cups)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-eroticSwords')">Feathers (Swords)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-eroticWands')">Candles (Wands)</button>
+    <button class="deck-jump-btn" onclick="jumpTo('anchor-eroticPentacles')">Roses (Pentacles)</button>
+  </div>
+  <div class="card" id="anchor-eroticMajor">
+    <div class="card-title">Major Arcana</div>
+    <div class="card-list" id="eroticMajor"></div>
+  </div>
+  <div class="card" id="anchor-eroticCups">
+    <div class="card-title">Cups (Shells)</div>
+    <div class="card-list" id="eroticCups"></div>
+  </div>
+  <div class="card" id="anchor-eroticSwords">
+    <div class="card-title">Swords (Feathers)</div>
+    <div class="card-list" id="eroticSwords"></div>
+  </div>
+  <div class="card" id="anchor-eroticWands">
+    <div class="card-title">Wands (Candles)</div>
+    <div class="card-list" id="eroticWands"></div>
+  </div>
+  <div class="card" id="anchor-eroticPentacles">
+    <div class="card-title">Pentacles (Roses)</div>
+    <div class="card-list" id="eroticPentacles"></div>
+  </div>
+</div>
+
+<!-- ======== AGR ======== -->
+<div id="agr" class="section">
+  <div class="card">
+    <div class="card-title">African Goddess Rising Oracle</div>
+    <div class="card-sub">Oracle · 44 Cards · 9 Temples · By Abiola Abrams</div>
+    <div class="card" style="background:rgba(138,127,173,0.1);border-color:rgba(138,127,173,0.3);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div id="deckDesc-agr" class="deck-desc-content"></div>
+    </div>
+    <div id="agrJumpNav" class="deck-jump-nav" style="margin-bottom:16px;"></div>
+    <div id="agrCards"></div>
+  </div>
+</div>
+
+<!-- ======== KIMBITION ======== -->
+<div id="kimbition" class="section">
+  <div class="card">
+    <div class="card-title">Kimbition Oracle</div>
+    <div class="card-sub">Oracle · 45 Cards · Erotic / Kink Archetypes as Spiritual Tools</div>
+    <div class="card" style="background:rgba(168,90,100,0.1);border-color:rgba(168,90,100,0.3);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div id="deckDesc-kimbition" class="deck-desc-content"></div>
+    </div>
+    <div class="card-list" id="kimbitionCards"></div>
+  </div>
+</div>
+
+<!-- ======== HEAVEN & HELL ======== -->
+<div id="hh" class="section">
+  <div class="card">
+    <div class="card-title">Heaven & Hell Oracle</div>
+    <div class="card-sub">Oracle · 72 Cards · Angel (Upright) / Demon (Reversed) Pairs</div>
+    <div class="card" style="background:rgba(122,143,173,0.1);border-color:rgba(122,143,173,0.3);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div id="deckDesc-hh" class="deck-desc-content"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 1px 1fr;gap:0;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:8px;">
+      <span style="font-size:10px;color:var(--text-light)">#</span>
+      <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lavender-dark);">Angel (Upright)</span>
+      <span></span>
+      <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);padding-left:12px;">Demon (Reversed)</span>
+    </div>
+    <div id="hhCards"></div>
+  </div>
+</div>
+
+</div><!-- end wrapper -->
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<footer>✿ Marcy's Deck Grimoire · Five Decks · Personal Reference ✿</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="cardModal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('cardModal').classList.remove('open')">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const MAJOR_ARCANA = [
+  { num: 0, name: "The Fool", meaning: "New beginnings, innocence, spontaneity, a free spirit. Leap of faith, unlimited potential.", rx: "Naivety, foolishness, recklessness, risk-taking without thought." },
+  { num: 1, name: "The Magician", meaning: "Manifestation, resourcefulness, power, inspired action. You have all the tools you need.", rx: "Manipulation, poor planning, untapped talents, illusion." },
+  { num: 2, name: "The High Priestess", meaning: "Intuition, sacred knowledge, divine feminine, the subconscious mind. Trust your inner knowing.", rx: "Secrets, disconnected from intuition, withdrawal, silence." },
+  { num: 3, name: "The Empress", meaning: "Femininity, beauty, nature, nurturing, abundance, fertility. Creation and sensuality.", rx: "Creative block, dependence on others, smothering, emptiness." },
+  { num: 4, name: "The Emperor", meaning: "Authority, structure, fatherhood, stability, power. Establishment and order.", rx: "Domination, rigidity, inflexibility, loss of control." },
+  { num: 5, name: "The Hierophant", meaning: "Spiritual wisdom, tradition, conformity, institutions. Seeking guidance.", rx: "Personal beliefs, freedom from convention, challenging the status quo." },
+  { num: 6, name: "The Lovers", meaning: "Love, harmony, relationships, values, choices. Union and alignment.", rx: "Disharmony, imbalance, misalignment of values, bad choices." },
+  { num: 7, name: "The Chariot", meaning: "Control, willpower, success, determination, direction. Victory through focus.", rx: "Lack of control, aggression, scattered energy, defeat." },
+  { num: 8, name: "Strength", meaning: "Strength, courage, patience, control of inner power, compassion. Gentle mastery.", rx: "Inner strength needed, self-doubt, weakness, raw emotion." },
+  { num: 9, name: "The Hermit", meaning: "Soul-searching, introspection, being alone, inner guidance. Retreat and reflection.", rx: "Isolation, loneliness, withdrawal, lost your way." },
+  { num: 10, name: "Wheel of Fortune", meaning: "Good luck, karma, life cycles, destiny, a turning point. Fate at work.", rx: "Bad luck, resistance to change, breaking cycles, no control." },
+  { num: 11, name: "Justice", meaning: "Justice, fairness, truth, cause and effect, law. Accountability and balance.", rx: "Unfairness, lack of accountability, dishonesty, karma delayed." },
+  { num: 12, name: "The Hanged One", meaning: "Pause, surrender, letting go, new perspectives, sacrifice. Waiting with purpose.", rx: "Delays, resistance, stalling, indecision." },
+  { num: 13, name: "Death", meaning: "Endings, beginnings, change, transformation, transition. Something must end for growth.", rx: "Resistance to change, inability to move on, stagnation." },
+  { num: 14, name: "Temperance", meaning: "Balance, moderation, patience, purpose, calling. Alchemy of the soul.", rx: "Imbalance, excess, lack of long-term vision, discord." },
+  { num: 15, name: "The Devil", meaning: "Shadow self, attachment, addiction, restriction, sexuality. The chains you wear.", rx: "Releasing limiting beliefs, exploring dark thoughts, detachment, freedom." },
+  { num: 16, name: "The Tower", meaning: "Sudden change, upheaval, chaos, revelation, awakening. Structures falling.", rx: "Fear of change, averting disaster, delaying the inevitable." },
+  { num: 17, name: "The Star", meaning: "Hope, faith, purpose, renewal, spirituality. Trust in the universe after hardship.", rx: "Lack of faith, despair, self-trust issues, disconnection." },
+  { num: 18, name: "The Moon", meaning: "Illusion, fear, the unconscious, intuition, confusion. Shadows and fog.", rx: "Release of fear, repressed emotion, inner confusion dissolving." },
+  { num: 19, name: "The Sun", meaning: "Positivity, fun, warmth, success, vitality. Radiance and clarity.", rx: "Inner child blocked, excessive optimism, sadness." },
+  { num: 20, name: "Judgement", meaning: "Judgement, rebirth, inner calling, absolution. A higher calling answered.", rx: "Self-doubt, inner critic, ignoring the call, stagnation." },
+  { num: 21, name: "The World", meaning: "Completion, integration, accomplishment, travel. Wholeness achieved.", rx: "Seeking closure, shortcuts, delays, incomplete cycle." },
+];
+
+const MINOR_ARCANA = {
+  cups: [
+    { name: "Ace of Cups", meaning: "New love, emotional beginning, intuition, creativity, divine love flowing in.", rx: "Emotional loss, blocked creativity, emptiness, feeling unloved." },
+    { name: "Two of Cups", meaning: "Unity, partnership, attraction, connection, mutual respect.", rx: "Imbalance, broken communication, tension in partnerships." },
+    { name: "Three of Cups", meaning: "Celebration, friendship, creativity, collaboration, community.", rx: "Independence needed, gossip, third-wheel, over-indulgence." },
+    { name: "Four of Cups", meaning: "Contemplation, apathy, re-evaluation, resentment, boredom.", rx: "Retreat ended, new motivation, seizing opportunity." },
+    { name: "Five of Cups", meaning: "Regret, failure, disappointment, pessimism, grief. Focus on the loss.", rx: "Moving on, acceptance, forgiveness, finding peace." },
+    { name: "Six of Cups", meaning: "Nostalgia, childhood memories, innocence, joy, reunion.", rx: "Living in the past, naivety, unrealistic." },
+    { name: "Seven of Cups", meaning: "Opportunities, choices, wishful thinking, illusion, fantasy.", rx: "Alignment, clarity, choosing decisively, reality check." },
+    { name: "Eight of Cups", meaning: "Disappointment, abandonment, withdrawal, escapism, letting go.", rx: "Trying again, motivation, returning, avoidance of transition." },
+    { name: "Nine of Cups", meaning: "Contentment, satisfaction, gratitude, wish fulfilled. The wish card.", rx: "Inner happiness needed, materialism, dissatisfaction." },
+    { name: "Ten of Cups", meaning: "Divine love, blissful relationships, harmony, alignment, family.", rx: "Disconnected values, struggling to create harmony, broken home." },
+    { name: "Page of Cups", meaning: "Creative opportunities, intuitive messages, curiosity, imagination.", rx: "New idea blocked, self-doubt, creative block." },
+    { name: "Knight of Cups", meaning: "Romance, charm, imagination, beauty, following the heart.", rx: "Moodiness, disappointment, unrealistic, jealousy." },
+    { name: "Queen of Cups", meaning: "Compassionate, caring, empathetic, intuitive, psychic. Deep emotional wisdom.", rx: "Martyrdom, insecurity, dependency, moodiness." },
+    { name: "King of Cups", meaning: "Emotional balance, generosity, diplomacy, wisdom. Mastery of emotion.", rx: "Emotional manipulation, volatile, moodiness, blocked feelings." },
+  ],
+  swords: [
+    { name: "Ace of Swords", meaning: "Breakthrough, clarity, sharp mind, new idea, truth revealed.", rx: "Confusion, chaos, miscommunication, clouded judgment." },
+    { name: "Two of Swords", meaning: "Difficult choices, indecision, stalemate, blocked emotions.", rx: "Indecision ends, lesser of two evils, no right choice." },
+    { name: "Three of Swords", meaning: "Heartbreak, emotional pain, sorrow, grief, hurt. Truth that cuts.", rx: "Negative self-talk, releasing pain, optimism, forgiveness." },
+    { name: "Four of Swords", meaning: "Rest, restoration, contemplation, passive, recovery.", rx: "Restlessness, burnout, stress, refusing to rest." },
+    { name: "Five of Swords", meaning: "Conflict, defeat, win at all costs, betrayal, discord.", rx: "Reconciliation, making amends, past wounds resurface." },
+    { name: "Six of Swords", meaning: "Transition, change, moving on, rite of passage, travel.", rx: "Stuck, baggage carried forward, unable to move on." },
+    { name: "Seven of Swords", meaning: "Betrayal, deception, getting away with something, cunning.", rx: "Imposter syndrome, self-deceit, keeping secrets." },
+    { name: "Eight of Swords", meaning: "Imprisonment, entrapment, self-victimization, restricted.", rx: "New perspective, freedom, releasing self-imposed restriction." },
+    { name: "Nine of Swords", meaning: "Anxiety, worry, fear, depression, nightmares. The dark night of the soul.", rx: "Hope, reaching out, despair slowly lifting, secrets released." },
+    { name: "Ten of Swords", meaning: "Painful endings, deep wounds, betrayal, loss, crisis. Rock bottom.", rx: "Recovery, regeneration, resisting an inevitable end." },
+    { name: "Page of Swords", meaning: "New ideas, curiosity, thirst for knowledge, vigilance.", rx: "Manipulation, cynicism, rudeness, haste." },
+    { name: "Knight of Swords", meaning: "Action, impulsive, ambitious, driven, fast-talking.", rx: "No direction, disregard for consequences, recklessness." },
+    { name: "Queen of Swords", meaning: "Independent, unbiased judgment, clear boundaries, direct.", rx: "Overly emotional, bitter, cruel, resentful." },
+    { name: "King of Swords", meaning: "Mental clarity, intellectual power, authority, truth.", rx: "Quiet power, inner truth, misuse of power, manipulation." },
+  ],
+  wands: [
+    { name: "Ace of Wands", meaning: "Inspiration, new opportunities, growth, potential. Creative spark ignited.", rx: "Delays, missed opportunities, blocked creativity." },
+    { name: "Two of Wands", meaning: "Future planning, progress, decisions, discovery.", rx: "Fear of unknown, lack of planning, playing it safe." },
+    { name: "Three of Wands", meaning: "Progress, expansion, foresight, overseas opportunities.", rx: "Playing small, lack of foresight, unexpected delays." },
+    { name: "Four of Wands", meaning: "Celebration, joy, harmony, relaxation, community.", rx: "Personal celebration, lack of support, home conflict." },
+    { name: "Five of Wands", meaning: "Conflict, disagreements, competition, tension, diversity.", rx: "Avoiding conflict, respecting differences, inner conflict." },
+    { name: "Six of Wands", meaning: "Success, public recognition, progress, self-confidence.", rx: "Private achievement, fall from grace, egotism." },
+    { name: "Seven of Wands", meaning: "Challenge, competition, protection, perseverance, standing your ground.", rx: "Overwhelm, giving up, self-doubt, exhausted." },
+    { name: "Eight of Wands", meaning: "Speed, action, air travel, movement, quick decisions.", rx: "Delays, frustration, resisting change, moving too fast." },
+    { name: "Nine of Wands", meaning: "Resilience, courage, persistence, test of faith, boundaries.", rx: "Inner resources exhausted, giving up, obstinate." },
+    { name: "Ten of Wands", meaning: "Burden, extra responsibility, hard work, completion, overwhelm.", rx: "Doing it alone, collapse under burden, dumping responsibilities." },
+    { name: "Page of Wands", meaning: "Exploration, excitement, discovery, free spirit, enthusiasm.", rx: "Newly formed ideas, redirected, self-limiting beliefs." },
+    { name: "Knight of Wands", meaning: "Energy, passion, inspired action, adventure, impulsiveness.", rx: "Passion project delayed, scattered energy, frustration." },
+    { name: "Queen of Wands", meaning: "Courage, confidence, independence, social, charismatic.", rx: "Self-respect, introverted, insecure, demanding." },
+    { name: "King of Wands", meaning: "Natural-born leader, vision, entrepreneur, honor.", rx: "Impulsiveness, overbearing, unachievable expectations." },
+  ],
+  pentacles: [
+    { name: "Ace of Pentacles", meaning: "A new financial or career opportunity, manifestation, abundance.", rx: "Lost opportunity, bad investment, scarcity mindset." },
+    { name: "Two of Pentacles", meaning: "Multiple priorities, time management, balance, adaptability.", rx: "Over-committed, disorganized, reprioritization needed." },
+    { name: "Three of Pentacles", meaning: "Teamwork, initial fulfilment, collaboration, learning.", rx: "Lack of teamwork, disorganized, group conflict." },
+    { name: "Four of Pentacles", meaning: "Saving money, security, conservatism, scarcity, control.", rx: "Over-spending, greed, self-protection, materialism." },
+    { name: "Five of Pentacles", meaning: "Financial loss, poverty, lack mindset, isolation, worry.", rx: "Recovery from loss, spiritual poverty, overcoming hardship." },
+    { name: "Six of Pentacles", meaning: "Generosity, charity, giving, receiving, sharing.", rx: "Self-care, unpaid debts, strings attached gifts." },
+    { name: "Seven of Pentacles", meaning: "Long-term vision, sustainable results, perseverance, investment.", rx: "Work without results, distractions, lack of rewards." },
+    { name: "Eight of Pentacles", meaning: "Apprenticeship, repetitive tasks, mastery, skill development.", rx: "Self-development, perfectionism, misdirected activity." },
+    { name: "Nine of Pentacles", meaning: "Abundance, luxury, self-reliance, financial independence.", rx: "Project delays, hustling, financial setbacks." },
+    { name: "Ten of Pentacles", meaning: "Wealth, financial security, family, long-term success, contribution.", rx: "Financial failure, loneliness, loss of family legacy." },
+    { name: "Page of Pentacles", meaning: "Manifestation, financial opportunity, new skills, ambition.", rx: "Lack of progress, procrastination, failure to launch." },
+    { name: "Knight of Pentacles", meaning: "Hard work, productivity, routine, conservatism, reliability.", rx: "Self-discipline, boredom, feeling stuck, perfectionism." },
+    { name: "Queen of Pentacles", meaning: "Nurturing, practical, providing financially, down-to-earth.", rx: "Financial independence, self-care, work-home imbalance." },
+    { name: "King of Pentacles", meaning: "Wealth, business, leadership, security, discipline.", rx: "Financially inept, obsessed with wealth and status." },
+  ]
+};
+
+const AGR_CARDS = {
+  "Threshold Guardians": ["Mawu-Lisa", "Nana Buluku"],
+  "Ancestors": ["Marie Laveau", "Mbuya Nehanda", "Sawtche", "Sara la Kali", "Tituba"],
+  "Conjurers": ["Seven Sisters", "Ngame", "Modjadji", "Ma'at", "Tanit"],
+  "Warriors": ["Asase Yaa", "Oya", "Sekhmet", "Atete", "Sitira"],
+  "Shadows": ["Jumbie", "Long Bubby Suzi", "Soucouyant", "Gang Gang Sara", "Mamlambo", "Medusa", "Aunt Nancy"],
+  "Lovers": ["Oshun", "Qetesh", "Mbokomu", "Ala", "Erzulie Dantor"],
+  "Griots": ["Mame Coumba Bang", "Nunde", "Mama Wata", "Yasigi", "Mama Djombo"],
+  "Queens": ["Queen Nefertiti", "Queen of Sheba", "Queen Mother Nanny", "Queen Yaa Asantewaa", "Queen Nandi"],
+  "High Priestesses": ["iNkosazana", "Yemaya", "Ayizan", "Iset", "a-Bol-Nimba"]
+};
+
+const AGR_MEANINGS = {
+  "Mawu-Lisa": {
+    meaning: "Sacred balance, divine union, wholeness, and harmony between complementary forces.",
+    shadow: "Inner split, imbalance, swinging between extremes, or trying to choose one side of yourself over the other.",
+    embodiment: "Choose integration over fragmentation. Let softness and strength, intuition and action, coexist.",
+    keywords: ["balance", "union", "duality", "harmony", "integration"]
+  },
+
+  "Nana Buluku": {
+    meaning: "Primordial wisdom, origin energy, ancient creation, and the stillness before form.",
+    shadow: "Disconnection from your roots, spiritual emptiness, lack of grounding, or feeling cut off from deeper purpose.",
+    embodiment: "Return to the beginning. Ground yourself in what is ancient, true, and foundational before chasing what is next.",
+    keywords: ["origin", "creation", "ancestral wisdom", "foundation", "primordial"]
+  },
+  "Marie Laveau": {
+    meaning: "Spiritual leadership, ancestral magic, sacred authority, and power rooted in service and legacy.",
+    shadow: "Misuse of influence, spiritual ego, over-identification with power, or fearing your own authority.",
+    embodiment: "Own your gifts without shrinking or performing. Lead from depth, not spectacle.",
+    keywords: ["leadership", "magic", "authority", "legacy", "service"]
+  },
+
+  "Mbuya Nehanda": {
+    meaning: "Ancestral resistance, sacred courage, liberation, and standing firm for collective truth.",
+    shadow: "Exhaustion, martyrdom, carrying battles that are draining your spirit, or living in permanent survival mode.",
+    embodiment: "Fight for what matters, but do not abandon yourself in the process. Let resistance stay rooted in purpose.",
+    keywords: ["resistance", "liberation", "courage", "ancestry", "truth"]
+  },
+
+  "Sawtche": {
+    meaning: "Inner knowing, ancestral remembrance, spiritual sensitivity, and messages carried across time.",
+    shadow: "Doubt in your own perception, ignoring signs, spiritual disconnection, or feeling cut off from guidance.",
+    embodiment: "Listen more carefully to what is subtle. Your spirit already knows more than your fear admits.",
+    keywords: ["intuition", "guidance", "remembrance", "signs", "ancestral connection"]
+  },
+
+  "Sara la Kali": {
+    meaning: "Sacred devotion, protection of the marginalized, spiritual endurance, and faith carried through movement and exile.",
+    shadow: "Feeling unprotected, uprooted, unseen, or spiritually abandoned in spaces where you do not fully belong.",
+    embodiment: "Let devotion travel with you. Your spirit is not less holy because your path has been difficult or displaced.",
+    keywords: ["devotion", "protection", "faith", "movement", "belonging"]
+  },
+
+  "Tituba": {
+    meaning: "Reclaimed voice, spiritual survival, truth under persecution, and wisdom born through being misunderstood.",
+    shadow: "Silencing yourself, internalized shame, fear of being misread, or shrinking because others project onto you.",
+    embodiment: "Speak from your own spirit instead of trying to make yourself easier for others to swallow.",
+    keywords: ["voice", "survival", "misunderstanding", "truth", "reclamation"]
+  },
+  "Seven Sisters": {
+    meaning: "Collective spiritual support, sacred sisterhood, intuitive protection, and wisdom shared across many voices.",
+    shadow: "Isolation, distrust of support, feeling spiritually abandoned, or refusing help because of past hurt.",
+    embodiment: "You are not meant to carry everything alone. Let aligned support and shared wisdom reach you.",
+    keywords: ["sisterhood", "support", "intuition", "protection", "collective wisdom"]
+  },
+
+  "Ngame": {
+    meaning: "Cosmic creation, divine intelligence, and spiritual mystery beyond immediate comprehension.",
+    shadow: "Confusion, feeling disconnected from meaning, trying to force understanding before you are ready.",
+    embodiment: "Let mystery exist without panic. Not everything sacred reveals itself all at once.",
+    keywords: ["creation", "mystery", "cosmic wisdom", "divinity", "spiritual intelligence"]
+  },
+
+  "Modjadji": {
+    meaning: "Command over inner climate, sacred influence, emotional power, and spiritual sovereignty.",
+    shadow: "Mood instability, misuse of influence, emotional intensity controlling you instead of serving you.",
+    embodiment: "Rule your inner atmosphere with intention. Your energy affects more than just you.",
+    keywords: ["sovereignty", "influence", "emotions", "power", "climate"]
+  },
+
+  "Ma'at": {
+    meaning: "Truth, justice, order, spiritual integrity, and alignment with what is morally and cosmically right.",
+    shadow: "Dishonesty, imbalance, self-betrayal, or clinging to appearances while inner truth is off.",
+    embodiment: "Tell the truth cleanly. Let your life become more aligned, not just more explained.",
+    keywords: ["truth", "justice", "integrity", "order", "alignment"]
+  },
+
+  "Tanit": {
+    meaning: "Protection, lunar wisdom, feminine mystery, and divine guardianship in uncertain spaces.",
+    shadow: "Fear of the unknown, spiritual guardedness, emotional distance, or rejecting intuition out of fear.",
+    embodiment: "Trust what watches over you in the dark. Your intuition does not need daylight to be real.",
+    keywords: ["protection", "moon", "mystery", "intuition", "guardianship"]
+  },
+  "Asase Yaa": {
+    meaning: "Grounded strength, sacred stewardship, patience, and protection through stability and truth.",
+    shadow: "Stubbornness, heaviness, resistance to change, or carrying responsibility until it turns into depletion.",
+    embodiment: "Stand firm without becoming immovable. Let your strength come from rootedness, not overburdening yourself.",
+    keywords: ["earth", "stability", "grounding", "responsibility", "strength"]
+  },
+
+  "Oya": {
+    meaning: "Storm power, transformation, movement, necessary endings, and fierce clearing.",
+    shadow: "Chaos, volatility, impulsive destruction, or clinging to what is already trying to leave.",
+    embodiment: "Let the storm clear what no longer belongs. Change is not always punishment; sometimes it is liberation.",
+    keywords: ["storm", "change", "transformation", "release", "power"]
+  },
+
+  "Sekhmet": {
+    meaning: "Sacred rage, fierce truth, purification, protection, and power that burns away distortion.",
+    shadow: "Destruction, uncontrolled anger, domination, or striking from wounded pride instead of clear truth.",
+    embodiment: "Channel your fire with precision. Let anger become protection and clarity, not self-destruction.",
+    keywords: ["rage", "truth", "protection", "fire", "power"]
+  },
+
+  "Atete": {
+    meaning: "Creative renewal, fertility, devotion, and the strength required to nurture what is still becoming.",
+    shadow: "Creative burnout, neglecting your own needs, blocked renewal, or feeling drained by what should be nourishing.",
+    embodiment: "Care for what you are growing without abandoning yourself. Renewal needs devotion and rest.",
+    keywords: ["renewal", "fertility", "creation", "devotion", "nurture"]
+  },
+
+  "Sitira": {
+    meaning: "Disciplined courage, spiritual resilience, and the will to endure without losing yourself.",
+    shadow: "Harsh self-control, defensiveness, emotional armoring, or confusing survival mode with strength.",
+    embodiment: "Be strong without becoming closed. Your resilience does not need to erase your softness.",
+    keywords: ["courage", "discipline", "resilience", "endurance", "protection"]
+  },
+  "Jumbie": {
+    meaning: "Unsettled energy, spiritual residue, haunting memory, and what lingers when something has not been fully released.",
+    shadow: "Being consumed by fear, paranoia, old pain, or letting the past keep authority over the present.",
+    embodiment: "Name what still haunts you. What is faced directly loses power to lurk in the dark.",
+    keywords: ["haunting", "residue", "fear", "past", "release"]
+  },
+
+  "Long Bubby Suzi": {
+    meaning: "Distortion, temptation, hunger, and the seductive pull of what is not truly nourishing.",
+    shadow: "Being drained by false comfort, unhealthy attachment, or reaching for what feeds craving instead of healing.",
+    embodiment: "Discern desire from depletion. Not everything that calls to you is meant to keep you alive.",
+    keywords: ["temptation", "drain", "hunger", "attachment", "discernment"]
+  },
+
+  "Soucouyant": {
+    meaning: "Hidden consumption, psychic depletion, and the cost of what feeds on you in secret.",
+    shadow: "Burnout, parasitic dynamics, secrecy, or relationships and habits that quietly empty you out.",
+    embodiment: "Protect your life force. Stop making yourself available to what only knows how to take.",
+    keywords: ["depletion", "energy", "secrecy", "burnout", "protection"]
+  },
+
+  "Gang Gang Sara": {
+    meaning: "Shadow through spectacle, illusion, and the danger of being distracted by what dazzles instead of what is true.",
+    shadow: "Escapism, exaggeration, false performance, or losing yourself inside drama, fantasy, or appearances.",
+    embodiment: "See through the show. Ask what is real underneath the noise, charm, or chaos.",
+    keywords: ["illusion", "spectacle", "performance", "distraction", "truth"]
+  },
+
+  "Mamlambo": {
+    meaning: "Dangerous allure, forbidden fascination, and the magnetic pull of what carries both desire and risk.",
+    shadow: "Being seduced by power, status, fantasy, or intensity that ultimately destabilizes you.",
+    embodiment: "Respect what attracts you without surrendering your judgment to it.",
+    keywords: ["allure", "risk", "seduction", "power", "temptation"]
+  },
+
+  "Medusa": {
+    meaning: "Reclaimed power, boundary-making, surviving violation, and seeing clearly through projection.",
+    shadow: "Bitterness, emotional petrification, isolation, or becoming fused with pain and defensiveness.",
+    embodiment: "Your boundaries are holy. Protect yourself without turning your pain into your whole identity.",
+    keywords: ["boundaries", "reclamation", "survival", "rage", "projection"]
+  },
+
+  "Aunt Nancy": {
+    meaning: "Cunning intelligence, survival through wit, strategy, and using perception as protection.",
+    shadow: "Manipulation, trickery, distrust, or always feeling like you must outsmart others to stay safe.",
+    embodiment: "Use your intelligence wisely. Strategy is powerful, but it should not trap you in constant defensiveness.",
+    keywords: ["strategy", "wit", "survival", "cunning", "perception"]
+  },
+  "Oshun": {
+    meaning: "Pleasure, beauty, sweetness, sensual flow, and self-worth that attracts without force.",
+    shadow: "Validation-seeking, vanity, emotional indulgence, or using charm to avoid deeper truth.",
+    embodiment: "Receive beauty without begging for it. Let pleasure nourish you instead of distract you.",
+    keywords: ["pleasure", "beauty", "sensuality", "self-worth", "sweetness"]
+  },
+
+  "Qetesh": {
+    meaning: "Sacred erotic power, magnetic desire, freedom in pleasure, and embodied feminine sovereignty.",
+    shadow: "Over-identifying with seduction, using sexuality as power without intimacy, or chasing intensity without alignment.",
+    embodiment: "Own your desire without apology, but do not confuse being wanted with being valued.",
+    keywords: ["desire", "erotic power", "magnetism", "freedom", "sensuality"]
+  },
+
+  "Mbokomu": {
+    meaning: "Deep emotional bonding, sacred attachment, intimacy, and the desire to be known beneath the surface.",
+    shadow: "Clinginess, fear of abandonment, emotional overdependence, or confusing intensity for safety.",
+    embodiment: "Let intimacy be mutual. Connection deepens when it is rooted in truth, not desperation.",
+    keywords: ["bonding", "intimacy", "attachment", "depth", "emotional truth"]
+  },
+
+  "Ala": {
+    meaning: "Sacred love through integrity, fertility, moral alignment, and devotion that is grounded and life-giving.",
+    shadow: "Misalignment in values, betrayal of your own standards, or trying to make love work without true foundation.",
+    embodiment: "Let love be rooted in what is right, not just what is desired. What is fertile must also be clean.",
+    keywords: ["integrity", "love", "fertility", "values", "devotion"]
+  },
+
+  "Erzulie Dantor": {
+    meaning: "Fierce devotion, protective love, wounded-heart strength, and the power of loving without softness being mistaken for weakness.",
+    shadow: "Possessiveness, distrust, defensive love, or expecting pain to arrive even in genuine connection.",
+    embodiment: "Love fiercely, but do not let old wounds script every bond. Protection is holy, but so is openness.",
+    keywords: ["devotion", "protection", "fierce love", "wounds", "strength"]
+  },
+  "Mame Coumba Bang": {
+    meaning: "Sacred depth, emotional truth, watery wisdom, and the call to honor what is ancient beneath the surface.",
+    shadow: "Emotional heaviness, avoidance of what lies underneath, fear of depth, or being pulled under by unprocessed feeling.",
+    embodiment: "Go deeper, but do not drown there. What is hidden in your depths wants reverence, not avoidance.",
+    keywords: ["depth", "water", "emotion", "ancestral wisdom", "truth"]
+  },
+
+  "Nunde": {
+    meaning: "Story, memory, witness, and the power of what is preserved through voice and remembrance.",
+    shadow: "Forgetting your own story, distortion of truth, silence around what matters, or feeling disconnected from your narrative.",
+    embodiment: "Tell the truth of your life clearly. Your story becomes medicine when it is owned instead of buried.",
+    keywords: ["story", "memory", "voice", "truth", "remembrance"]
+  },
+
+  "Mama Wata": {
+    meaning: "Mysticism, seduction, spiritual allure, abundance, and the powerful pull of the seen and unseen worlds together.",
+    shadow: "Illusion, vanity, spiritual glamour, or becoming enchanted by what dazzles without asking what it costs.",
+    embodiment: "Honor beauty and mystery without surrendering discernment. Magnetism is strongest when it stays rooted in truth.",
+    keywords: ["mysticism", "allure", "abundance", "beauty", "discernment"]
+  },
+
+  "Yasigi": {
+    meaning: "Joy, celebration, sensual presence, and the healing power of embodied delight.",
+    shadow: "Performing happiness, masking pain with pleasure, overindulgence, or fearing stillness because it reveals what hurts.",
+    embodiment: "Let joy be real, not just decorative. Celebration heals most when it is honest.",
+    keywords: ["joy", "celebration", "pleasure", "presence", "healing"]
+  },
+
+  "Mama Djombo": {
+    meaning: "Protective ancestral guidance, mystical authority, and unseen support shaping the path ahead.",
+    shadow: "Doubt in spiritual guidance, fear of the unknown, or resisting support because you do not control how it arrives.",
+    embodiment: "Trust that not all help comes in obvious forms. Guidance can be quiet and still deeply real.",
+    keywords: ["guidance", "protection", "ancestral support", "mysticism", "trust"]
+  },
+  "Queen Nefertiti": {
+    meaning: "Radiance, elegance, sovereign self-possession, and power expressed through presence as much as action.",
+    shadow: "Over-identifying with image, needing admiration, or mistaking appearance for full embodiment of power.",
+    embodiment: "Let your presence speak without making performance your prison. Beauty is strongest when it is anchored in self-respect.",
+    keywords: ["radiance", "sovereignty", "presence", "beauty", "self-possession"]
+  },
+
+  "Queen of Sheba": {
+    meaning: "Discernment, wisdom, sacred curiosity, and power rooted in intellect, diplomacy, and standards.",
+    shadow: "Testing others from a guarded place, arrogance, over-intellectualizing, or using distance to avoid vulnerability.",
+    embodiment: "Let discernment protect your standards without cutting you off from genuine exchange.",
+    keywords: ["wisdom", "discernment", "standards", "diplomacy", "intellect"]
+  },
+
+  "Queen Mother Nanny": {
+    meaning: "Protective leadership, ancestral strength, liberation, and the power of guiding others toward survival and freedom.",
+    shadow: "Carrying too much, becoming hardened by responsibility, or feeling like you must always be the strong one.",
+    embodiment: "Lead with strength, but do not confuse constant burden with sacred duty. Protection also requires replenishment.",
+    keywords: ["leadership", "protection", "liberation", "ancestral strength", "responsibility"]
+  },
+
+  "Queen Yaa Asantewaa": {
+    meaning: "Defiant courage, sacred leadership, resistance, and refusing silence in the face of threat or injustice.",
+    shadow: "Hyper-defensiveness, rage without strategy, over-functioning in battle mode, or expecting every moment to be a fight.",
+    embodiment: "Stand boldly, but let your courage remain purposeful. Not every situation deserves your full war energy.",
+    keywords: ["courage", "resistance", "leadership", "defiance", "strategy"]
+  },
+
+  "Queen Nandi": {
+    meaning: "Maternal sovereignty, legacy-building, fierce care, and the power of shaping what comes after you.",
+    shadow: "Over-control, sacrificing too much for others, or confusing love with carrying everything alone.",
+    embodiment: "Build legacy through love and strength, but do not erase yourself while trying to secure the future.",
+    keywords: ["legacy", "maternal power", "sovereignty", "care", "strength"]
+  },
+  "iNkosazana": {
+    meaning: "Sacred initiation, spiritual authority, and the quiet power of inner consecration.",
+    shadow: "Doubting your spiritual legitimacy, waiting for external permission, or shrinking from your own sacred path.",
+    embodiment: "Treat your path as holy now, not only after someone else validates it. You are already being initiated by what you survive and honor.",
+    keywords: ["initiation", "authority", "sacred path", "devotion", "inner power"]
+  },
+
+  "Yemaya": {
+    meaning: "Nurturing, sacred motherhood, emotional truth, deep care, and healing through softness.",
+    shadow: "Overgiving, emotional overwhelm, grief held too long, or losing yourself while caring for others.",
+    embodiment: "Let yourself be held too. Return to what nourishes, cleanses, and restores you emotionally.",
+    keywords: ["mothering", "water", "care", "grief", "nourishment"]
+  },
+
+  "Ayizan": {
+    meaning: "Spiritual service, sacred guardianship, ritual purity, and devotion to the threshold between worlds.",
+    shadow: "Spiritual exhaustion, over-responsibility, gatekeeping from fear, or feeling burdened by your sensitivity.",
+    embodiment: "Protect what is sacred without draining your entire life force. Service is holy, but so is energetic care.",
+    keywords: ["service", "ritual", "guardianship", "threshold", "devotion"]
+  },
+
+  "Iset": {
+    meaning: "Divine wisdom, intuition, healing intelligence, and mastery born through love, grief, and sacred knowledge.",
+    shadow: "Over-identifying with fixing, carrying everyone else, or forgetting your own wholeness while tending others.",
+    embodiment: "Use your wisdom with precision. Healing is powerful, but it does not require self-erasure.",
+    keywords: ["wisdom", "healing", "intuition", "magic", "sacred knowledge"]
+  },
+
+  "a-Bol-Nimba": {
+    meaning: "Sacred visibility, divine embodiment, abundance of presence, and the blessing of taking up full space.",
+    shadow: "Shame around visibility, shrinking your body or spirit, or feeling like your presence is too much.",
+    embodiment: "Take up the space you were made for. Your fullness is not a flaw; it is part of your sacred form.",
+    keywords: ["visibility", "embodiment", "presence", "abundance", "fullness"]
+  }
+};
+
+const KIMBITION_CARDS = [
+  "Missionary","Threesome","Doggy Style","Bondage or BDSM","Voyeur",
+  "Orgy","Anal Sex","Public Sex","Cuckold","Romantic Sex",
+  "Roleplay or Cosplay","Gangbang","Rimming","Creampie","Masturbation",
+  "Oral Sex","Double Penetration","Handjob","Phone Sex","Facial",
+  "Sex Toys","Bukkake","Spooning","69","Footjob",
+  "Cowgirl","Reverse Cowgirl","Porn","Swinging","Multiple Orgasms",
+  "Erotic Massage","Foreplay or Fingering","Video or Pics of Sex Act","Prostate Massage","Golden Shower",
+  "Sexcation","Shower Sex","Hot Tub or Bath Sex","Squirting","Vehicle Sex",
+  "Sex Drugs","Hot Wax or Candle Wax","Blindfold","Whip Cream or Food","Erotic Spanking"
+];
+const KIMBITION_MEANINGS = {
+  "Missionary": {
+    meaning: "Direct intimacy, closeness, eye contact, emotional presence, and vulnerability through simplicity.",
+    shadow: "Routine, emotional performance, going through the motions, or mistaking familiarity for real intimacy.",
+    lesson: "Can closeness be enough without spectacle? Where are you being asked to stay present instead of chasing intensity?",
+    keywords: ["intimacy", "closeness", "presence", "vulnerability", "simplicity"]
+  },
+
+  "Threesome": {
+    meaning: "Expansion, multiplicity, layered desire, and the complexity of shared attention and energy.",
+    shadow: "Comparison, jealousy, fragmentation, divided focus, or using excess to avoid deeper one-on-one truth.",
+    lesson: "More does not always mean deeper. What is being expanded here: pleasure, possibility, or instability?",
+    keywords: ["expansion", "desire", "multiplicity", "sharing", "comparison"]
+  },
+
+  "Doggy Style": {
+    meaning: "Instinct, raw appetite, physical drive, surrender to primal energy, and desire without overthinking.",
+    shadow: "Disconnection, objectification, acting on hunger without emotional awareness, or reducing intimacy to pure impulse.",
+    lesson: "Honor instinct without letting it erase humanity. Where is desire asking to be felt more honestly?",
+    keywords: ["instinct", "appetite", "raw desire", "physicality", "primal"]
+  },
+
+  "Bondage or BDSM": {
+    meaning: "Power exchange, trust, structure, surrender, restraint, and intentional exploration of limits.",
+    shadow: "Control issues, unsafe surrender, repression, domination without care, or fear disguised as authority.",
+    lesson: "Power is only sacred when it is conscious, mutual, and held with responsibility.",
+    keywords: ["power", "trust", "surrender", "control", "limits"]
+  },
+
+  "Voyeur": {
+    meaning: "Observation, fascination, witnessing, and desire experienced through watching rather than acting.",
+    shadow: "Passivity, avoidance, hiding behind fantasy, emotional distance, or fear of direct participation.",
+    lesson: "Where are you watching life instead of entering it? What feels safer at a distance than up close?",
+    keywords: ["observation", "distance", "fantasy", "watching", "avoidance"]
+  },
+
+  "Orgy": {
+    meaning: "Excess, collective appetite, pleasure without singular focus, and immersion in overwhelming desire.",
+    shadow: "Overstimulation, loss of boundaries, dissociation through intensity, or confusing chaos with liberation.",
+    lesson: "When everything is available at once, what actually satisfies? Where does abundance become overwhelm?",
+    keywords: ["excess", "appetite", "overwhelm", "collective energy", "intensity"]
+  },
+
+  "Anal Sex": {
+    meaning: "Trust, taboo, depth, control, surrender, and crossing a threshold that demands care and preparation.",
+    shadow: "Pain without trust, forced vulnerability, fear of surrender, or pushing past limits instead of honoring them.",
+    lesson: "Depth is not something to force. What requires more trust, slowness, and preparation before opening?",
+    keywords: ["trust", "taboo", "depth", "surrender", "threshold"]
+  },
+
+  "Public Sex": {
+    meaning: "Risk, thrill, visibility, exposure, and excitement heightened by being seen or almost seen.",
+    shadow: "Recklessness, attention-seeking, danger without grounding, or needing exposure to feel alive.",
+    lesson: "What are you trying to feel through risk? Is visibility empowering you, or controlling you?",
+    keywords: ["risk", "visibility", "thrill", "exposure", "danger"]
+  },
+
+  "Cuckold": {
+    meaning: "Power inversion, humiliation dynamics, comparison, and confronting desire through displacement or voyeuristic tension.",
+    shadow: "Shame, insecurity, resentment, obsession with inadequacy, or using comparison to wound rather than reveal.",
+    lesson: "What does comparison activate in you: humiliation, desire, power, or fear? What wound is being eroticized?",
+    keywords: ["comparison", "humiliation", "power", "shame", "displacement"]
+  },
+
+  "Romantic Sex": {
+    meaning: "Tenderness, affection, bonding, sweetness, and emotional intimacy woven into physical connection.",
+    shadow: "Idealization, dependency, sentimentality, or using softness to avoid confronting deeper incompatibilities.",
+    lesson: "Let tenderness be real, not performative. Is the softness here grounded in truth or fantasy?",
+    keywords: ["romance", "tenderness", "bonding", "affection", "softness"]
+  },
+  "Roleplay or Cosplay": {
+    meaning: "Fantasy, embodiment, play, and the freedom to explore desire through alternate personas or scenarios.",
+    shadow: "Escapism, hiding behind performance, losing yourself in character, or avoiding real intimacy through scripted fantasy.",
+    lesson: "What becomes easier to express when you are 'someone else'? What truth is trying to come out through play?",
+    keywords: ["fantasy", "play", "persona", "expression", "escapism"]
+  },
+
+  "Gangbang": {
+    meaning: "Overwhelming intensity, total surrender, excess attention, and the erotic charge of being the center of collective focus.",
+    shadow: "Objectification, emotional fragmentation, dissociation, or confusing being overwhelmed with being truly seen.",
+    lesson: "What does intensity awaken in you: power, surrender, validation, or loss of self? Where is the line?",
+    keywords: ["intensity", "surrender", "attention", "overwhelm", "objectification"]
+  },
+
+  "Rimming": {
+    meaning: "Taboo trust, intimacy through vulnerability, and desire that moves through acts of deep acceptance and exposure.",
+    shadow: "Shame, disgust, fear of judgment, or discomfort with the messy and unpolished parts of closeness.",
+    lesson: "What part of intimacy still feels too vulnerable, too raw, or too human to receive without shame?",
+    keywords: ["taboo", "trust", "vulnerability", "acceptance", "intimacy"]
+  },
+
+  "Creampie": {
+    meaning: "Completion, claiming, fullness, and the symbolic desire to leave something behind or be deeply filled.",
+    shadow: "Possession, entitlement, carelessness, or eroticizing permanence without emotional responsibility.",
+    lesson: "What does 'being left with something' mean here: intimacy, power, risk, attachment, or fantasy?",
+    keywords: ["completion", "fullness", "claiming", "intimacy", "risk"]
+  },
+
+  "Masturbation": {
+    meaning: "Self-knowledge, self-pleasure, autonomy, and direct relationship with your own desire without mediation.",
+    shadow: "Isolation, retreat, using self-sufficiency to avoid intimacy, or disconnecting from shared vulnerability.",
+    lesson: "What do you know about your own pleasure when no one else is involved? Where does self-sufficiency help or hide you?",
+    keywords: ["self-pleasure", "autonomy", "self-knowledge", "independence", "desire"]
+  },
+
+  "Oral Sex": {
+    meaning: "Devotion, giving, receiving, attentiveness, and pleasure created through focus and intimate service.",
+    shadow: "Performance, obligation, people-pleasing, or giving pleasure in ways that disconnect you from your own desire.",
+    lesson: "When you give or receive, is it mutual and alive, or are you slipping into performance and expectation?",
+    keywords: ["devotion", "service", "pleasure", "giving", "receiving"]
+  },
+
+  "Double Penetration": {
+    meaning: "Intensity, fullness, threshold-crossing, and the desire to be completely overtaken by sensation or experience.",
+    shadow: "Overwhelm, pushing past limits, excess without grounding, or confusing extremity with depth.",
+    lesson: "What are you trying to feel through total intensity? Where is your body or spirit asking for more discernment?",
+    keywords: ["intensity", "fullness", "threshold", "overwhelm", "excess"]
+  },
+
+  "Handjob": {
+    meaning: "Control, rhythm, direct stimulation, and intimacy through touch that is focused, practical, and responsive.",
+    shadow: "Mechanical connection, routine touch without presence, or reducing pleasure to technique without attunement.",
+    lesson: "Touch becomes real when it listens. Where are you being asked to be more responsive and less automatic?",
+    keywords: ["touch", "control", "rhythm", "technique", "attunement"]
+  },
+
+  "Phone Sex": {
+    meaning: "Imagination, anticipation, verbal eroticism, and intimacy built through voice rather than physical presence.",
+    shadow: "Distance, fantasy replacing reality, emotional detachment, or relying on imagination because real closeness feels harder.",
+    lesson: "What opens up when the body is absent? What role do words, distance, and imagination play in your desire?",
+    keywords: ["voice", "distance", "imagination", "anticipation", "fantasy"]
+  },
+
+  "Facial": {
+    meaning: "Display, climax made visible, erotic spectacle, and the symbolism of being marked, seen, or finished upon.",
+    shadow: "Humiliation without care, objectification, performance of dominance, or reducing intimacy to visual control.",
+    lesson: "What does being seen at the moment of climax represent here: power, exposure, degradation, or recognition?",
+    keywords: ["display", "visibility", "spectacle", "marking", "power"]
+  },
+  "Sex Toys": {
+    meaning: "Experimentation, enhancement, curiosity, and using tools to expand pleasure, access, and sensation.",
+    shadow: "Disconnection, dependency on stimulation, using novelty to avoid intimacy, or treating pleasure like a performance project.",
+    lesson: "What is the tool helping you access: more pleasure, more confidence, more control, or less vulnerability?",
+    keywords: ["experimentation", "enhancement", "curiosity", "sensation", "tools"]
+  },
+
+  "Bukkake": {
+    meaning: "Overexposure, collective climax, spectacle, and the erotic charge of being the focal point of overwhelming release.",
+    shadow: "Objectification, humiliation without care, emotional overwhelm, or being reduced to a surface for others’ gratification.",
+    lesson: "When many forces converge on one body, what is being eroticized: surrender, visibility, excess, or loss of personhood?",
+    keywords: ["overwhelm", "spectacle", "exposure", "release", "objectification"]
+  },
+
+  "Spooning": {
+    meaning: "Comfort, tenderness, aftercare, softness, and intimacy rooted in safety and quiet closeness.",
+    shadow: "Stagnation, passivity, emotional dependency, or mistaking comfort for real relational depth.",
+    lesson: "Softness is sacred, but is it nourishing connection or just a way to avoid harder truths?",
+    keywords: ["comfort", "softness", "aftercare", "safety", "closeness"]
+  },
+
+  "69": {
+    meaning: "Mutual exchange, reciprocity, simultaneous giving and receiving, and balanced erotic flow.",
+    shadow: "Split focus, performative reciprocity, inability to fully receive, or pressure to make everything equal at once.",
+    lesson: "Can you truly give and receive at the same time, or does one side of the exchange still make you more comfortable?",
+    keywords: ["reciprocity", "exchange", "balance", "mutuality", "receiving"]
+  },
+
+  "Footjob": {
+    meaning: "Control, fetishized focus, indirect touch, and desire shaped through unconventional routes of stimulation.",
+    shadow: "Detachment, over-fixation, emotional distance, or narrowing desire into ritual without deeper connection.",
+    lesson: "What does the indirect path provide that direct contact does not: control, novelty, distance, or specificity?",
+    keywords: ["fetish", "control", "indirect touch", "specificity", "novelty"]
+  },
+
+  "Cowgirl": {
+    meaning: "Agency, active desire, confident embodiment, and pleasure driven by your own pace and rhythm.",
+    shadow: "Performance pressure, overcompensating through control, or feeling responsible for carrying the whole experience.",
+    lesson: "What changes when you take the lead? Does agency feel empowering, exposing, or exhausting?",
+    keywords: ["agency", "leadership", "embodiment", "confidence", "rhythm"]
+  },
+
+  "Reverse Cowgirl": {
+    meaning: "Display, control with distance, erotic confidence, and leading while withholding full emotional access.",
+    shadow: "Disconnection, avoidance of eye contact or vulnerability, performance without presence, or control used as armor.",
+    lesson: "Where are you leading while still keeping part of yourself turned away?",
+    keywords: ["display", "distance", "control", "confidence", "armor"]
+  },
+
+  "Porn": {
+    meaning: "Fantasy, projection, stimulation through image, and desire shaped by watching constructed erotic narratives.",
+    shadow: "Distortion, unrealistic expectations, detachment from embodied intimacy, or replacing lived experience with consumption.",
+    lesson: "What scripts about sex, power, beauty, or desire are you absorbing without questioning?",
+    keywords: ["fantasy", "projection", "image", "consumption", "expectation"]
+  },
+
+  "Swinging": {
+    meaning: "Openness, shared exploration, consensual expansion, and desire experienced through social or relational plurality.",
+    shadow: "Comparison, insecurity, jealousy, emotional displacement, or using openness to avoid core relational issues.",
+    lesson: "Is expansion here rooted in trust and curiosity, or is it exposing cracks that were already present?",
+    keywords: ["openness", "exploration", "plurality", "trust", "comparison"]
+  },
+
+  "Multiple Orgasms": {
+    meaning: "Abundance, layered pleasure, repeated release, and the ability to stay open to sustained enjoyment.",
+    shadow: "Chasing peak after peak, pressure to maximize pleasure, overstimulation, or measuring worth through intensity.",
+    lesson: "Can pleasure be abundant without becoming a performance goal? When is enough actually enough?",
+    keywords: ["abundance", "release", "pleasure", "sustained sensation", "intensity"]
+  },
+  "Erotic Massage": {
+    meaning: "Sensual buildup, attentive touch, relaxation, and desire awakened through patience and body awareness.",
+    shadow: "Teasing without connection, touch that stays surface-level, or using sensuality to avoid deeper intimacy.",
+    lesson: "What happens when pleasure is allowed to build slowly instead of being rushed toward climax?",
+    keywords: ["sensuality", "touch", "buildup", "patience", "body awareness"]
+  },
+
+  "Foreplay or Fingering": {
+    meaning: "Preparation, attentiveness, arousal through exploration, and intimacy that values the process as much as the peak.",
+    shadow: "Impatience, mechanical stimulation, neglecting responsiveness, or treating touch like a task instead of a conversation.",
+    lesson: "How well are you listening to what desire needs before asking it to fully open?",
+    keywords: ["preparation", "touch", "arousal", "exploration", "responsiveness"]
+  },
+
+  "Video or Pics of Sex Act": {
+    meaning: "Documentation, erotic memory, visual desire, and the wish to preserve or replay intimacy through image.",
+    shadow: "Exposure risk, performance for the camera, dissociation into image-making, or valuing proof over presence.",
+    lesson: "What does recording the moment give you: memory, validation, control, or distance from the real experience?",
+    keywords: ["image", "memory", "documentation", "visibility", "performance"]
+  },
+
+  "Prostate Massage": {
+    meaning: "Hidden pleasure, trust, vulnerability, and accessing sensation through unconventional or culturally taboo routes.",
+    shadow: "Shame, fear of surrender, discomfort with receptivity, or blocking pleasure because it threatens identity or control.",
+    lesson: "What pleasure have you been taught to fear because it opens a part of you that feels unfamiliar or exposed?",
+    keywords: ["hidden pleasure", "trust", "taboo", "vulnerability", "receptivity"]
+  },
+
+  "Golden Shower": {
+    meaning: "Taboo release, humiliation or devotion dynamics, and intimacy shaped through transgression, trust, and bodily surrender.",
+    shadow: "Disgust without consent, degradation without care, or using taboo as shock rather than meaningful erotic language.",
+    lesson: "What does crossing this boundary symbolize: surrender, worship, humiliation, cleansing, or raw trust?",
+    keywords: ["taboo", "release", "transgression", "surrender", "trust"]
+  },
+
+  "Sexcation": {
+    meaning: "Escape, pleasure pilgrimage, erotic renewal, and creating intentional space for desire away from daily routine.",
+    shadow: "Using escape to avoid real-life issues, fantasy that doesn’t translate into everyday intimacy, or chasing novelty instead of depth.",
+    lesson: "What changes when desire is given space? What are you trying to leave behind in order to feel free enough to want?",
+    keywords: ["escape", "renewal", "travel", "novelty", "space"]
+  },
+
+  "Shower Sex": {
+    meaning: "Heat, immediacy, slippery intimacy, and desire woven into vulnerability, cleansing, and spontaneity.",
+    shadow: "Awkwardness, instability, forcing spontaneity, or romanticizing intensity while ignoring what actually works.",
+    lesson: "What are you chasing here: closeness, excitement, sensuality, or the fantasy of being overtaken by the moment?",
+    keywords: ["heat", "spontaneity", "vulnerability", "sensuality", "flow"]
+  },
+
+  "Hot Tub or Bath Sex": {
+    meaning: "Immersion, luxury, softness, and pleasure amplified by warmth, atmosphere, and emotional melt.",
+    shadow: "Overindulgence, fantasy over practicality, or using atmosphere to create closeness that isn’t actually there.",
+    lesson: "How much of intimacy here is the setting, and how much is the bond itself?",
+    keywords: ["immersion", "luxury", "warmth", "atmosphere", "softness"]
+  },
+
+  "Squirting": {
+    meaning: "Release, overflow, surrender, and the body expressing abundance beyond neat control.",
+    shadow: "Performance pressure, anxiety about proving pleasure, shame around bodily response, or chasing spectacle instead of sensation.",
+    lesson: "What does full release mean to you when it cannot be completely controlled, hidden, or polished?",
+    keywords: ["release", "overflow", "surrender", "abundance", "body response"]
+  },
+
+  "Vehicle Sex": {
+    meaning: "Improvisation, urgency, thrill, and finding desire in constrained or unconventional spaces.",
+    shadow: "Discomfort, recklessness, forcing intensity, or confusing inconvenience and risk with genuine excitement.",
+    lesson: "What does making desire fit into a tight space reveal: resourcefulness, urgency, hunger, or impatience?",
+    keywords: ["improvisation", "thrill", "urgency", "risk", "constraint"]
+  },
+  "Sex Drugs": {
+    meaning: "Altered states, intensified sensation, lowered inhibition, and desire filtered through escape, expansion, or chemical surrender.",
+    shadow: "Dissociation, dependency, blurred consent, using substances to bypass fear, or confusing numbness with freedom.",
+    lesson: "What are you trying to access through altered states that feels unreachable in full presence?",
+    keywords: ["altered states", "escape", "intensity", "surrender", "disinhibition"]
+  },
+
+  "Hot Wax or Candle Wax": {
+    meaning: "Controlled pain, anticipation, sensation play, and the erotic edge between discomfort and pleasure.",
+    shadow: "Punishment without trust, crossing limits carelessly, or seeking pain as proof instead of as conscious sensation.",
+    lesson: "Where does intensity become sacred, and where does it become harm? Precision matters.",
+    keywords: ["sensation", "pain play", "anticipation", "control", "intensity"]
+  },
+
+  "Blindfold": {
+    meaning: "Trust, surrender, heightened senses, and the power of not seeing while still choosing to remain present.",
+    shadow: "Fear, loss of control, vulnerability without enough safety, or shutting down when certainty is removed.",
+    lesson: "What happens when sight is removed and trust must take over? Where do you tighten when you cannot predict?",
+    keywords: ["trust", "surrender", "heightened senses", "uncertainty", "vulnerability"]
+  },
+
+  "Whip Cream or Food": {
+    meaning: "Playfulness, indulgence, sensory pleasure, and desire expressed through sweetness, mess, and novelty.",
+    shadow: "Immaturity, distraction, overdoing theatrics, or using play to avoid emotional depth.",
+    lesson: "Pleasure can be light and still be real. Where does play enhance intimacy, and where does it distract from it?",
+    keywords: ["play", "indulgence", "sweetness", "sensory pleasure", "novelty"]
+  },
+
+  "Erotic Spanking": {
+    meaning: "Impact, discipline, arousal through rhythm and correction, and the erotic charge of power made physical.",
+    shadow: "Punishment without attunement, unresolved anger entering the dynamic, or using force to avoid emotional honesty.",
+    lesson: "Is the intensity here rooted in trust and play, or is something harsher trying to speak through the body?",
+    keywords: ["impact", "discipline", "power", "rhythm", "trust"]
+  },
+};
+
+const HH_CARDS = [
+  {angel:"Vehuiah",angelTheme:"New Beginnings",demon:"Bael",demonTheme:"Anger"},
+  {angel:"Ieliel",angelTheme:"Love & Wisdom",demon:"Agares",demonTheme:"Immorality"},
+  {angel:"Sitael",angelTheme:"Creation of all things",demon:"Vassago",demonTheme:"Ingratitude"},
+  {angel:"Elemiah",angelTheme:"Divine power",demon:"Samigina",demonTheme:"Delay"},
+  {angel:"Mahasiah",angelTheme:"Rectification",demon:"Marbas",demonTheme:"Unrestrained living"},
+  {angel:"Lelahel",angelTheme:"The light of understanding",demon:"Valefor",demonTheme:"Ambition"},
+  {angel:"Achaiah",angelTheme:"Patience",demon:"Amon",demonTheme:"Laziness"},
+  {angel:"Cahethel",angelTheme:"Divine blessings",demon:"Barbatos",demonTheme:"Blasphemy"},
+  {angel:"Haziel",angelTheme:"Divine forgiveness",demon:"Paimon",demonTheme:"Deception"},
+  {angel:"Aladiah",angelTheme:"Divine grace",demon:"Buer",demonTheme:"Laziness and Neglectfulness"},
+  {angel:"Lauviah",angelTheme:"Victory",demon:"Gusion",demonTheme:"Jealousy"},
+  {angel:"Hahaiah",angelTheme:"Refuge and finding peace",demon:"Sitri",demonTheme:"Indiscretion and lie telling"},
+  {angel:"Iezalel",angelTheme:"Loyalty",demon:"Beleth",demonTheme:"Wastrels and vagabonds"},
+  {angel:"Mebahel",angelTheme:"Truth and Justice",demon:"Leraje",demonTheme:"False Testimony"},
+  {angel:"Hariel",angelTheme:"Purification",demon:"Eligos",demonTheme:"Religious and general conflicts"},
+  {angel:"Hakamiah",angelTheme:"Loyalty",demon:"Zepar",demonTheme:"Reason and revolt"},
+  {angel:"Louviah",angelTheme:"Revelation",demon:"Botis",demonTheme:"Atheism and the rejection of spirit"},
+  {angel:"Caliel",angelTheme:"Justice",demon:"Bathin",demonTheme:"Scandal"},
+  {angel:"Leuuviah",angelTheme:"Fruition and the realization of dreams",demon:"Sallos",demonTheme:"Forgetfulness and release of unpleasant thoughts"},
+  {angel:"Pahaliah",angelTheme:"Redemption",demon:"Purson",demonTheme:"Libertines and renegades"},
+  {angel:"Nelchael",angelTheme:"Desire for knowledge",demon:"Marax",demonTheme:"Prejudice"},
+  {angel:"Ieiaiel",angelTheme:"Fame and renown",demon:"Ipos",demonTheme:"Voyages and travel by sea"},
+  {angel:"Melahel",angelTheme:"Capacity for healing",demon:"Aim",demonTheme:"Destruction of the environment"},
+  {angel:"Hahuiah",angelTheme:"Protection",demon:"Naberius",demonTheme:"Criminal enterprise"},
+  {angel:"Nith-Haiah",angelTheme:"Spiritual wisdom",demon:"Glasya-Labolas",demonTheme:"Black magic"},
+  {angel:"Haaiah",angelTheme:"Politics and Ambition",demon:"Bune",demonTheme:"Traitors and conspiracies"},
+  {angel:"Ierathel",angelTheme:"Propagation of light",demon:"Ronove",demonTheme:"Slavery and bondage"},
+  {angel:"Seehiah",angelTheme:"Longevity",demon:"Berith",demonTheme:"Catastrophe and haste"},
+  {angel:"Reiaiel",angelTheme:"Liberation",demon:"Astaroth",demonTheme:"Fanatical belief and hypocrisy"},
+  {angel:"Omael",angelTheme:"Fertility and multiplicity",demon:"Forneus",demonTheme:"Fruitless labor"},
+  {angel:"Lecabel",angelTheme:"Intellectual talent",demon:"Foras",demonTheme:"Greed"},
+  {angel:"Vasariah",angelTheme:"Clemency",demon:"Asmoday",demonTheme:"Lust and weak wills"},
+  {angel:"Iehuiah",angelTheme:"Submission to a higher power",demon:"Gaap",demonTheme:"Rebellion"},
+  {angel:"Lehahiah",angelTheme:"Obedience",demon:"Furfur",demonTheme:"War and strife"},
+  {angel:"Chavakiah",angelTheme:"Reconciliation",demon:"Marchosias",demonTheme:"Family conflicts"},
+  {angel:"Menadel",angelTheme:"Inner and Outer work",demon:"Stolas",demonTheme:"Protection of criminals"},
+  {angel:"Aniel",angelTheme:"Breaking the circle",demon:"Phenex",demonTheme:"Fraud and misrepresentation"},
+  {angel:"Haamiah",angelTheme:"Ritual and ceremony",demon:"Halphas",demonTheme:"Falsehood"},
+  {angel:"Rehael",angelTheme:"Love and Submission",demon:"Malphas",demonTheme:"Cruelty"},
+  {angel:"Ieiazel",angelTheme:"Divine comfort",demon:"Raum",demonTheme:"Solitude"},
+  {angel:"Hahahel",angelTheme:"Undertaking and completing missions",demon:"Focalor",demonTheme:"Disregarding of rules"},
+  {angel:"Mikael",angelTheme:"Political authority",demon:"Vepar",demonTheme:"Malevolent behavior"},
+  {angel:"Veualiah",angelTheme:"Prosperity",demon:"Sabnock",demonTheme:"The fall of empires"},
+  {angel:"Ielahiah",angelTheme:"Success",demon:"Shax",demonTheme:"War and violence"},
+  {angel:"Sealiah",angelTheme:"Motivation",demon:"Vine",demonTheme:"Extreme opposite or opposing factions"},
+  {angel:"Ariel",angelTheme:"Perception and revelation",demon:"Bifrons",demonTheme:"Spiritual troubles"},
+  {angel:"Asaliah",angelTheme:"Contemplation",demon:"Uvall",demonTheme:"Impossible plans"},
+  {angel:"Mihael",angelTheme:"Fertility and fruitfulness",demon:"Haagenti",demonTheme:"Luxury"},
+  {angel:"Vehuel",angelTheme:"Grandeur",demon:"Crocell",demonTheme:"Ego and hatred"},
+  {angel:"Daniel",angelTheme:"Eloquence",demon:"Furcas",demonTheme:"Living by your wits and illicit earnings"},
+  {angel:"Hahasiah",angelTheme:"Universal medicine",demon:"Balam",demonTheme:"False promises"},
+  {angel:"Imamiah",angelTheme:"Atonement of errors",demon:"Alloces",demonTheme:"Pride"},
+  {angel:"Nanael",angelTheme:"Spiritual communication",demon:"Camio",demonTheme:"Ignorance"},
+  {angel:"Nithael",angelTheme:"Rejuvenation",demon:"Murmur",demonTheme:"Overthrowing of authority"},
+  {angel:"Mebahiah",angelTheme:"Intellectual lucidity",demon:"Orobas",demonTheme:"Vice"},
+  {angel:"Poiel",angelTheme:"Fortune and fame",demon:"Gremory",demonTheme:"Self-blame individuals"},
+  {angel:"Nemamiah",angelTheme:"Discernment",demon:"Ose",demonTheme:"Cowardly actions"},
+  {angel:"Ieialel",angelTheme:"Mental force",demon:"Amy",demonTheme:"Rage"},
+  {angel:"Harahel",angelTheme:"Intellectual richness",demon:"Orias",demonTheme:"Theft and destruction"},
+  {angel:"Mizrael",angelTheme:"Self-atonement",demon:"Vapula",demonTheme:"Disability and immorality"},
+  {angel:"Umabel",angelTheme:"Affinity and Friendship",demon:"Zagan",demonTheme:"Unnatural passions"},
+  {angel:"Iahhel",angelTheme:"Desire to know",demon:"Valac",demonTheme:"Relationship Strife"},
+  {angel:"Anauel",angelTheme:"Perception of unity",demon:"Andras",demonTheme:"Folly"},
+  {angel:"Mehiel",angelTheme:"Restoration of life",demon:"Haures",demonTheme:"Criticism"},
+  {angel:"Damabiah",angelTheme:"Fountain of wisdom",demon:"Andrealphus",demonTheme:"Unhappy voyages"},
+  {angel:"Manakel",angelTheme:"Knowledge of good and evil",demon:"Cimeies",demonTheme:"Physical and moral imperfections"},
+  {angel:"Eiael",angelTheme:"Transformation",demon:"Amdusias",demonTheme:"Making mistakes"},
+  {angel:"Habuhiah",angelTheme:"Healing",demon:"Belial",demonTheme:"Famine and Sickness"},
+  {angel:"Rochel",angelTheme:"Restitution",demon:"Decarabia",demonTheme:"Fines and unfair costs"},
+  {angel:"Iabamiah",angelTheme:"Alchemy and Transformation",demon:"Seere",demonTheme:"Dangerous writings"},
+  {angel:"Haiaiel",angelTheme:"Divine warriors",demon:"Dantalion",demonTheme:"Infamy"},
+  {angel:"Mumiah",angelTheme:"Endings and rebirth",demon:"Andromalius",demonTheme:"Despair and suicide"},
+];
+
+// Build all cards master list
+const ALL_CARDS = [];
+
+// Sailor Moon Major
+MAJOR_ARCANA.forEach(c => {
+  let smName = c.name;
+  if(c.name === "Judgement") smName = "Judgement";
+  if(c.name === "The Hierophant") smName = "The Hierophant";
+  ALL_CARDS.push({ deck:'sailor', suit:'major', name: smName, altName: null, meaning: c.meaning, rx: c.rx });
+});
+// Sailor Moon Minor
+const suitMapSM = { cups:'Crescent', swords:'Talisman', wands:'Rods', pentacles:'Crystals' };
+const courtMapSM = { 'Page':'Maiden', 'Knight':'Guardian', 'Queen':'Princess', 'King':'Queen' };
+Object.entries(MINOR_ARCANA).forEach(([suit, cards]) => {
+  cards.forEach(c => {
+    let smName = c.name;
+    const parts = c.name.split(' ');
+    // Replace suit
+    smName = smName.replace('Cups', suitMapSM.cups).replace('Swords', suitMapSM.swords).replace('Wands', suitMapSM.wands).replace('Pentacles', suitMapSM.pentacles);
+    // Replace court
+    Object.entries(courtMapSM).forEach(([std, sm]) => { smName = smName.replace(std + ' of', sm + ' of'); });
+    ALL_CARDS.push({ deck:'sailor', suit, name: smName, altName: c.name, meaning: c.meaning, rx: c.rx });
+  });
+});
+
+// Erotic Tarot Major
+MAJOR_ARCANA.forEach(c => {
+  let etName = c.name;
+  if(c.name === "Judgement") etName = "The Awakening";
+  if(c.name === "The Hierophant") etName = "The High Priest";
+  ALL_CARDS.push({ deck:'erotic', suit:'major', name: etName, altName: c.name !== etName ? c.name : null, meaning: c.meaning, rx: c.rx });
+});
+// Erotic Minor
+const suitMapET = { cups:'Shells', swords:'Feathers', wands:'Candles', pentacles:'Roses' };
+Object.entries(MINOR_ARCANA).forEach(([suit, cards]) => {
+  cards.forEach(c => {
+    let etName = c.name.replace('Cups', suitMapET.cups).replace('Swords', suitMapET.swords).replace('Wands', suitMapET.wands).replace('Pentacles', suitMapET.roses || suitMapET.pentacles);
+    etName = etName.replace(/Pentacles/g, 'Roses');
+    ALL_CARDS.push({ deck:'erotic', suit, name: etName, altName: c.name, meaning: c.meaning, rx: c.rx });
+  });
+});
+
+// AGR
+Object.entries(AGR_CARDS).forEach(([temple, cards]) => {
+  cards.forEach(name => {
+    const m = AGR_MEANINGS[name] || {
+      meaning: '',
+      shadow: '',
+      embodiment: '',
+      keywords: []
+    };
+
+    ALL_CARDS.push({
+      deck: 'agr',
+      suit: temple,
+      name,
+      altName: `Temple: ${temple}`,
+      meaning: m.meaning,
+      shadow: m.shadow,
+      embodiment: m.embodiment,
+      keywords: m.keywords
+    });
+  });
+});
+
+// Kimbition
+KIMBITION_CARDS.forEach((name, i) => {
+  const m = KIMBITION_MEANINGS[name] || {
+    meaning: '',
+    shadow: '',
+    lesson: '',
+    keywords: []
+  };
+
+  ALL_CARDS.push({
+    deck: 'kimbition',
+    suit: 'oracle',
+    name,
+    altName: `Card ${i+1}`,
+    meaning: m.meaning,
+    shadow: m.shadow,
+    lesson: m.lesson,
+    keywords: m.keywords
+  });
+});
+
+// HH
+HH_CARDS.forEach((c, i) => {
+  ALL_CARDS.push({
+    deck:'hh', suit:'angel', name: c.angel,
+    altName: `Angel ${i+1} · Upright`,
+    meaning: c.angelTheme, rx: `${c.demon} — ${c.demonTheme}`,
+    demon: c.demon, demonTheme: c.demonTheme, angelTheme: c.angelTheme, num: i+1
+  });
+});
+
+// ============================================================
+// SPREAD TEMPLATES
+// ============================================================
+const SPREAD_TEMPLATES = [
+  { name: "Single Card", positions: ["Card 1"] },
+  { name: "Past · Present · Future", positions: ["Past","Present","Future"] },
+  { name: "Mind · Body · Spirit", positions: ["Mind","Body","Spirit"] },
+  { name: "Situation · Action · Outcome", positions: ["Situation","Action","Outcome"] },
+  { name: "What I Know · What I Don't · What I Need", positions: ["What I Know","What I Don't See","What I Need"] },
+  { name: "Celtic Cross", positions: ["Present","Challenge","Past","Future","Above","Below","Advice","External","Hopes/Fears","Outcome"] },
+  { name: "Why They Chose Me · Their Role · What They Want", positions: ["Why They Chose Me","Their Role in My Life","What They Want From Me"] },
+  { name: "Doorway · Old One · Young One · Bloodline · Chosen · Why Now · Lesson · How to Reach · Help · Opening", positions: ["The Doorway","The Old One","The Young One","Bloodline Connection","The Chosen","Why Gathering Now","Lesson Not Heard","How to Reach Out","Immediate Help","Opening the Door"] },
+  { name: "Root · Desire · Power · Heart · Mind · Destiny · Integration", positions: ["Root","Desire","Power","Heart","Mind","Destiny","Integration"] },
+  { name: "Shadow · Intuition · Wake-Up Message", positions: ["Subconscious Pain","Spiritual Intuition","Wake-Up Message"] },
+  {
+    name: "FS Spread",
+    sections: [
+      { name: "Personality", positions: ["Card 1","Card 2","Card 3"] },
+      { name: "Appearance", positions: ["Card 1","Card 2"] },
+      { name: "Timing", positions: ["Card 1","Card 2"] },
+      { name: "Feelings", positions: ["Card 1","Card 2","Card 3"] },
+      { name: "Connection", positions: ["Card 1","Card 2"] },
+      { name: "Outcome", positions: ["Card 1","Card 2","Card 3"] },
+    ]
+  },
+];
+
+function renderTemplates() {
+  const grid = document.getElementById('templateGrid');
+  if(!grid) return;
+  grid.innerHTML = SPREAD_TEMPLATES.map((t,i) => {
+    const count = t.sections
+      ? t.sections.reduce((sum, s) => sum + s.positions.length, 0)
+      : t.positions.length;
+    const sectionLabel = t.sections ? ` · ${t.sections.length} sections` : '';
+    return `
+    <div class="template-card" onclick="applyTemplate(${i})">
+      <div class="template-card-name">${t.name}</div>
+      <div class="template-card-count">${count} cards${sectionLabel}</div>
+    </div>`;
+  }).join('');
+}
+
+function applyTemplate(idx) {
+  const t = SPREAD_TEMPLATES[idx];
+  document.getElementById('spreadName').value = t.name;
+  document.getElementById('spreadCards').innerHTML = '';
+  if(t.sections) {
+    t.sections.forEach(sec => {
+      addSpreadSection(sec.name);
+      sec.positions.forEach(pos => addSpreadCard('', pos, '', 'upright', ''));
+    });
+  } else {
+    t.positions.forEach(pos => addSpreadCard('', pos, '', 'upright', ''));
+  }
+}
+
+// ============================================================
+// PULL LOG (mixed-deck spreads + localStorage)
+// ============================================================
+let pulls = JSON.parse(localStorage.getItem('marcyDeckPulls') || '[]');
+let logFilter = 'all';
+let lookupFilter = 'all';
+let activeTags = [];
+let tagLogFilter = '';
+let pullSort = 'newest';
+let currentPage = 1;
+const ITEMS_PER_PAGE = 8;
+let editingPullId = null;
+let openPulls = JSON.parse(localStorage.getItem('marcyOpenPulls') || '[]');
+
+// Register real implementations for stub functions
+window._toggleTag = function(el, tag) {
+  el.classList.toggle('selected');
+  if(activeTags.includes(tag)) {
+    activeTags = activeTags.filter(t => t !== tag);
+  } else {
+    activeTags.push(tag);
+  }
+};
+window._filterTag = function(el, tag) {
+  tagLogFilter = tag;
+  currentPage = 1;
+  document.querySelectorAll('#tracker .filter-wrap').forEach(fw => {
+    if(fw.querySelector('[onclick*="filterTag"]'))
+      fw.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  });
+  el.classList.add('active');
+  renderPullLog();
+};
+window._filterLog = function(el, filter) {
+  logFilter = filter;
+  currentPage = 1;
+  document.querySelectorAll('#tracker .filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderPullLog();
+};
+window._toggleFilter = function(el, filter) {
+  lookupFilter = filter;
+  document.querySelectorAll('#lookup .filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  filterLookup();
+};
+
+function savePulls() {
+  localStorage.setItem('marcyDeckPulls', JSON.stringify(pulls));
+}
+
+function addSpreadSection(nameValue = '') {
+  const container = document.getElementById('spreadCards');
+  const row = document.createElement('div');
+  row.className = 'spread-section-header';
+  row.dataset.type = 'section';
+  row.innerHTML = `
+    <div class="spread-move-btns">
+      <button type="button" class="btn-move" onclick="moveRow(this, -1)" title="Move up">▲</button>
+      <button type="button" class="btn-move" onclick="moveRow(this, 1)" title="Move down">▼</button>
+    </div>
+    <span class="spread-section-label-icon">§</span>
+    <input class="spread-section-name" placeholder="Section name (e.g. Personality, Timing, Appearance...)" value="${nameValue}" />
+    <button type="button" class="btn-remove" style="margin-top:0;" onclick="this.closest('.spread-section-header').remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+function addSpreadCard(
+  deckValue = '',
+  positionValue = '',
+  cardValue = '',
+  orientationValue = 'upright',
+  notesValue = ''
+) {
+  const container = document.getElementById('spreadCards');
+  const row = document.createElement('div');
+  row.className = 'spread-card-row';
+
+  row.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:8px;">
+      <div class="spread-move-btns" style="margin-top:4px;">
+        <button type="button" class="btn-move" onclick="moveRow(this, -1)" title="Move up">▲</button>
+        <button type="button" class="btn-move" onclick="moveRow(this, 1)" title="Move down">▼</button>
+      </div>
+      <div style="flex:1;">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Deck</label>
+        <select class="form-select spread-deck" onchange="updateSpreadRowCards(this)">
+          <option value="">Select deck...</option>
+          <option value="sailor" ${deckValue === 'sailor' ? 'selected' : ''}>Sailor Moon Tarot</option>
+          <option value="erotic" ${deckValue === 'erotic' ? 'selected' : ''}>Erotic Tarot</option>
+          <option value="agr" ${deckValue === 'agr' ? 'selected' : ''}>African Goddess Rising</option>
+          <option value="kimbition" ${deckValue === 'kimbition' ? 'selected' : ''}>Kimbition Oracle</option>
+          <option value="hh" ${deckValue === 'hh' ? 'selected' : ''}>Heaven & Hell Oracle</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Position</label>
+        <input class="form-input spread-position" placeholder="e.g. Past, Present, Advice, Card 1" value="${positionValue}">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Card</label>
+        <select class="form-select spread-card">
+          <option value="">Select deck first...</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Orientation</label>
+        <select class="form-select spread-orientation">
+          <option value="upright" ${orientationValue === 'upright' ? 'selected' : ''}>Upright / Angel</option>
+          <option value="reversed" ${orientationValue === 'reversed' ? 'selected' : ''}>Reversed / Demon</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Card Notes</label>
+        <textarea class="form-textarea spread-notes" placeholder="Message or interpretation for this card...">${notesValue}</textarea>
+      </div>
+    </div>
+
+    <div class="spread-card-actions">
+      <button type="button" class="btn-remove" onclick="this.closest('.spread-card-row').remove()">Remove</button>
+    </div>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(row);
+
+  const cardSelect = row.querySelector('.spread-card');
+  if (deckValue) {
+    populateCardOptions(cardSelect, deckValue, cardValue);
+  }
+}
+
+function populateCardOptions(cardSelect, deck, selectedCard = '') {
+  cardSelect.innerHTML = '<option value="">Select card...</option>';
+
+  if (!deck) {
+    cardSelect.innerHTML = '<option value="">Select deck first...</option>';
+    return;
+  }
+
+  const deckCards = ALL_CARDS.filter(c => c.deck === deck);
+
+  deckCards.forEach(card => {
+    const option = document.createElement('option');
+    option.value = card.name;
+
+    if (deck === 'hh' && card.demon) {
+      option.textContent = `${card.name} ⇄ ${card.demon}`;
+    } else {
+      option.textContent = card.name;
+    }
+
+    if (card.name === selectedCard) option.selected = true;
+    cardSelect.appendChild(option);
+  });
+}
+
+function updateSpreadRowCards(deckSelectEl) {
+  const row = deckSelectEl.closest('.spread-card-row');
+  const cardSelect = row.querySelector('.spread-card');
+  populateCardOptions(cardSelect, deckSelectEl.value);
+}
+
+function logPull() {
+  const spreadName = document.getElementById('spreadName').value.trim();
+  const date = document.getElementById('pullDate').value || new Date().toISOString().split('T')[0];
+  const question = document.getElementById('pullQuestion').value.trim();
+
+  const rows = document.querySelectorAll('#spreadCards > *');
+  const cards = [];
+  let currentSection = '';
+
+  rows.forEach((row, index) => {
+    if(row.classList.contains('spread-section-header')) {
+      currentSection = row.querySelector('.spread-section-name')?.value.trim() || '';
+      return;
+    }
+    if(!row.classList.contains('spread-card-row')) return;
+    const deck = row.querySelector('.spread-deck').value;
+    const position = row.querySelector('.spread-position').value.trim();
+    const card = row.querySelector('.spread-card').value;
+    const orientation = row.querySelector('.spread-orientation').value;
+    const notes = row.querySelector('.spread-notes').value.trim();
+
+    if (deck && card) {
+      cards.push({
+        deck,
+        section: currentSection,
+        position: position || `Card ${cards.length + 1}`,
+        card,
+        orientation,
+        notes
+      });
+    }
+  });
+
+  const synthesis = document.getElementById('spreadSynthesis').value.trim();
+
+  if (cards.length === 0) {
+    alert('Please add at least one card.');
+    return;
+  }
+
+  const payload = {
+    id: editingPullId || Date.now(),
+    spreadName,
+    date,
+    question,
+    synthesis,
+    tags: [...activeTags],
+    cards
+  };
+
+  if (editingPullId) {
+    pulls = pulls.map(p => p.id === editingPullId ? payload : p);
+  } else {
+    pulls.unshift(payload);
+  }
+
+    savePulls();
+  renderPullLog();
+  renderStats();
+  renderMostPulled();
+  renderHomeRecent();
+
+  // reset tags
+  activeTags = [];
+  document.querySelectorAll('#spreadTagWrap .tag-chip').forEach(t => t.classList.remove('selected'));
+
+  document.getElementById('spreadName').value = '';
+  document.getElementById('pullDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('pullQuestion').value = '';
+  document.getElementById('spreadSynthesis').value = '';
+  document.getElementById('spreadCards').innerHTML = '';
+
+  editingPullId = null;
+
+  const btn = document.getElementById('saveSpreadBtn');
+  if (btn) btn.textContent = '✦ Log This Spread';
+}
+
+function deletePull(id) {
+  pulls = pulls.filter(p => p.id !== id);
+  savePulls();
+  renderPullLog();
+  renderStats();
+  renderMostPulled();
+  renderHomeRecent();
+}
+
+function cloneSpread(id) {
+  const spread = pulls.find(p => p.id === id);
+  if (!spread) return;
+
+  showSection('tracker');
+
+  document.getElementById('spreadName').value = spread.spreadName || '';
+  document.getElementById('pullQuestion').value = spread.question || '';
+  document.getElementById('pullDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('spreadSynthesis').value = '';
+  document.getElementById('spreadCards').innerHTML = '';
+
+  activeTags = [...(spread.tags || [])];
+  document.querySelectorAll('#spreadTagWrap .tag-chip').forEach(t => t.classList.remove('selected'));
+  activeTags.forEach(tag => {
+    const chip = [...document.querySelectorAll('#spreadTagWrap .tag-chip')].find(el =>
+      el.getAttribute('onclick') && el.getAttribute('onclick').includes(`'${tag}'`)
+    );
+    if (chip) chip.classList.add('selected');
+  });
+
+  (spread.cards || []).forEach((c, i) => {
+    // Insert section header when section changes
+    if(c.section !== undefined) {
+      const prev = spread.cards[i - 1];
+      if(i === 0 && c.section) {
+        addSpreadSection(c.section);
+      } else if(i > 0 && c.section !== prev.section) {
+        addSpreadSection(c.section);
+      }
+    }
+    addSpreadCard(c.deck, c.position, c.card, c.orientation, c.notes || '');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function editSpread(id) {
+  const spread = pulls.find(p => p.id === id);
+  if (!spread) return;
+
+  editingPullId = id;
+  showSection('tracker');
+
+  document.getElementById('spreadName').value = spread.spreadName || '';
+  document.getElementById('pullQuestion').value = spread.question || '';
+  document.getElementById('pullDate').value = spread.date || new Date().toISOString().split('T')[0];
+  document.getElementById('spreadSynthesis').value = spread.synthesis || '';
+  document.getElementById('spreadCards').innerHTML = '';
+
+  activeTags = [...(spread.tags || [])];
+  document.querySelectorAll('#spreadTagWrap .tag-chip').forEach(t => t.classList.remove('selected'));
+  activeTags.forEach(tag => {
+    const chip = [...document.querySelectorAll('#spreadTagWrap .tag-chip')].find(el =>
+      el.getAttribute('onclick') && el.getAttribute('onclick').includes(`'${tag}'`)
+    );
+    if (chip) chip.classList.add('selected');
+  });
+
+  (spread.cards || []).forEach((c, i) => {
+    if(c.section !== undefined) {
+      const prev = spread.cards[i - 1];
+      if(i === 0 && c.section) {
+        addSpreadSection(c.section);
+      } else if(i > 0 && c.section !== prev.section) {
+        addSpreadSection(c.section);
+      }
+    }
+    addSpreadCard(c.deck, c.position, c.card, c.orientation, c.notes || '');
+  });
+
+  const btn = document.getElementById('saveSpreadBtn');
+  if (btn) btn.textContent = '✦ Save Changes';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function togglePullOpen(id) {
+  if (openPulls.includes(id)) {
+    openPulls = openPulls.filter(x => x !== id);
+  } else {
+    openPulls.push(id);
+  }
+
+  localStorage.setItem('marcyOpenPulls', JSON.stringify(openPulls));
+  renderPullLog();
+}
+
+function renderPullLog() {
+  const container = document.getElementById('pullLog');
+  const search = (document.getElementById('pullHistorySearch')?.value || '').toLowerCase().trim();
+
+  const deckNames = {
+    sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
+    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell'
+  };
+
+  const tagLabels = {
+    love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career',
+    spirit:'🌸 Spirit', body:'🌿 Body', ancestors:'🌊 Ancestors',
+    timing:'⏳ Timing', general:'🔮 General', fun:'🎉 Fun',
+    social:'🤝 Social', travel:'✈ Travel', fantasy:'🌙 Fantasy',
+    erotic:'🌹 Erotic', grief:'🤍 Grief', money:'💰 Money',
+    health:'🌱 Health', past:'📋 Past', future:'🌠 Future', dream:'💜 Dream'
+  };
+
+  let filtered = logFilter === 'all'
+    ? pulls
+    : pulls.filter(p => p.cards && p.cards.some(card => card.deck === logFilter));
+
+  if(tagLogFilter) {
+    filtered = filtered.filter(p => p.tags && p.tags.includes(tagLogFilter));
+  }
+
+  if(search) {
+    filtered = filtered.filter(p => {
+      const spreadText = [
+        p.spreadName || '', p.question || '', p.date || '',
+        ...(p.tags || []),
+        ...(p.cards || []).flatMap(c => [
+          c.position || '', c.card || '', c.orientation || '',
+          c.notes || '', deckNames[c.deck] || c.deck || ''
+        ])
+      ].join(' ').toLowerCase();
+      return spreadText.includes(search);
+    });
+  }
+filtered = [...filtered];
+
+if (pullSort === 'newest') {
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+} else if (pullSort === 'oldest') {
+  filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+} else if (pullSort === 'mostCards') {
+  filtered.sort((a, b) => (b.cards?.length || 0) - (a.cards?.length || 0));
+} else if (pullSort === 'leastCards') {
+  filtered.sort((a, b) => (a.cards?.length || 0) - (b.cards?.length || 0));
+}
+
+  if(filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="es-icon">✿</div><p>No matching pulls found</p></div>`;
+    document.getElementById('pullPagination').innerHTML = '';
+    return;
+  }
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  if(currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginated = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  container.innerHTML = paginated.map(p => `
+  <div class="pull-entry ${openPulls.includes(p.id) ? 'open' : ''}">
+    <div class="pull-entry-top">
+      <div class="pull-entry-summary" onclick="togglePullOpen(${p.id})" style="flex:1;">
+        ${p.spreadName ? `<div class="pull-question">✦ ${p.spreadName}</div>` : ''}
+        ${p.question ? `<div class="pull-question">${p.question}</div>` : ''}
+        <div class="pull-entry-card" style="display:flex;align-items:center;gap:8px;">
+          <span class="pull-entry-chevron">›</span>
+          <span>${p.cards.length} card spread</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button class="pull-entry-delete" onclick="editSpread(${p.id})" title="Edit spread">✎</button>
+        <button class="pull-entry-delete" onclick="cloneSpread(${p.id})" title="Clone spread">⧉</button>
+        <button class="pull-entry-delete" onclick="deletePull(${p.id})" title="Delete spread">✕</button>
+      </div>
+    </div>
+
+    <div class="pull-entry-meta">
+      <span class="meta-pill pill-date">${p.date}</span>
+      ${(p.tags || []).map(t => `<span class="meta-pill pill-tag">${tagLabels[t] || t}</span>`).join('')}
+    </div>
+
+    <div class="pull-entry-details">
+      <div class="pull-entry-notes" style="font-style:normal;">
+        ${renderSpreadCards(p.cards, deckNames, p.id)}
+      </div>
+      ${p.synthesis ? `
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">✦ Overall Synthesis</div>
+          <div style="font-family:var(--font-elegant);font-size:15px;line-height:1.8;color:var(--text);white-space:pre-wrap;">${p.synthesis}</div>
+        </div>
+      ` : ''}
+    </div>
+  </div>
+`).join('');
+
+  // Pagination controls
+  const pagination = document.getElementById('pullPagination');
+  if(totalPages <= 1) { pagination.innerHTML = ''; return; }
+
+  let pagerHtml = `<div class="pagination">`;
+  pagerHtml += `<button class="page-btn" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+
+  // Show smart page range
+  const range = [];
+  for(let i = 1; i <= totalPages; i++) {
+    if(i === 1 || i === totalPages || (i >= currentPage-1 && i <= currentPage+1)) range.push(i);
+    else if(range[range.length-1] !== '…') range.push('…');
+  }
+  range.forEach(r => {
+    if(r === '…') {
+      pagerHtml += `<span class="page-info">…</span>`;
+    } else {
+      pagerHtml += `<button class="page-btn ${r===currentPage?'active':''}" onclick="goToPage(${r})">${r}</button>`;
+    }
+  });
+
+  pagerHtml += `<button class="page-btn" onclick="goToPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  pagerHtml += `<span class="page-info">${start+1}–${Math.min(start+ITEMS_PER_PAGE, filtered.length)} of ${filtered.length}</span>`;
+  pagerHtml += `</div>`;
+  pagination.innerHTML = pagerHtml;
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderPullLog();
+  document.getElementById('pullLog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderSpreadCards(cards, deckNames, spreadId) {
+  if(!cards || cards.length === 0) return '';
+
+  // Check if any cards have sections
+  const hasSections = cards.some(c => c.section);
+
+  if(!hasSections) {
+    // Flat render — no sections
+    return cards.map(c => `
+      <div style="margin-bottom:10px;">
+        <strong>${c.position}</strong>: ${c.card}
+        <em>(${c.orientation})</em>
+        <span style="display:inline-block;margin-left:6px;font-size:11px;color:var(--lavender-dark);">[${deckNames[c.deck]||c.deck}]</span>
+        ${c.notes ? `<div style="margin-top:4px;font-style:italic;">${c.notes}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  // Group cards into sections
+  const groups = [];
+  let currentGroup = null;
+
+  cards.forEach(c => {
+    if(currentGroup === null || (c.section !== undefined && c.section !== currentGroup.name)) {
+      currentGroup = { name: c.section || '', cards: [] };
+      groups.push(currentGroup);
+    }
+    currentGroup.cards.push(c);
+  });
+
+  return groups.map((group, gi) => {
+    const groupId = `section-${spreadId}-${gi}`;
+    const cardHtml = group.cards.map(c => `
+      <div style="margin-bottom:10px;">
+        <strong>${c.position}</strong>: ${c.card}
+        <em>(${c.orientation})</em>
+        <span style="display:inline-block;margin-left:6px;font-size:11px;color:var(--lavender-dark);">[${deckNames[c.deck]||c.deck}]</span>
+        ${c.notes ? `<div style="margin-top:4px;font-style:italic;">${c.notes}</div>` : ''}
+      </div>
+    `).join('');
+
+    if(!group.name) return cardHtml;
+
+    return `
+      <div class="pull-section-group open" id="${groupId}">
+        <div class="pull-section-title" onclick="toggleSection('${groupId}')">
+          <span class="pull-section-chevron">›</span>
+          <span class="pull-section-title-text">${group.name}</span>
+          <span style="font-size:10px;color:var(--text-muted);">${group.cards.length} card${group.cards.length!==1?'s':''}</span>
+        </div>
+        <div class="pull-section-cards">${cardHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleSection(groupId) {
+  const el = document.getElementById(groupId);
+  if(el) el.classList.toggle('open');
+}
+
+function renderStats() {
+  const row = document.getElementById('statsRow');
+  const deckNames = {
+    sailor: 'Sailor Moon',
+    erotic: 'Erotic',
+    agr: 'AGR',
+    kimbition: 'Kimbition',
+    hh: 'H&H'
+  };
+
+  const counts = {};
+  pulls.forEach(p => {
+    const uniqueDecksInSpread = [...new Set((p.cards || []).map(card => card.deck))];
+    uniqueDecksInSpread.forEach(deck => {
+      counts[deck] = (counts[deck] || 0) + 1;
+    });
+  });
+
+  let html = `<div class="stat-card"><div class="stat-number">${pulls.length}</div><div class="stat-label">Total Spreads</div></div>`;
+
+  Object.entries(counts).forEach(([deck, count]) => {
+    html += `<div class="stat-card"><div class="stat-number">${count}</div><div class="stat-label">${deckNames[deck] || deck}</div></div>`;
+  });
+
+  row.innerHTML = html;
+}
+
+function renderMostPulled() {
+  const container = document.getElementById('mostPulledList');
+  if(!container) return;
+
+  const cardCounts = {};
+  const cardDecks = {};
+  const cardUpright = {};
+  const cardReversed = {};
+
+  pulls.forEach(p => {
+    (p.cards || []).forEach(c => {
+      if(!c.card) return;
+      const key = c.card;
+      cardCounts[key] = (cardCounts[key] || 0) + 1;
+      cardDecks[key] = c.deck;
+      if(c.orientation === 'reversed') {
+        cardReversed[key] = (cardReversed[key] || 0) + 1;
+      } else {
+        cardUpright[key] = (cardUpright[key] || 0) + 1;
+      }
+    });
+  });
+
+  const sorted = Object.entries(cardCounts)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 8);
+
+  if(sorted.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-family:var(--font-elegant);font-style:italic;font-size:16px;">Cards you pull most will appear here ✿</div>`;
+    return;
+  }
+
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', hh:'Heaven & Hell' };
+  const max = sorted[0][1];
+
+  container.innerHTML = sorted.map(([name, count], i) => {
+    const up = cardUpright[name] || 0;
+    const rx = cardReversed[name] || 0;
+    const upPct = Math.round((up / count) * 100);
+    const rxPct = 100 - upPct;
+    return `
+    <div class="mp-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="mp-rank">${i+1}</div>
+        <div style="flex:1">
+          <div class="mp-name">${name}</div>
+          <div class="mp-deck">${deckNames[cardDecks[name]]||cardDecks[name]}</div>
+        </div>
+        <div class="mp-count">${count}×</div>
+      </div>
+      <div style="padding-left:36px;">
+        <div class="mp-bar-wrap" style="height:6px;border-radius:4px;overflow:hidden;display:flex;gap:2px;">
+          <div style="width:${upPct}%;background:linear-gradient(90deg,var(--lavender-dark),var(--lavender-deep));border-radius:4px 0 0 4px;transition:width 0.4s;"></div>
+          <div style="width:${rxPct}%;background:linear-gradient(90deg,var(--blush-deep),var(--rose));border-radius:0 4px 4px 0;transition:width 0.4s;"></div>
+        </div>
+        <div style="display:flex;gap:14px;margin-top:4px;">
+          <span style="font-size:10px;color:var(--lavender-dark);">↑ ${up} upright (${upPct}%)</span>
+          <span style="font-size:10px;color:var(--rose);">↓ ${rx} reversed (${rxPct}%)</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCardHistory() {
+  const container = document.getElementById('cardHistoryResults');
+  if(!container) return;
+
+  const q = (document.getElementById('cardHistorySearch')?.value || '').toLowerCase().trim();
+
+  if(!q) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', hh:'Heaven & Hell' };
+  const tagLabels = {
+    love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career', spirit:'🌸 Spirit',
+    body:'🌿 Body', ancestors:'🌊 Ancestors', timing:'⏳ Timing', general:'🔮 General',
+    fun:'🎉 Fun', social:'🤝 Social', travel:'✈ Travel', fantasy:'🌙 Fantasy',
+    erotic:'🌹 Erotic', grief:'🤍 Grief', money:'💰 Money', health:'🌱 Health',
+    past:'📋 Past', future:'🌠 Future', dream:'💜 Dream'
+  };
+
+  // Find all spreads containing a matching card
+  const matches = [];
+  pulls.forEach(p => {
+    const matchingCards = (p.cards || []).filter(c =>
+      c.card && c.card.toLowerCase().includes(q)
+    );
+    if(matchingCards.length > 0) {
+      matches.push({ spread: p, cards: matchingCards });
+    }
+  });
+
+  if(matches.length === 0) {
+    container.innerHTML = `<div style="padding:20px 0;text-align:center;color:var(--text-muted);font-style:italic;font-family:var(--font-elegant);">No spreads found containing "${q}"</div>`;
+    return;
+  }
+
+  // Summary line
+  const totalAppearances = matches.reduce((sum, m) => sum + m.cards.length, 0);
+  const upCount = matches.reduce((sum, m) => sum + m.cards.filter(c => c.orientation !== 'reversed').length, 0);
+  const rxCount = totalAppearances - upCount;
+
+  container.innerHTML = `
+    <div style="margin-bottom:16px;padding:12px 16px;background:var(--surface2);border-radius:12px;border:1px solid var(--border);">
+      <div style="font-size:13px;color:var(--text);">
+        Found in <strong>${matches.length}</strong> spread${matches.length !== 1 ? 's' : ''} · 
+        <strong>${totalAppearances}</strong> total appearance${totalAppearances !== 1 ? 's' : ''}
+      </div>
+      <div style="display:flex;gap:14px;margin-top:6px;">
+        <span style="font-size:11px;color:var(--lavender-dark);">↑ ${upCount} upright</span>
+        <span style="font-size:11px;color:var(--rose);">↓ ${rxCount} reversed</span>
+      </div>
+    </div>
+    ${matches.map(({ spread: p, cards: matchCards }) => `
+      <div class="pull-entry" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div>
+            ${p.spreadName ? `<div class="pull-question">✦ ${p.spreadName}</div>` : ''}
+            ${p.question ? `<div class="pull-question">${p.question}</div>` : ''}
+          </div>
+          <span class="meta-pill pill-date" style="flex-shrink:0;">${p.date}</span>
+        </div>
+        <div style="margin-top:10px;display:grid;gap:6px;">
+          ${matchCards.map(c => `
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+              <span style="font-size:12px;font-weight:500;color:var(--text);">${c.card}</span>
+              <span class="meta-pill ${c.orientation === 'reversed' ? 'pill-rx' : 'pill-upright'}">${c.orientation}</span>
+              <span style="font-size:10px;color:var(--text-muted);">${c.position}</span>
+              <span style="font-size:10px;color:var(--lavender-dark);margin-left:auto;">[${deckNames[c.deck]||c.deck}]</span>
+            </div>
+            ${c.notes ? `<div style="font-size:12px;color:var(--text-muted);font-style:italic;padding:0 12px;">${c.notes}</div>` : ''}
+          `).join('')}
+        </div>
+        ${(p.tags||[]).length ? `
+          <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
+            ${p.tags.map(t => `<span class="meta-pill pill-tag">${tagLabels[t]||t}</span>`).join('')}
+          </div>` : ''}
+      </div>
+    `).join('')}
+  `;
+}
+
+function renderHomeRecent() {
+  const container = document.getElementById('home-recent-log');
+
+  if (pulls.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:30px 0"><div class="es-icon">✿</div><p>Your pull history will appear here</p></div>`;
+    return;
+  }
+
+  const deckNames = {
+    sailor: 'Sailor Moon',
+    erotic: 'Erotic Tarot',
+    agr: 'AGR Oracle',
+    kimbition: 'Kimbition',
+    hh: 'Heaven & Hell'
+  };
+
+  container.innerHTML = pulls.slice(0, 5).map(p => `
+    <div class="pull-entry">
+      <div class="pull-entry-top">
+        <div>
+          ${p.spreadName ? `<div class="pull-question">✦ ${p.spreadName}</div>` : ''}
+          <div class="pull-entry-card">${p.cards.length} card spread</div>
+        </div>
+      </div>
+
+      <div class="pull-entry-meta">
+        <span class="meta-pill pill-date">${p.date}</span>
+      </div>
+
+      <div class="pull-entry-notes" style="font-style:normal;">
+        ${p.cards.slice(0, 3).map(c => `
+          <div>
+            <strong>${c.position}</strong>: ${c.card} <em>(${c.orientation})</em>
+            <span style="margin-left:6px;font-size:11px;color:var(--lavender-dark);">
+              [${deckNames[c.deck] || c.deck}]
+            </span>
+          </div>
+        `).join('')}
+        ${p.cards.length > 3 ? `<div style="margin-top:6px;font-style:italic;">+ ${p.cards.length - 3} more</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// CARD LOOKUP
+// ============================================================
+function filterLookup() {
+  const q = document.getElementById('lookupSearch').value.toLowerCase();
+  let cards = lookupFilter === 'all' ? ALL_CARDS : ALL_CARDS.filter(c => c.deck === lookupFilter);
+  if (q) {
+  cards = cards.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.altName && c.altName.toLowerCase().includes(q)) ||
+    (c.demonTheme && c.demonTheme.toLowerCase().includes(q)) ||
+    (c.demon && c.demon.toLowerCase().includes(q)) ||
+    (c.meaning && c.meaning.toLowerCase().includes(q)) ||
+    (c.shadow && c.shadow.toLowerCase().includes(q)) ||
+    (c.embodiment && c.embodiment.toLowerCase().includes(q)) ||
+    (c.lesson && c.lesson.toLowerCase().includes(q)) ||
+    (c.keywords && c.keywords.some(k => k.toLowerCase().includes(q)))
+  );
+}
+const container = document.getElementById('lookupResults');
+  if(cards.length === 0) { container.innerHTML = `<div class="empty-state" style="padding:30px 0"><div class="es-icon">✿</div><p>No cards found</p></div>`; return; }
+  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition Oracle', hh:'Heaven & Hell' };
+  container.innerHTML = cards.slice(0,60).map(c => `
+    <div class="card-item" onclick='openModal(${JSON.stringify(c).replace(/'/g,"&apos;")})'>
+      <div class="card-item-badge badge-${c.deck}">${deckIcons[c.deck]}</div>
+      <div>
+  <div class="card-item-name">
+  ${isFavorite(c) ? '★ ' : ''}${c.deck === 'hh' ? `${c.name} ⇄ ${c.demon}` : c.name}
+</div>
+  ${
+    c.deck === 'hh'
+      ? `<div class="card-item-sub">${c.angelTheme} / ${c.demonTheme}</div>`
+      : (c.altName ? `<div class="card-item-sub">${c.altName}</div>` : '')
+  }
+  <div class="card-item-deck">${deckNames[c.deck]}</div>
+</div>
+      <span class="card-item-arrow">›</span>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModalByIndex(idx) {
+  const card = ALL_CARDS[idx];
+  if(card) openModal(card);
+}
+
+function openModal(card) {
+  const deckNames = {
+    sailor:'Sailor Moon Tarot',
+    erotic:'Erotic Tarot',
+    agr:'AGR Oracle',
+    kimbition:'Kimbition Oracle',
+    hh:'Heaven & Hell Oracle'
+  };
+
+  const deckColors = {
+    sailor:'background:#fce8ec;color:#c97b84',
+    erotic:'background:#fde8e0;color:#a85a64',
+    agr:'background:#eae8f5;color:#8a7fad',
+    kimbition:'background:#fce8ec;color:#a85a64',
+    hh:'background:#e8ecf5;color:#5a6a8a'
+  };
+
+  let content = `
+  <span class="modal-deck-badge" style="${deckColors[card.deck] || ''};padding:4px 14px;border-radius:20px;font-size:10px;letter-spacing:2px;text-transform:uppercase;">
+    ${deckNames[card.deck] || card.deck}
+  </span>
+
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+    <div class="modal-card-name" style="margin-bottom:0;">${card.name}</div>
+    <button
+      onclick='event.stopPropagation(); toggleFavorite(${JSON.stringify(card).replace(/'/g,"&apos;")})'
+      style="border:none;background:transparent;font-size:24px;cursor:pointer;color:${isFavorite(card) ? 'var(--gold)' : 'var(--text-light)'};line-height:1;"
+      title="Toggle favorite"
+    >
+      ${isFavorite(card) ? '★' : '☆'}
+    </button>
+  </div>
+
+  ${card.altName ? `<div class="modal-card-alt">${card.altName}</div>` : ''}
+  <div class="modal-divider"></div>
+`;
+
+  if (card.deck === 'hh') {
+  content += `
+    <div class="two-col" style="margin-top:8px;">
+      <div style="background:var(--surface2);padding:16px;border:1px solid var(--border);border-radius:14px;">
+        <div class="modal-section-label">✦ Angel</div>
+        <div class="modal-card-alt" style="margin-bottom:10px;color:var(--lavender-dark);font-style:normal;">${card.name}</div>
+        <div class="modal-meaning">${card.angelTheme}</div>
+      </div>
+
+      <div style="background:rgba(201,123,132,0.08);padding:16px;border:1px solid var(--border);border-radius:14px;">
+        <div class="modal-section-label" style="color:var(--rose)">✦ Demon</div>
+        <div class="modal-card-alt" style="margin-bottom:10px;color:var(--rose);font-style:normal;">${card.demon}</div>
+        <div class="modal-rx" style="margin-bottom:0;">${card.demonTheme}</div>
+      </div>
+    </div>
+  `;
+} else if (card.deck === 'kimbition') {
+  content += `
+    <div class="modal-section-label">✦ Meaning</div>
+    <div class="modal-meaning">${card.meaning || 'No meaning added yet.'}</div>
+
+    <div class="modal-section-label" style="color:var(--rose)">✦ Shadow</div>
+    <div class="modal-rx">${card.shadow || 'No shadow added yet.'}</div>
+
+    <div class="modal-section-label">✦ Lesson</div>
+    <div class="modal-meaning">${card.lesson || 'No lesson added yet.'}</div>
+
+    ${card.keywords && card.keywords.length ? `
+      <div class="modal-section-label">✦ Keywords</div>
+      <div class="keyword-wrap">
+        ${card.keywords.map(k => `<span class="keyword-chip">${k}</span>`).join('')}
+      </div>
+    ` : ''}
+  `;
+} else if (card.deck === 'agr') {
+  content += `
+    <div class="modal-section-label">✦ Temple</div>
+    <div class="modal-meaning">${card.suit}</div>
+
+    <div class="modal-section-label">✦ Meaning</div>
+    <div class="modal-meaning">${card.meaning || 'No meaning added yet.'}</div>
+
+    <div class="modal-section-label" style="color:var(--rose)">✦ Shadow</div>
+    <div class="modal-rx">${card.shadow || 'No shadow added yet.'}</div>
+
+    <div class="modal-section-label">✦ Embodiment</div>
+    <div class="modal-meaning">${card.embodiment || 'No embodiment guidance added yet.'}</div>
+
+    ${card.keywords && card.keywords.length ? `
+      <div class="modal-section-label">✦ Keywords</div>
+      <div class="keyword-wrap">
+        ${card.keywords.map(k => `<span class="keyword-chip">${k}</span>`).join('')}
+      </div>
+    ` : ''}
+  `;
+} else {
+  if (card.meaning) {
+    content += `<div class="modal-section-label">✦ Upright</div><div class="modal-meaning">${card.meaning}</div>`;
+  }
+  if (card.rx) {
+    content += `<div class="modal-section-label" style="color:var(--rose)">✦ Reversed</div><div class="modal-rx">${card.rx}</div>`;
+  }
+}
+  content += `
+    <div class="modal-divider"></div>
+    <div class="modal-section-label">✦ Your Personal Notes</div>
+    <textarea class="modal-notes" id="noteFor_${card.deck}_${card.name.replace(/[^a-z0-9]/gi,'_')}" placeholder="Your personal associations, pulls, feelings, messages received..." onchange="saveNote(this, '${card.deck}')">${getNote(card.deck, card.name)}</textarea>
+  `;
+
+  document.getElementById('modalContent').innerHTML = content;
+  document.getElementById('cardModal').classList.add('open');
+}
+function closeModal(e) {
+  if (e.target.id === 'cardModal') {
+    document.getElementById('cardModal').classList.remove('open');
+  }
+}
+
+let favoriteCards = JSON.parse(localStorage.getItem('marcyFavoriteCards') || '[]');
+
+function getCardKey(card) {
+  return `${card.deck}::${card.name}`;
+}
+
+function isFavorite(card) {
+  return favoriteCards.includes(getCardKey(card));
+}
+
+function toggleFavorite(card) {
+  const key = getCardKey(card);
+
+  if (favoriteCards.includes(key)) {
+    favoriteCards = favoriteCards.filter(k => k !== key);
+  } else {
+    favoriteCards.push(key);
+  }
+
+  localStorage.setItem('marcyFavoriteCards', JSON.stringify(favoriteCards));
+  openModal(card);
+  filterLookup();
+}
+
+let cardNotes = JSON.parse(localStorage.getItem('marcyCardNotes') || '{}');
+
+function getNote(deck, name) {
+  const newKey = `${deck}::${name}`;
+  return cardNotes[newKey] || cardNotes[name] || '';
+}
+
+function saveNote(el, deck) {
+  const rawId = el.id.replace('noteFor_', '');
+  const deckPrefix = deck + '_';
+  const namePart = rawId.startsWith(deckPrefix) ? rawId.slice(deckPrefix.length) : rawId;
+  const name = namePart.replace(/_/g, ' ');
+  cardNotes[`${deck}::${name}`] = el.value;
+  localStorage.setItem('marcyCardNotes', JSON.stringify(cardNotes));
+}
+
+function updatePullSort() {
+  pullSort = document.getElementById('pullSort').value;
+  currentPage = 1;
+  renderPullLog();
+}
+
+function exportData() {
+  const data = {
+    pulls: pulls,
+    cardNotes: cardNotes,
+    favoriteCards: favoriteCards,
+    exportedAt: new Date().toISOString(),
+    version: "1.2"
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const today = new Date().toISOString().split("T")[0];
+  a.href = url;
+  a.download = `marcy-deck-grimoire-backup-${today}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!imported || typeof imported !== "object") throw new Error("Invalid file format.");
+
+      if (Array.isArray(imported.pulls)) {
+        pulls = imported.pulls;
+        localStorage.setItem("marcyDeckPulls", JSON.stringify(pulls));
+      }
+      if (imported.cardNotes && typeof imported.cardNotes === "object") {
+        cardNotes = imported.cardNotes;
+        localStorage.setItem("marcyCardNotes", JSON.stringify(cardNotes));
+      }      if (Array.isArray(imported.favoriteCards)) {
+        favoriteCards = imported.favoriteCards;
+        localStorage.setItem("marcyFavoriteCards", JSON.stringify(favoriteCards));
+      }
+
+      renderPullLog();
+      renderStats();
+      renderMostPulled();
+      renderHomeRecent();
+      alert("Import successful.");
+    } catch (error) {
+      alert("That file could not be imported. Make sure it is a valid backup JSON.");
+      console.error(error);
+    }
+    event.target.value = "";
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData() {
+  const confirmed = confirm("This will delete all saved spreads, card notes, deck notes, and favorites from this browser. Are you sure?");
+  if (!confirmed) return;
+
+  pulls = [];
+  cardNotes = {};
+  favoriteCards = [];
+
+  localStorage.removeItem("marcyDeckPulls");
+  localStorage.removeItem("marcyCardNotes");
+  localStorage.removeItem("marcyFavoriteCards");
+
+  renderPullLog();
+  renderStats();
+  renderMostPulled();
+  renderHomeRecent();
+  alert("All saved data was cleared.");
+}
+
+// ============================================================
+// RENDER DECK PAGES
+// ============================================================
+function renderCardList(containerId, cards, deck) {
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
+  container.innerHTML = cards.map(c => `
+    <div class="card-item" onclick='openModal(${JSON.stringify(c).replace(/'/g,"&apos;")})'>
+      <div class="card-item-badge badge-${deck}">${deckIcons[deck]}</div>
+      <div>
+        <div class="card-item-name">${c.name}</div>
+        ${c.altName && c.altName !== c.name ? `<div class="card-item-sub">${c.altName}</div>` : ''}
+      </div>
+      <span class="card-item-arrow">›</span>
+    </div>
+  `).join('');
+}
+
+function renderSailorMoon() {
+  const major = ALL_CARDS.filter(c => c.deck==='sailor' && c.suit==='major');
+  const cups = ALL_CARDS.filter(c => c.deck==='sailor' && c.suit==='cups');
+  const swords = ALL_CARDS.filter(c => c.deck==='sailor' && c.suit==='swords');
+  const wands = ALL_CARDS.filter(c => c.deck==='sailor' && c.suit==='wands');
+  const pentacles = ALL_CARDS.filter(c => c.deck==='sailor' && c.suit==='pentacles');
+  renderCardList('sailorMajor', major, 'sailor');
+  renderCardList('sailorCups', cups, 'sailor');
+  renderCardList('sailorSwords', swords, 'sailor');
+  renderCardList('sailorWands', wands, 'sailor');
+  renderCardList('sailorPentacles', pentacles, 'sailor');
+}
+
+function renderEroticTarot() {
+  const major = ALL_CARDS.filter(c => c.deck==='erotic' && c.suit==='major');
+  const cups = ALL_CARDS.filter(c => c.deck==='erotic' && c.suit==='cups');
+  const swords = ALL_CARDS.filter(c => c.deck==='erotic' && c.suit==='swords');
+  const wands = ALL_CARDS.filter(c => c.deck==='erotic' && c.suit==='wands');
+  const pentacles = ALL_CARDS.filter(c => c.deck==='erotic' && c.suit==='pentacles');
+  renderCardList('eroticMajor', major, 'erotic');
+  renderCardList('eroticCups', cups, 'erotic');
+  renderCardList('eroticSwords', swords, 'erotic');
+  renderCardList('eroticWands', wands, 'erotic');
+  renderCardList('eroticPentacles', pentacles, 'erotic');
+}
+
+function renderAGR() {
+  const container = document.getElementById('agrCards');
+  const jumpNav = document.getElementById('agrJumpNav');
+  let html = '';
+  let navHtml = '<span class="deck-jump-label">Jump to:</span>';
+
+  Object.entries(AGR_CARDS).forEach(([temple, cards]) => {
+    const anchorId = 'anchor-agr-' + temple.replace(/\s+/g, '-');
+    html += `<div class="temple-header" id="${anchorId}">✦ ${temple}</div>`;
+    navHtml += `<button class="deck-jump-btn" onclick="jumpTo('${anchorId}')">${temple}</button>`;
+    html += cards.map(name => {
+      const c = ALL_CARDS.find(x => x.deck==='agr' && x.name===name);
+      const idx = ALL_CARDS.indexOf(c);
+      return `<div class="card-item" onclick="openModalByIndex(${idx})">
+        <div class="card-item-badge badge-agr">🌺</div>
+        <div><div class="card-item-name">${name}</div></div>
+        <span class="card-item-arrow">›</span>
+      </div>`;
+    }).join('');
+  });
+
+  container.innerHTML = html;
+  if(jumpNav) jumpNav.innerHTML = navHtml;
+}
+
+function renderKimbition() {
+  const container = document.getElementById('kimbitionCards');
+  container.innerHTML = KIMBITION_CARDS.map((name, i) => {
+    const c = ALL_CARDS.find(x => x.deck==='kimbition' && x.name===name);
+    return `<div class="card-item" onclick='openModal(${JSON.stringify(c).replace(/'/g,"&apos;")})'>
+      <div class="card-item-badge badge-kimbition">🔥</div>
+      <div><div class="card-item-name">${i+1}. ${name}</div></div>
+      <span class="card-item-arrow">›</span>
+    </div>`;
+  }).join('');
+}
+
+function renderHH() {
+  const container = document.getElementById('hhCards');
+  container.innerHTML = HH_CARDS.map((c, i) => `
+    <div class="hh-item" onclick="openHHModal(${i})">
+      <span class="hh-num">${i + 1}</span>
+      <div class="hh-angel">
+        <div class="hh-name angel">☀️ ${c.angel}</div>
+        <div class="hh-theme">${c.angelTheme}</div>
+      </div>
+      <div class="hh-divider"></div>
+      <div class="hh-demon" style="padding-left:12px">
+        <div class="hh-name demon">🌑 ${c.demon}</div>
+        <div class="hh-theme">${c.demonTheme}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openHHModal(i) {
+  const c = HH_CARDS[i];
+  const idx = ALL_CARDS.findIndex(x => x.deck==='hh' && x.name===c.angel);
+  if(idx >= 0) openModalByIndex(idx);
+}
+
+// ============================================================
+// SPREAD SYNTHESIS
+// ============================================================
+const synthesisCacheKey = id => `marcySynthesis_${id}`;
+
+async function generateSynthesis(pullId, btn) {
+  const pull = pulls.find(p => p.id === pullId);
+  if (!pull) return;
+
+  const outputEl = document.getElementById(`synthesis-${pullId}`);
+  if (!outputEl) return;
+
+  // If cached, just show it
+  const cached = localStorage.getItem(synthesisCacheKey(pullId));
+  if (cached) {
+    outputEl.textContent = cached;
+    outputEl.style.display = 'block';
+    btn.textContent = '✦ Regenerate Synthesis';
+    return;
+  }
+
+  // Build prompt
+  const deckNames = {
+    sailor: 'Sailor Moon Tarot', erotic: 'Erotic Tarot',
+    agr: 'African Goddess Rising Oracle', kimbition: 'Kimbition Oracle',
+    hh: 'Heaven & Hell Oracle'
+  };
+
+  const cardLines = pull.cards.map(c => {
+    const orientation = c.orientation === 'reversed' ? 'Reversed' : 'Upright';
+    const deckLabel = deckNames[c.deck] || c.deck;
+    const notePart = c.notes ? ` — personal note: "${c.notes}"` : '';
+    return `• ${c.position}: ${c.card} (${orientation}, ${deckLabel})${notePart}`;
+  }).join('\n');
+
+  const tagLine = pull.tags && pull.tags.length
+    ? `Theme tags: ${pull.tags.join(', ')}`
+    : '';
+
+  const prompt = `You are an experienced tarot and oracle reader providing a spread synthesis for the following reading.
+
+Spread name: ${pull.spreadName || 'Untitled Spread'}
+Date: ${pull.date}
+Question: ${pull.question || 'No question stated'}
+${tagLine}
+
+Cards pulled:
+${cardLines}
+
+Deck notes:
+- Sailor Moon Tarot uses renamed suits: Crescent=Cups, Talisman=Swords, Rods=Wands, Crystals=Pentacles. Courts: Guardian=Knight, Maiden=Page, Princess=Queen, Queen=King.
+- Erotic Tarot uses: Shells=Cups, Feathers=Swords, Candles=Wands, Roses=Pentacles. The Awakening=Judgement, The High Priest=Hierophant.
+- African Goddess Rising Oracle uses goddess archetypes organized by Temples (Threshold Guardians, Ancestors, Conjurers, Warriors, Shadows, Lovers, Griots, Queens, High Priestesses).
+- Kimbition Oracle uses erotic/kink archetypes as spiritual and reflective tools — treat them symbolically, not literally.
+- Heaven & Hell Oracle: upright cards = Angel meaning, reversed = Demon meaning.
+
+Please write a flowing, synthesized reading of this spread. Cover:
+1. The overall energy and theme across all cards
+2. What each card is contributing to the larger message
+3. The through-line or core message the spread is delivering
+4. One practical or spiritual invitation for the reader
+
+Write in a warm, direct, insightful tone. Do not use bullet points — write in flowing paragraphs. Keep it under 400 words.`;
+
+  // Show loading state
+  btn.disabled = true;
+  btn.textContent = '✦ Reading the cards...';
+  outputEl.style.display = 'block';
+  outputEl.innerHTML = `<div class="synthesis-loading"><div class="synthesis-dot"></div><div class="synthesis-dot"></div><div class="synthesis-dot"></div><span>Synthesizing your spread...</span></div>`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'No synthesis returned. Please try again.';
+
+    outputEl.textContent = text;
+    localStorage.setItem(synthesisCacheKey(pullId), text);
+    btn.textContent = '✦ Regenerate Synthesis';
+  } catch (err) {
+    outputEl.textContent = 'Something went wrong generating the synthesis. Check your connection and try again.';
+    btn.textContent = '✦ Generate Spread Synthesis';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ============================================================
+// DECK DESCRIPTIONS
+// ============================================================
+const DECK_DESCRIPTIONS = {
+  sailor: {
+    icon: '🐚',
+    use: [
+      'General Readings',
+      'Life Themes and Personal Direction',
+      'Identity and Growth Cycles',
+      'Decision-making',
+      'Understanding Patterns and Lessons',
+      'Framing Experiences in a Larger Context',
+    ],
+    useSummary: 'Best for: What is happening right now? What chapter am I in? What is being asked of me?',
+    notFor: [
+      'Replacing emotional or spiritual care',
+      'Diagnosing desire or attachment',
+      'Analyzing erotic power dynamics',
+    ],
+    notForNote: 'A narrative and symbolic deck first and foremost.',
+    howTo: 'Usually the first — and sometimes only — deck used in a reading. It sets the structure, the emotional tone, and the boundaries of interpretation. When other decks are layered, they are always used in relation to what this deck establishes.',
+    systemRole: '🌙 Handles the main narrative of the reading.',
+  },
+  erotic: {
+    icon: '💋',
+    use: [
+      'Erotic energy and attraction',
+      'Sex and Sexuality',
+      'Power dynamics in connections',
+      'Attachment Patterns',
+      'Fantasy vs Lived Reality',
+      'Desire that feels intense, confusing, or transformative',
+      '8H / Lilith / Pluto-coded themes',
+    ],
+    useSummary: 'Reads through the body first, intellect second. Best used when clarity is needed — not comfort.',
+    notFor: [
+      'Daily Pulls',
+      'Predictive Questions',
+      'Money, Career, or Logistics',
+      'Reassurance-seeking',
+      'Reading while lonely, dysregulated, or emotionally flooded',
+    ],
+    notForNote: 'This deck amplifies intensity — it must have boundaries.',
+    howTo: 'Not a general use deck. Called in specifically when the reading enters erotic, relational, or body-based territory.',
+    systemRole: '💋 Reveals the erotic archetypes and energetic dynamics.',
+  },
+  agr: {
+    icon: '☀️',
+    use: [
+      'Spiritual authority and guidance',
+      'Emotional containment and regulation',
+      'Integration after intense or revealing readings',
+      'Ancestral wisdom and protection',
+      'Closing and sealing spreads',
+      'Reorienting when clarity feels overwhelming',
+    ],
+    useSummary: 'Best for: What holds this situation? What medicine is needed now? How should this insight be carried safely?',
+    notFor: [
+      'Replacing tarot structure or narrative',
+      'Analyzing mechanics or details',
+      'Predicting outcomes',
+      'Escalating intensity',
+    ],
+    notForNote: 'This deck governs — it does not interrogate.',
+    howTo: 'Used at the end of a spread to close and integrate, at the beginning to set tone, or on its own when emotional holding is needed. When layered with tarot, this deck always has the final word.',
+    systemRole: '🌺 Holds spiritual authority and integrates the reading safely.',
+  },
+  kimbition: {
+    icon: '🔥',
+    use: [
+      'Sexual chemistry',
+      'Erotic attraction',
+      'Fantasies and desires',
+      'Power dynamics within relationships',
+      'Taboo or hidden motivations',
+      'Situations where desire is clearly influencing the connection',
+    ],
+    useSummary: 'Called in when readings drift into spicy territory. Reads through instinct and the body first.',
+    notFor: [
+      'Daily pulls',
+      'General life questions',
+      'Career or money readings',
+      'Reassurance spirals',
+      'Readings when emotionally chaotic',
+    ],
+    notForNote: 'This deck amplifies intensity — it must be used intentionally.',
+    howTo: 'Stricter than the Erotic Tarot in its scope. Only comes out when desire, fantasy, or erotic power dynamics are the explicit focus of the reading.',
+    systemRole: '🌶 Shows the literal manifestations of fantasy, desire, and power dynamics.',
+  },
+  hh: {
+    icon: '😈😇',
+    use: [
+      'Alignment vs Misalignment',
+      'Truth vs Distortion',
+      'Self-Sabotage',
+      'Seeing both sides of a situation',
+      'Calling yourself out',
+    ],
+    useSummary: 'Best used when something feels off, confusing, too good to be true, or when feeling extremely indecisive.',
+    notFor: [
+      'Emotional comfort',
+      'Reassurance',
+      'Soft Guidance',
+      'When already overthinking',
+      'When needing grounding',
+    ],
+    notForNote: 'This deck will make things more uncomfortable before they make sense.',
+    howTo: 'This deck does not soften — it reveals. Used specifically to audit alignment and surface distortion.',
+    systemRole: '😇👿 Reveals whether the energy is aligned or distorted — showing the highest vs shadow expression.',
+  },
+};
+
+
+
+function renderDeckDesc(deck) {
+  const el = document.getElementById(`deckDesc-${deck}`);  if(!el) return;
+
+  const d = DECK_DESCRIPTIONS[deck];
+  if(!d) return;
+
+  el.innerHTML = `
+    <h4>${d.icon} What it's used for</h4>
+    <ul>${d.use.map(u => `<li>${u}</li>`).join('')}</ul>
+    <p style="font-size:12px;color:var(--gold);">${d.useSummary}</p>
+    <h4>🚫 What it's not used for</h4>
+    <ul>${d.notFor.map(u => `<li>${u}</li>`).join('')}</ul>
+    <p style="font-size:12px;color:var(--text-muted);font-style:italic;">${d.notForNote}</p>
+    <h4>✦ How to work with it</h4>
+    <p>${d.howTo}</p>
+    <div class="deck-system-role">${d.systemRole}</div>
+  `;}
+
+function renderAllDeckDescs() {
+  ['sailor','erotic','agr','kimbition','hh'].forEach(renderDeckDesc);
+}
+
+// ============================================================
+// JUMP TO SECTION
+// ============================================================
+function jumpTo(anchorId) {
+  const el = document.getElementById(anchorId);
+  if(!el) return;
+  const offset = 70; // account for sticky nav height
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// ============================================================
+// ROW REORDERING — up/down buttons
+// ============================================================
+function moveRow(btn, direction) {
+  const row = btn.closest('.spread-card-row, .spread-section-header');
+  const container = document.getElementById('spreadCards');
+  if(!row || !container) return;
+  if(direction === -1) {
+    const prev = row.previousElementSibling;
+    if(prev) container.insertBefore(row, prev);
+  } else {
+    const next = row.nextElementSibling;
+    if(next) container.insertBefore(next, row);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pullDate').value = new Date().toISOString().split('T')[0];
+  renderTemplates();
+  renderSailorMoon();
+  renderEroticTarot();
+  renderAGR();
+  renderKimbition();
+  renderHH();
+  filterLookup();
+  renderHomeRecent();
+  renderStats();
+  renderMostPulled();
+  renderPullLog();
+  renderAllDeckDescs();
+
+  // Back to top button
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+});
+</script>
+</body>
+</html>

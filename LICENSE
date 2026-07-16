@@ -1,0 +1,142 @@
+# 🌿 Marcy's Deck Grimoire
+
+A personal tarot and oracle deck reference app — single HTML file, no server, no dependencies, works fully offline.
+
+Built for a five-deck practice spanning tarot, oracle, and esoteric systems.
+
+---
+
+## Decks
+
+| Deck | Type | Cards |
+|---|---|---|
+| Sailor Moon Tarot | Tarot | 78 |
+| Erotic Tarot | Tarot | 78 |
+| African Goddess Rising Oracle | Oracle | 44 |
+| Kimbition Oracle | Oracle | 45 |
+| Heaven & Hell Oracle | Oracle | 72 |
+
+---
+
+## Features
+
+### Card Reference
+- Full card list for all five decks
+- Upright and reversed meanings for both tarot decks
+- AGR organized by all 9 Temples with goddess meanings, shadow, and embodiment question
+- Kimbition cards with spiritual/reflective interpretations
+- Heaven & Hell Angel (upright) / Demon (reversed) pairs
+- Deck-specific personal notes per card — Sailor Moon and Erotic Tarot store notes separately even for shared Major Arcana names
+- Favorites system
+
+### Spread Logger
+- Log spreads with name, date, question, and overall question
+- Add cards from any deck with position, card, orientation, and card-level notes
+- Section headers to group cards within a spread (e.g. Personality / Timing / Appearance)
+- Up/down buttons to reorder cards and sections
+- Duplicate card rows for fast multi-card logging from the same deck
+- Overall synthesis field for your personal reading of the full spread
+- 10 built-in spread templates including FS Spread, Celtic Cross, Ancestral Council, and Soul Map
+
+### Tagging
+19 tags for pull history filtering:
+💗 Love · 🌑 Shadow · ✨ Career · 🌸 Spirit · 🌿 Body · 🌊 Ancestors · ⏳ Timing · 🔮 General · 🎉 Fun · 🤝 Social · ✈ Travel · 🌙 Fantasy · 🌹 Erotic · 🤍 Grief · 💰 Money · 🌱 Health · 📋 Past · 🌠 Future · 💜 Dream
+
+### Pull History
+- Search across all spreads, positions, cards, notes, and tags
+- Filter by deck and by tag
+- Sort by newest, oldest, most cards, least cards
+- Paginated — 8 spreads per page
+- Expand/collapse individual spread entries
+- Collapsible sections within sectioned spreads
+- Edit and clone existing spreads
+
+### Stats
+- Total spreads and per-deck counts
+- Most Pulled Cards — top 8 cards with upright/reversed orientation breakdown and visual bar
+- Card History Search — find every spread a specific card appeared in, with summary counts and orientation split
+
+### Navigation
+- Sticky nav bar stays visible while scrolling
+- Jump-to nav within Sailor Moon, Erotic Tarot, and AGR to skip to a suit or temple
+- Back to top button appears after scrolling
+
+### Data
+- All data stored in browser localStorage
+- Export to JSON backup
+- Import from JSON backup
+- Clear all data option
+
+---
+
+## Usage
+
+1. Download `deck_grimoire.html`
+2. Open it in any modern browser (Chrome, Firefox, Safari, Edge)
+3. No internet connection required after download
+
+That's it. There is no build step, no install, no server.
+
+---
+
+## Data Persistence
+
+All pull history, card notes, and favorites are stored in your **browser's localStorage**. This means:
+
+- Data is tied to the specific browser you use
+- Clearing browser data will erase it
+- Opening the file in a different browser or device starts fresh
+
+**Recommendation:** Use the Export Data button regularly and save backups to a cloud folder (Google Drive, iCloud, etc.) alongside the HTML file. Use Import Data to restore on a new device or browser.
+
+---
+
+## Deck Translations
+
+### Sailor Moon Tarot
+
+| Sailor Moon | Standard |
+|---|---|
+| Crescent | Cups |
+| Talisman | Swords |
+| Rods | Wands |
+| Crystals | Pentacles |
+| Guardian | Knight |
+| Maiden | Page |
+| Princess | Queen |
+| Queen | King |
+
+### Erotic Tarot
+
+| Erotic Tarot | Standard |
+|---|---|
+| Shells | Cups |
+| Feathers | Swords |
+| Candles | Wands |
+| Roses | Pentacles |
+| The Awakening | Judgement |
+| The High Priest | The Hierophant |
+
+---
+
+## Five-Deck System
+
+| Deck | Role |
+|---|---|
+| 🌙 Sailor Moon Tarot | Main narrative of the reading |
+| 💋 Erotic Tarot | Erotic archetypes and energetic dynamics |
+| 🌺 African Goddess Rising | Spiritual authority — always has the final word |
+| 🌶 Kimbition Oracle | Fantasy, desire, and power dynamics |
+| 😇👿 Heaven & Hell | Alignment vs distortion — highest vs shadow expression |
+
+---
+
+## Browser Support
+
+Works in any modern browser. No external fonts, no CDN dependencies, no network requests.
+
+---
+
+## License
+
+Personal use. Deck content belongs to their respective creators and publishers.
