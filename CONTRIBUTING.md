@@ -3,8 +3,22 @@
 All notable changes to this project are documented here.
 
 ---
+## v11 (Current)
 
-## v10 (Current)
+### Added
+- Added editable deck-specific upright and reversed meanings for Sailor Moon and Erotic Tarot Major Arcana
+- Added separate localStorage persistence through `marcyDeckMeanings`
+- Included deck-specific meanings in JSON export, import, and clear-data operations
+- Expanded AGR and Kimbition Card Lookup search to match card keyword arrays
+- Added visible matching keywords beneath relevant search results
+
+### Improved
+- Updated all card-list modal links to use `openModalByIndex`
+- Standardized modal behavior across all five decks
+- Improved Card Lookup discoverability for thematic searches such as water, healing, and shadow
+---
+
+## v10
 
 - Fixed Most Pulled Cards merging shared Major Arcana names across Sailor Moon and Erotic Tarot — now keyed by `deck::cardname`
 - Added duplicate card row button (⧉ Copy) for faster spread building
