@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>My's Deck Grimoire</title>
+<title>Marcy's Deck Grimoire</title>
 <style>
 /* System font stacks — no internet required */
 :root {
@@ -558,22 +558,6 @@ header h1 em { color: var(--rose); font-style: italic; }
 
 .btn-remove:hover {
   background: #fce8ec;
-}
-
-.btn-duplicate {
-  background: transparent;
-  border: 1px solid var(--lavender-deep);
-  border-radius: 20px;
-  color: var(--lavender-dark);
-  font-family: var(--font-body);
-  font-size: 12px;
-  padding: 8px 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-duplicate:hover {
-  background: var(--lavender);
-  border-color: var(--lavender-dark);
 }
 
 .keyword-wrap {
@@ -2477,7 +2461,6 @@ function addSpreadCard(
     </div>
 
     <div class="spread-card-actions">
-      <button type="button" class="btn-duplicate" onclick="duplicateCardRow(this)">⧉ Copy</button>
       <button type="button" class="btn-remove" onclick="this.closest('.spread-card-row').remove()">Remove</button>
     </div>
       </div>
@@ -2925,17 +2908,15 @@ function renderMostPulled() {
 
   const cardCounts = {};
   const cardDecks = {};
-  const cardNames = {};
   const cardUpright = {};
   const cardReversed = {};
 
   pulls.forEach(p => {
     (p.cards || []).forEach(c => {
-      if(!c.card || !c.deck) return;
-      const key = `${c.deck}::${c.card}`;
+      if(!c.card) return;
+      const key = c.card;
       cardCounts[key] = (cardCounts[key] || 0) + 1;
       cardDecks[key] = c.deck;
-      cardNames[key] = c.card;
       if(c.orientation === 'reversed') {
         cardReversed[key] = (cardReversed[key] || 0) + 1;
       } else {
@@ -2949,17 +2930,16 @@ function renderMostPulled() {
     .slice(0, 8);
 
   if(sorted.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-family:var(--font-elegant);font-style:italic;font-size:16px;">Cards you pull most will appear here ✵</div>`;
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-family:var(--font-elegant);font-style:italic;font-size:16px;">Cards you pull most will appear here ✿</div>`;
     return;
   }
 
   const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', hh:'Heaven & Hell' };
+  const max = sorted[0][1];
 
-  container.innerHTML = sorted.map(([key, count], i) => {
-    const name = cardNames[key];
-    const deck = cardDecks[key];
-    const up = cardUpright[key] || 0;
-    const rx = cardReversed[key] || 0;
+  container.innerHTML = sorted.map(([name, count], i) => {
+    const up = cardUpright[name] || 0;
+    const rx = cardReversed[name] || 0;
     const upPct = Math.round((up / count) * 100);
     const rxPct = 100 - upPct;
     return `
@@ -2968,7 +2948,7 @@ function renderMostPulled() {
         <div class="mp-rank">${i+1}</div>
         <div style="flex:1">
           <div class="mp-name">${name}</div>
-          <div class="mp-deck">${deckNames[deck]||deck}</div>
+          <div class="mp-deck">${deckNames[cardDecks[name]]||cardDecks[name]}</div>
         </div>
         <div class="mp-count">${count}×</div>
       </div>
@@ -3117,40 +3097,44 @@ function renderHomeRecent() {
 function filterLookup() {
   const q = document.getElementById('lookupSearch').value.toLowerCase();
   let cards = lookupFilter === 'all' ? ALL_CARDS : ALL_CARDS.filter(c => c.deck === lookupFilter);
-  if (q) {
-  cards = cards.filter(c =>
-    c.name.toLowerCase().includes(q) ||
-    (c.altName && c.altName.toLowerCase().includes(q)) ||
-    (c.demonTheme && c.demonTheme.toLowerCase().includes(q)) ||
-    (c.demon && c.demon.toLowerCase().includes(q)) ||
-    (c.meaning && c.meaning.toLowerCase().includes(q)) ||
-    (c.shadow && c.shadow.toLowerCase().includes(q)) ||
-    (c.embodiment && c.embodiment.toLowerCase().includes(q)) ||
-    (c.lesson && c.lesson.toLowerCase().includes(q)) ||
-    (c.keywords && c.keywords.some(k => k.toLowerCase().includes(q)))
-  );
-}
-const container = document.getElementById('lookupResults');
-  if(cards.length === 0) { container.innerHTML = `<div class="empty-state" style="padding:30px 0"><div class="es-icon">✿</div><p>No cards found</p></div>`; return; }
+  if(q) {
+    cards = cards.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      (c.altName && c.altName.toLowerCase().includes(q)) ||
+      (c.demonTheme && c.demonTheme.toLowerCase().includes(q)) ||
+      (c.demon && c.demon.toLowerCase().includes(q)) ||
+      (c.meaning && c.meaning.toLowerCase().includes(q)) ||
+      (c.shadow && c.shadow.toLowerCase().includes(q)) ||
+      (c.embodiment && c.embodiment.toLowerCase().includes(q)) ||
+      (c.lesson && c.lesson.toLowerCase().includes(q)) ||
+      (c.keywords && c.keywords.some(k => k.toLowerCase().includes(q)))
+    );
+  }
+  const container = document.getElementById('lookupResults');
+  if(cards.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:30px 0"><div class="es-icon">✿</div><p>No cards found</p></div>`;
+    return;
+  }
   const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
   const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition Oracle', hh:'Heaven & Hell' };
-  container.innerHTML = cards.slice(0,60).map(c => `
-    <div class="card-item" onclick='openModal(${JSON.stringify(c).replace(/'/g,"&apos;")})'>
+  container.innerHTML = cards.slice(0, 60).map(c => {
+    const idx = ALL_CARDS.indexOf(c);
+    return `
+    <div class="card-item" onclick="openModalByIndex(${idx})">
       <div class="card-item-badge badge-${c.deck}">${deckIcons[c.deck]}</div>
       <div>
-  <div class="card-item-name">
-  ${isFavorite(c) ? '★ ' : ''}${c.deck === 'hh' ? `${c.name} ⇄ ${c.demon}` : c.name}
-</div>
-  ${
-    c.deck === 'hh'
-      ? `<div class="card-item-sub">${c.angelTheme} / ${c.demonTheme}</div>`
-      : (c.altName ? `<div class="card-item-sub">${c.altName}</div>` : '')
-  }
-  <div class="card-item-deck">${deckNames[c.deck]}</div>
-</div>
+        <div class="card-item-name">${isFavorite(c) ? '★ ' : ''}${c.deck === 'hh' ? `${c.name} ⇄ ${c.demon}` : c.name}</div>
+        ${c.deck === 'hh'
+          ? `<div class="card-item-sub">${c.angelTheme} / ${c.demonTheme}</div>`
+          : (c.altName ? `<div class="card-item-sub">${c.altName}</div>` : '')}
+        ${(c.keywords && c.keywords.length && q)
+          ? `<div class="card-item-sub" style="color:var(--lavender-dark);">${c.keywords.filter(k => k.toLowerCase().includes(q)).join(' · ')}</div>`
+          : ''}
+        <div class="card-item-deck">${deckNames[c.deck]}</div>
+      </div>
       <span class="card-item-arrow">›</span>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ============================================================
@@ -3254,11 +3238,34 @@ function openModal(card) {
     ` : ''}
   `;
 } else {
+  // Tarot decks — show base RWS meanings plus editable deck-specific fields
+  const safeName = card.name.replace(/[^a-z0-9]/gi,'_');
+  const isMajor = card.suit === 'major';
+
   if (card.meaning) {
-    content += `<div class="modal-section-label">✦ Upright</div><div class="modal-meaning">${card.meaning}</div>`;
+    content += `<div class="modal-section-label">✦ Upright (RWS Base)</div><div class="modal-meaning">${card.meaning}</div>`;
   }
   if (card.rx) {
-    content += `<div class="modal-section-label" style="color:var(--rose)">✦ Reversed</div><div class="modal-rx">${card.rx}</div>`;
+    content += `<div class="modal-section-label" style="color:var(--rose)">✦ Reversed (RWS Base)</div><div class="modal-rx">${card.rx}</div>`;
+  }
+
+  if (isMajor) {
+    const deckLabel = card.deck === 'sailor' ? 'Sailor Moon' : 'Erotic Tarot';
+    const upVal = getMeaning(card.deck, card.name, 'upright');
+    const rxVal = getMeaning(card.deck, card.name, 'reversed');
+    content += `
+      <div class="modal-divider"></div>
+      <div class="modal-section-label">✦ ${deckLabel} — Upright Meaning</div>
+      <textarea class="modal-notes" id="deckUp_${card.deck}_${safeName}"
+        placeholder="How this card reads specifically in ${deckLabel}..."
+        onchange="saveMeaning(this, '${card.deck}', '${card.name}', 'upright')"
+      >${upVal}</textarea>
+      <div class="modal-section-label" style="color:var(--rose);margin-top:12px;">✦ ${deckLabel} — Reversed Meaning</div>
+      <textarea class="modal-notes" id="deckRx_${card.deck}_${safeName}"
+        placeholder="How this card reads reversed in ${deckLabel}..."
+        onchange="saveMeaning(this, '${card.deck}', '${card.name}', 'reversed')"
+      >${rxVal}</textarea>
+    `;
   }
 }
   content += `
@@ -3301,6 +3308,18 @@ function toggleFavorite(card) {
 }
 
 let cardNotes = JSON.parse(localStorage.getItem('marcyCardNotes') || '{}');
+let deckMeanings = JSON.parse(localStorage.getItem('marcyDeckMeanings') || '{}');
+
+function getMeaning(deck, name, field) {
+  const key = `${deck}::${name}::${field}`;
+  return deckMeanings[key] || '';
+}
+
+function saveMeaning(el, deck, name, field) {
+  const key = `${deck}::${name}::${field}`;
+  deckMeanings[key] = el.value;
+  localStorage.setItem('marcyDeckMeanings', JSON.stringify(deckMeanings));
+}
 
 function getNote(deck, name) {
   const newKey = `${deck}::${name}`;
@@ -3326,11 +3345,11 @@ function exportData() {
   const data = {
     pulls: pulls,
     cardNotes: cardNotes,
+    deckMeanings: deckMeanings,
     favoriteCards: favoriteCards,
     exportedAt: new Date().toISOString(),
-    version: "1.2"
+    version: "1.3"
   };
-
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -3346,13 +3365,11 @@ function exportData() {
 function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const imported = JSON.parse(e.target.result);
       if (!imported || typeof imported !== "object") throw new Error("Invalid file format.");
-
       if (Array.isArray(imported.pulls)) {
         pulls = imported.pulls;
         localStorage.setItem("marcyDeckPulls", JSON.stringify(pulls));
@@ -3360,11 +3377,15 @@ function importData(event) {
       if (imported.cardNotes && typeof imported.cardNotes === "object") {
         cardNotes = imported.cardNotes;
         localStorage.setItem("marcyCardNotes", JSON.stringify(cardNotes));
-      }      if (Array.isArray(imported.favoriteCards)) {
+      }
+      if (imported.deckMeanings && typeof imported.deckMeanings === "object") {
+        deckMeanings = imported.deckMeanings;
+        localStorage.setItem("marcyDeckMeanings", JSON.stringify(deckMeanings));
+      }
+      if (Array.isArray(imported.favoriteCards)) {
         favoriteCards = imported.favoriteCards;
         localStorage.setItem("marcyFavoriteCards", JSON.stringify(favoriteCards));
       }
-
       renderPullLog();
       renderStats();
       renderMostPulled();
@@ -3380,17 +3401,16 @@ function importData(event) {
 }
 
 function clearAllData() {
-  const confirmed = confirm("This will delete all saved spreads, card notes, deck notes, and favorites from this browser. Are you sure?");
+  const confirmed = confirm("This will delete all saved spreads, card notes, deck meanings, and favorites from this browser. Are you sure?");
   if (!confirmed) return;
-
   pulls = [];
   cardNotes = {};
+  deckMeanings = {};
   favoriteCards = [];
-
   localStorage.removeItem("marcyDeckPulls");
   localStorage.removeItem("marcyCardNotes");
+  localStorage.removeItem("marcyDeckMeanings");
   localStorage.removeItem("marcyFavoriteCards");
-
   renderPullLog();
   renderStats();
   renderMostPulled();
@@ -3405,16 +3425,18 @@ function renderCardList(containerId, cards, deck) {
   const container = document.getElementById(containerId);
   if(!container) return;
   const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
-  container.innerHTML = cards.map(c => `
-    <div class="card-item" onclick='openModal(${JSON.stringify(c).replace(/'/g,"&apos;")})'>
+  container.innerHTML = cards.map(c => {
+    const idx = ALL_CARDS.indexOf(c);
+    return `
+    <div class="card-item" onclick="openModalByIndex(${idx})">
       <div class="card-item-badge badge-${deck}">${deckIcons[deck]}</div>
       <div>
         <div class="card-item-name">${c.name}</div>
         ${c.altName && c.altName !== c.name ? `<div class="card-item-sub">${c.altName}</div>` : ''}
       </div>
       <span class="card-item-arrow">›</span>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderSailorMoon() {
@@ -3745,43 +3767,6 @@ function jumpTo(anchorId) {
   const offset = 70; // account for sticky nav height
   const top = el.getBoundingClientRect().top + window.scrollY - offset;
   window.scrollTo({ top, behavior: 'smooth' });
-}
-
-// ============================================================
-// DUPLICATE CARD ROW
-// ============================================================
-function duplicateCardRow(btn) {
-  const row = btn.closest('.spread-card-row');
-  if(!row) return;
-
-  const deck = row.querySelector('.spread-deck').value;
-  const position = row.querySelector('.spread-position').value;
-  const card = row.querySelector('.spread-card').value;
-  const orientation = row.querySelector('.spread-orientation').value;
-  const notes = row.querySelector('.spread-notes').value;
-
-  // Insert the new row right after the current one
-  const container = document.getElementById('spreadCards');
-  const newRow = document.createElement('div');
-  newRow.className = 'spread-card-row';
-  newRow.innerHTML = row.innerHTML;
-  container.insertBefore(newRow, row.nextSibling);
-
-  // Re-populate the card select since innerHTML doesn't carry option states reliably
-  const newDeckSelect = newRow.querySelector('.spread-deck');
-  const newCardSelect = newRow.querySelector('.spread-card');
-  const newOrientation = newRow.querySelector('.spread-orientation');
-  const newPosition = newRow.querySelector('.spread-position');
-  const newNotes = newRow.querySelector('.spread-notes');
-
-  newDeckSelect.value = deck;
-  newOrientation.value = orientation;
-  newPosition.value = position;
-  newNotes.value = notes;
-
-  if(deck) {
-    populateCardOptions(newCardSelect, deck, card);
-  }
 }
 
 // ============================================================
