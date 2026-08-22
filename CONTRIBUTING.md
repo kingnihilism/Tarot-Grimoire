@@ -3,7 +3,38 @@
 All notable changes to this project are documented here.
 
 ---
-## v11 (Current)
+## v12 (Current)
+
+### Added
+- Added light and dark mode with persistent theme preference
+- Added a floating theme toggle in the bottom-left corner
+- Added Pull History pop-ups for viewing complete saved spread details
+- Added four new spread tags:
+  - 🔎 Check-In
+  - 🧭 Decision
+  - 🗓️ Forecast
+  - 🕯️ Deity
+- Added Sideways and Unclear card orientations alongside Upright and Reversed
+- Added gold styling for the Other orientation category in Most Pulled Cards
+- Added Erotic Tarot keyword chips based on each card's Core Erotic Function
+- Added Erotic Tarot keyword matching to Card Lookup
+- Added expanded source-reference meanings from the deck reference PDFs
+
+### Improved
+- Changed deck and suit navigation from page jumps to in-place content filtering
+- Added All filters for returning to complete deck views
+- Improved spacing between card meaning sections for easier reading
+- Improved Pull History browsing by opening spreads in a dedicated modal
+- Preserved Edit, Clone, and Delete controls separately from the Pull History pop-up
+- Updated orientation statistics so Sideways and Unclear cards are counted as Other instead of Upright
+- Improved light and dark mode styling across navigation, modals, forms, tags, badges, and spread panels
+- Audited Heaven & Hell Oracle angel and demon pairings against the provided PDF
+- Corrected Heaven & Hell light and shadow meanings to match the source material
+- Removed citation-style trailing reference numbers from displayed source explanations
+- Simplified card orientation options after testing by removing diagonal and custom rotation choices
+---
+
+## v11
 
 ### Added
 - Added editable deck-specific upright and reversed meanings for Sailor Moon and Erotic Tarot Major Arcana
