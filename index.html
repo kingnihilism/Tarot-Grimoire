@@ -694,7 +694,23 @@ header h1 em { color: var(--rose); font-style: italic; }
 .spread-card-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.btn-duplicate {
+  background: var(--surface);
+  color: var(--lavender-dark);
+  border: 1px solid var(--lavender-deep);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-duplicate:hover {
+  background: var(--lavender);
 }
 
 .btn-remove {
@@ -5628,6 +5644,7 @@ function addSpreadCard(
     </div>
 
     <div class="spread-card-actions">
+      <button type="button" class="btn-duplicate" onclick="duplicateSpreadCard(this)" title="Duplicate this card row">Duplicate</button>
       <button type="button" class="btn-remove" onclick="this.closest('.spread-card-row').remove()">Remove</button>
     </div>
       </div>
@@ -5640,6 +5657,8 @@ function addSpreadCard(
   if (deckValue) {
     populateCardOptions(cardSelect, deckValue, cardValue);
   }
+
+  return row;
 }
 
 function populateCardOptions(cardSelect, deck, selectedCard = '') {
@@ -6990,6 +7009,22 @@ function jumpTo(anchorId) {
 // ============================================================
 // ROW REORDERING — up/down buttons
 // ============================================================
+function duplicateSpreadCard(btn) {
+  const source = btn.closest('.spread-card-row');
+  if(!source) return;
+
+  const duplicate = addSpreadCard(
+    source.querySelector('.spread-deck').value,
+    source.querySelector('.spread-position').value,
+    source.querySelector('.spread-card').value,
+    source.querySelector('.spread-orientation').value,
+    source.querySelector('.spread-notes').value
+  );
+
+  source.after(duplicate);
+  duplicate.querySelector('.spread-position').focus();
+}
+
 function moveRow(btn, direction) {
   const row = btn.closest('.spread-card-row, .spread-section-header');
   const container = document.getElementById('spreadCards');
