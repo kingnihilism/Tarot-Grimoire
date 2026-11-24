@@ -1729,7 +1729,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
 <div id="lenormand" class="section">
   <div class="card">
     <div class="card-title">Romantic Lenormand</div>
-    <div class="card-sub">Lenormand · 37 Cards · 36 Numbered Positions</div>
+    <div class="card-sub">Lenormand · 37 Cards · Anna Oginski</div>
     <div class="card" style="background:rgba(168,90,100,0.1);border-color:rgba(168,90,100,0.3);margin-bottom:18px;">
       <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
       <div id="deckDesc-lenormand" class="deck-desc-content"></div>
@@ -6629,6 +6629,7 @@ function openModal(card) {
     content += `
       <div class="source-reference">
         <div class="source-reference-title">Romantic Lenormand guidebook · p. ${card.page}</div>
+        ${sourceField('Polarity', card.polarity)}
         ${sourceField('Keywords', card.keywords.join(' · '))}
         ${sourceField('Guidebook meaning (paraphrased)', card.meaning)}
         ${card.timing ? sourceField('Symbolic timing in the guidebook', card.timing) : ''}
@@ -7057,12 +7058,12 @@ function openHHModal(i) {
 const DECK_DESCRIPTIONS = {
   lenormand: {
     icon: '✿',
-    use: ['Focused questions about relationships and everyday situations', 'Reading cards together as a phrase or sentence', 'Tracking combinations that recur in your readings'],
-    useSummary: 'Anna Oginsky · Art by Marina Miranova',
+    use: ['Choices and decisions', 'Conversations and relationships', 'Travel and how a situation is developing'],
+    useSummary: 'Art by Marina Miranova',
     rulesHeading: 'Reading rules',
-    notFor: ['Read every card upright.', 'Keep the cards in pull order.', 'Choose Birds or Owls for card 12.'],
-    howTo: 'Start with a clear question. Read the line in order, paying attention to how surrounding cards shape each symbol. Use the position labels when the spread assigns them.',
-    systemRole: '✿ Card combinations tell the story of the pull.',
+    notFor: ['Read every card upright.', 'Each card has its own meaning and a guidebook classification of positive, negative, or neutral.', 'Birds and Owls each have their own entry as card 12. Use one per reading.'],
+    howTo: 'Enter the cards in the order you pulled them. For a three-card line, read the first two cards together, then the last two. Use the middle card to connect the pairs.',
+    systemRole: '✿ Example pull · Crossroads → Ship → Owls. Read Crossroads + Ship and Ship + Owls, then use Ship to connect the two pairs.',
   },
   sailor: {
     icon: '🐚',
