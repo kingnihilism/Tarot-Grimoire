@@ -2,19 +2,29 @@
 
 A browser-based tarot and oracle reference, spread logging, and pattern-tracking application built with **HTML, CSS, and vanilla JavaScript**.
 
-The project supports a five-deck practice with different card structures, meanings, and roles while remaining fully offline. It includes searchable card references, customizable spread logging, deck-specific notes and meanings, statistics, filtering, JSON backups, and a documented GitHub Wiki.
+The project supports a six-deck practice with different card structures, meanings, and roles while remaining fully offline. It includes searchable card references, customizable spread logging, deck-specific notes and meanings, statistics, filtering, JSON backups, and a documented GitHub Wiki.
 
 ## Live Project
 
 - **Repository:** https://github.com/kingnihilism/Tarot-Grimoire
 - **Wiki:** https://github.com/kingnihilism/Tarot-Grimoire/wiki
-- **Current Version:** v12
+- **Current Version:** v14 — Romantic Lenormand Expansion
+
+## Romantic Lenormand
+
+Open **Romantic Lenormand** to browse 37 card profiles by name, number, keyword, or polarity. The deck has 36 numbered positions and two alternatives for #12. Select either Birds or Owls for a reading. The profiles paraphrase the Lo Scarabeo guidebook (Anna Oginsky, March 2024) and label supported timing separately from your personal notes.
+
+Choose a layout, then enter the cards you physically pulled in order. Available layouts are single card, three- and five-card lines, nine-card box, Grand Tableau (four rows of eight plus four), and custom. Use positions for positional readings or Overall Synthesis for a continuous sentence. The saved reading also retains individual card notes, reflections, tags, and category.
+
+The combination encyclopedia counts contiguous sequences in their recorded order. Sequences inside mixed-deck readings stop at non-Lenormand cards. Add or edit personal combination interpretations and open the associated readings directly. The Lenormand dashboard tracks card and combination frequencies, polarity, and categories.
+
+JSON backups include the new reading fields, combination interpretations, and theme. Earlier backups can still be restored. The application runs from the single HTML file without a network connection.
 
 ## Project Goals
 
 Marcy's Deck Grimoire was created to solve several practical problems:
 
-- Keep five different tarot and oracle systems in one searchable reference
+- Keep six tarot, oracle, and Lenormand decks in one searchable reference
 - Preserve deck-specific meanings instead of treating shared card names as identical
 - Log complex, multi-section spreads without relying on paper notes
 - Track recurring cards, orientations, tags, and themes over time
@@ -35,7 +45,7 @@ Marcy's Deck Grimoire was created to solve several practical problems:
 
 ### Card Reference
 
-- Full card reference for all five decks
+- Full card reference for all six decks
 - Upright and reversed meanings for both tarot decks
 - Sailor Moon and Erotic Tarot translation tables
 - African Goddess Rising cards organized by all 9 Temples
@@ -64,7 +74,7 @@ Shared card names remain separated by deck so notes, statistics, and reference c
 
 ### Card Lookup
 
-- Search across all five decks
+- Search across all six decks
 - Filter results by deck
 - Search by card name, alternate name, theme, and meaning
 - Keyword search for African Goddess Rising, Kimbition, and Erotic Tarot cards
@@ -83,7 +93,7 @@ Example thematic searches include:
 ### Spread Logger
 
 - Log spreads with a date, name, question, tags, and overall synthesis
-- Add cards from any of the five decks
+- Add cards from any of the six decks
 - Record position, orientation, and card-level notes
 - Orientation options include Upright, Reversed, Sideways, and Unclear
 - Add custom section headers

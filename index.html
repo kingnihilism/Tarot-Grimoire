@@ -1218,6 +1218,15 @@ footer {
 .mp-count { font-family: var(--font-display); font-size: 16px; color: var(--rose); flex-shrink: 0; }
 .mp-bar-wrap { height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; }
 .mp-bar { height: 3px; background: linear-gradient(90deg, var(--blush-deep), var(--rose)); border-radius: 2px; }
+
+#lenFields[hidden], .spread-card-row .form-group[hidden] { display: none; }
+.deck-thumb.lenormand::before { background: linear-gradient(90deg, var(--rose), var(--lavender-dark)); }
+.badge-lenormand { background: var(--lavender-soft); color: var(--lavender-dark); }
+.len-layout-scroll { overflow-x: auto; }
+.len-layout-grid { display: grid; grid-template-columns: repeat(var(--len-columns), minmax(7rem, 1fr)); gap: 8px; }
+.len-layout-grid .spread-modal-card { overflow-wrap: anywhere; }
+.len-layout-grid:has(> :nth-child(36)) > :nth-child(33) { grid-column: 3; }
+#lenormand summary { cursor: pointer; }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -1227,7 +1236,8 @@ function showSection(id) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const el = document.getElementById(id);
   if(el) el.classList.add('active');
-  const ids = ['home','lookup','tracker','sailor','erotic','agr','kimbition','hh'];
+  const ids = ['home','lookup','tracker','sailor','erotic','agr','kimbition','hh','lenormand'];
+  if (id === 'lenormand') renderLenormandDashboard();
   const idx = ids.indexOf(id);
   if(idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   // Keep the current viewport position. The selected section swaps into the page
@@ -1248,7 +1258,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
 <header>
   <div class="header-deco">✦ personal grimoire ✦</div>
   <h1>Marcy's <em>Deck</em> Companion</h1>
-  <div class="header-sub">Five Decks · Reference · Pull Tracker · Personal Notes</div>
+  <div class="header-sub">Six Decks · Reference · Pull Tracker · Personal Notes</div>
   <div class="header-rule"><span>❀</span></div>
 </header>
 
@@ -1261,6 +1271,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
   <button class="nav-btn" onclick="showSection('agr')">🌺 AGR Oracle</button>
   <button class="nav-btn" onclick="showSection('kimbition')">🔥 Kimbition</button>
   <button class="nav-btn" onclick="showSection('hh')">⚖️ Heaven & Hell</button>
+  <button class="nav-btn" onclick="showSection('lenormand')">✿ Romantic Lenormand</button>
 </nav>
 
 <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Switch color theme">☾ Dark</button>
@@ -1298,6 +1309,12 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       <div class="deck-type">Oracle · 72 Cards</div>
       <span class="deck-count">Angel / Demon Pairs</span>
     </div>
+    <div class="deck-thumb lenormand" onclick="showSection('lenormand')">
+      <div class="deck-icon">✿</div>
+      <div class="deck-name">Romantic Lenormand</div>
+      <div class="deck-type">Lenormand · 37 Cards</div>
+      <span class="deck-count">36 Numbers · Alternate #12</span>
+    </div>
   </div>
 
   <div class="card">
@@ -1322,6 +1339,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       <span class="filter-pill f-agr" onclick="toggleFilter(this,'agr')">🌺 AGR</span>
       <span class="filter-pill f-kimbition" onclick="toggleFilter(this,'kimbition')">🔥 Kimbition</span>
       <span class="filter-pill f-hh" onclick="toggleFilter(this,'hh')">⚖️ Heaven & Hell</span>
+      <span class="filter-pill" onclick="toggleFilter(this,'lenormand')">✿ Lenormand</span>
     </div>
     <div class="card-list" id="lookupResults"></div>
   </div>
@@ -1392,6 +1410,19 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       </div>
     </div>
 
+        <div class="form-group full" id="lenFields" hidden>
+      <label class="form-label" for="lenLayout">Lenormand layout</label>
+      <select class="form-select" id="lenLayout"></select>
+      <label class="form-label" for="lenMode">Reading style</label>
+      <select class="form-select" id="lenMode">
+        <option value="sentence">Continuous sentence</option><option value="positional">Positional</option>
+      </select>
+      <label class="form-label" for="lenCategory">Reading category</label>
+      <input class="form-input" id="lenCategory" placeholder="e.g. Relationships">
+      <label class="form-label" for="lenReflection">Personal observations and reflections</label>
+      <textarea class="form-textarea" id="lenReflection"></textarea>
+    </div>
+
     <div class="form-group full">
       <label class="form-label">Overall Synthesis</label>
       <textarea class="form-textarea" id="spreadSynthesis" style="min-height:120px;" placeholder="What does this spread mean as a whole? What through-line do you see across all the cards? Write your personal reading of the full spread here..."></textarea>
@@ -1446,6 +1477,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       <span class="filter-pill f-agr" onclick="filterLog(this,'agr')">🌺 AGR</span>
       <span class="filter-pill f-kimbition" onclick="filterLog(this,'kimbition')">🔥 Kimbition</span>
       <span class="filter-pill f-hh" onclick="filterLog(this,'hh')">⚖️ H&H</span>
+      <span class="filter-pill" onclick="filterLog(this,'lenormand')">✿ Lenormand</span>
     </div>
 
     <div class="filter-wrap" style="margin-top:-8px;">
@@ -1661,11 +1693,53 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
   </div>
 </div>
 
+<div id="lenormand" class="section">
+  <div class="card">
+    <div class="card-title">Romantic Lenormand</div>
+    <div class="card-sub">Anna Oginsky · Art by Marina Miranova · 37 cards</div>
+    <p>Choose either Birds or Owls for #12. Enter your physical pulls in order.</p>
+    <label class="form-label" for="lenSearch">Search the deck wiki</label>
+    <input id="lenSearch" class="form-input" type="search" oninput="filterLenormand()" placeholder="Number, card, keyword or meaning">
+    <label class="form-label" for="lenPolarity">Polarity</label>
+    <select id="lenPolarity" class="form-select" onchange="filterLenormand()">
+      <option value="">All polarities</option><option>positive</option><option>negative</option><option>neutral</option>
+    </select>
+    <div id="lenCards"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Log a Lenormand reading</div>
+    <label class="form-label" for="lenPreset">Spread layout</label>
+    <select id="lenPreset" class="form-select"></select>
+    <button class="btn-primary" type="button" onclick="addLenormandLayout()">Open in Pull Tracker</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Combination Encyclopedia</div>
+    <form onsubmit="saveLenormandCombination(event)">
+      <label class="form-label" for="lenComboNames">Card names in order</label>
+      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
+      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
+      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
+      <button type="submit" class="btn-primary">Save interpretation</button>
+      <span id="lenComboStatus" role="status"></span>
+    </form>
+    <label class="form-label" for="lenComboSearch">Search combinations</label>
+    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
+    <label class="form-label" for="lenComboType">Sequence type</label>
+    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
+      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
+      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
+    </select>
+    <div id="lenComboResults"></div>
+  </div>
+  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
+  <div class="card"><div class="card-title">Lenormand Reading History</div><div id="lenHistory"></div></div>
+</div>
+
 </div><!-- end wrapper -->
 
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
-<footer>✿ Marcy's Deck Grimoire · Five Decks · Personal Reference ✿</footer>
+<footer>✿ Marcy's Deck Grimoire · v14 — Romantic Lenormand Expansion ✿</footer>
 
 <!-- SPREAD HISTORY MODAL -->
 <div class="spread-modal-overlay" id="spreadHistoryModal" onclick="closeSpreadHistoryModal(event)">
@@ -5322,6 +5396,46 @@ function sourceKeywords(text) {
 }
 
 // Build all cards master list
+const LENORMAND_CARDS = [
+  {"deck": "lenormand", "suit": "lenormand", "number": 1, "name": "Rider", "polarity": "neutral", "altName": "1 · neutral", "keywords": ["news", "arrival", "momentum"], "meaning": "An incoming message, visitor, delivery, or rapidly developing opportunity. Nearby cards describe the nature of the news.", "timing": "Fast-moving developments.", "page": 13},
+  {"deck": "lenormand", "suit": "lenormand", "number": 2, "name": "Clover", "polarity": "positive", "altName": "2 · positive", "keywords": ["luck", "opportunity", "coincidence"], "meaning": "A lucky opening or happy coincidence that can strengthen favorable cards and soften difficulties.", "timing": "A brief window of opportunity.", "page": 14},
+  {"deck": "lenormand", "suit": "lenormand", "number": 3, "name": "Ship", "polarity": "neutral", "altName": "3 · neutral", "keywords": ["travel", "distance", "movement"], "meaning": "Travel, transport, or purposeful movement toward a goal. Neighbors help distinguish welcome progress from travel difficulties.", "timing": "", "page": 15},
+  {"deck": "lenormand", "suit": "lenormand", "number": 4, "name": "House", "polarity": "positive", "altName": "4 · positive", "keywords": ["home", "security", "stability"], "meaning": "Home, family, or a secure foundation. In a difficult context, familiarity can become confinement or rigidity.", "timing": "", "page": 16},
+  {"deck": "lenormand", "suit": "lenormand", "number": 5, "name": "Tree", "polarity": "positive", "altName": "5 · positive", "keywords": ["growth", "health", "vitality"], "meaning": "Gradual development that takes root and may last. It can point to health, vitality, or sustained care.", "timing": "Slow, phased development.", "page": 17},
+  {"deck": "lenormand", "suit": "lenormand", "number": 6, "name": "Clouds", "polarity": "negative", "altName": "6 · negative", "keywords": ["confusion", "instability", "doubt"], "meaning": "A clear situation becomes uncertain. Conflicting signals or temporary turmoil can obscure what is happening.", "timing": "", "page": 18},
+  {"deck": "lenormand", "suit": "lenormand", "number": 7, "name": "Snake", "polarity": "negative", "altName": "7 · negative", "keywords": ["complications", "deceit", "strategy"], "meaning": "Complications or deceit may require a more flexible, strategic approach. Nearby cards can clarify where the concern lies.", "timing": "", "page": 20},
+  {"deck": "lenormand", "suit": "lenormand", "number": 8, "name": "Coffin", "polarity": "negative", "altName": "8 · negative", "keywords": ["ending", "inactivity", "transformation"], "meaning": "An ending, loss of momentum, or period of inactivity. At the end of a difficult sequence it can signal that the trouble is ending.", "timing": "", "page": 21},
+  {"deck": "lenormand", "suit": "lenormand", "number": 9, "name": "Bouquet", "polarity": "positive", "altName": "9 · positive", "keywords": ["gift", "celebration", "affection"], "meaning": "A gift, invitation, pleasant encounter, or celebration. With Ring it can suggest an engagement.", "timing": "", "page": 22},
+  {"deck": "lenormand", "suit": "lenormand", "number": 10, "name": "Scythe", "polarity": "negative", "altName": "10 · negative", "keywords": ["cut", "separation", "sudden decision"], "meaning": "A sudden interruption or decisive cut. In a favorable context it can describe the need to act promptly or remove what is in the way.", "timing": "Abrupt development.", "page": 23},
+  {"deck": "lenormand", "suit": "lenormand", "number": 11, "name": "Whip", "polarity": "negative", "altName": "11 · negative", "keywords": ["conflict", "discipline", "competition"], "meaning": "Arguments or friction. With supportive cards the same energy can describe discipline, competition, exercise, or sexuality.", "timing": "", "page": 24},
+  {"deck": "lenormand", "suit": "lenormand", "number": 12, "name": "Birds", "polarity": "neutral", "altName": "12 · neutral", "keywords": ["conversation", "movement", "worry"], "meaning": "Calls, meetings, errands, or passing worries. Nearby cards indicate whether the communication is fruitful or merely tiring.", "timing": "", "page": 26},
+  {"deck": "lenormand", "suit": "lenormand", "number": 12, "name": "Owls", "polarity": "neutral", "altName": "12 · neutral · Alternate to Birds", "keywords": ["observation", "analysis", "criticism"], "meaning": "Pay attention to important information and consider it carefully. This can also describe criticism, uneasy conversation, or experienced advice. The guidebook describes Owls as neutral leaning negative.", "timing": "", "page": 27},
+  {"deck": "lenormand", "suit": "lenormand", "number": 13, "name": "Child", "polarity": "neutral", "altName": "13 · neutral", "keywords": ["beginnings", "care", "inexperience"], "meaning": "Something new or small that needs care, or a literal child. The surrounding cards clarify whether innocence or inexperience is relevant.", "timing": "", "page": 29},
+  {"deck": "lenormand", "suit": "lenormand", "number": 14, "name": "Fox", "polarity": "negative", "altName": "14 · negative", "keywords": ["cunning", "deceit", "resourcefulness"], "meaning": "Cleverness can help someone navigate a problem, but the card warns of deceit, betrayal, or hidden motives.", "timing": "", "page": 30},
+  {"deck": "lenormand", "suit": "lenormand", "number": 15, "name": "Bear", "polarity": "neutral", "altName": "15 · neutral", "keywords": ["authority", "protection", "resources"], "meaning": "Power, authority, protection, or control over resources. Nearby cards show how that power is used.", "timing": "", "page": 31},
+  {"deck": "lenormand", "suit": "lenormand", "number": 16, "name": "Stars", "polarity": "positive", "altName": "16 · positive", "keywords": ["hope", "aspirations", "inspiration"], "meaning": "High aspirations, inspiration, and favorable prospects. Difficult neighbors can show disruption or disappointment in a plan.", "timing": "", "page": 32},
+  {"deck": "lenormand", "suit": "lenormand", "number": 17, "name": "Stork", "polarity": "neutral", "altName": "17 · neutral", "keywords": ["change", "transition", "relocation"], "meaning": "A transition, relocation, or renewal. The guidebook describes the card as neutral with a positive undertone.", "timing": "Spring as a symbol of seasonal change.", "page": 33},
+  {"deck": "lenormand", "suit": "lenormand", "number": 18, "name": "Dog", "polarity": "positive", "altName": "18 · positive", "keywords": ["loyalty", "friendship", "support"], "meaning": "A dependable friend, ally, or source of support. Difficult neighbors can indicate misplaced loyalty.", "timing": "", "page": 34},
+  {"deck": "lenormand", "suit": "lenormand", "number": 19, "name": "Tower", "polarity": "neutral", "altName": "19 · neutral", "keywords": ["institutions", "autonomy", "isolation"], "meaning": "A protective structure, institution, authority, or independence. In difficult surroundings it can signal isolation or restrictions.", "timing": "", "page": 35},
+  {"deck": "lenormand", "suit": "lenormand", "number": 20, "name": "Garden", "polarity": "positive", "altName": "20 · positive", "keywords": ["socializing", "events", "public life"], "meaning": "Social gatherings, events, or public activity. Difficult neighbors can point to problems with social appearances or the group.", "timing": "", "page": 37},
+  {"deck": "lenormand", "suit": "lenormand", "number": 21, "name": "Mountain", "polarity": "negative", "altName": "21 · negative", "keywords": ["obstacles", "delay", "resistance"], "meaning": "A substantial obstacle that slows progress or blocks the path. Nearby cards help identify the source.", "timing": "Slowdown or delay.", "page": 38},
+  {"deck": "lenormand", "suit": "lenormand", "number": 22, "name": "Crossroads", "polarity": "neutral", "altName": "22 · neutral", "keywords": ["choice", "alternatives", "indecision"], "meaning": "Several options are open, and a decision or change of direction may be needed.", "timing": "", "page": 39},
+  {"deck": "lenormand", "suit": "lenormand", "number": 23, "name": "Mice", "polarity": "negative", "altName": "23 · negative", "keywords": ["erosion", "loss", "anxiety"], "meaning": "Small recurring losses, damage, or worries can wear down resources or peace of mind.", "timing": "", "page": 40},
+  {"deck": "lenormand", "suit": "lenormand", "number": 24, "name": "Heart", "polarity": "positive", "altName": "24 · positive", "keywords": ["love", "romance", "emotion"], "meaning": "Affection, romance, or emotional fulfillment. Neighboring cards show how feelings are expressed or complicated.", "timing": "", "page": 41},
+  {"deck": "lenormand", "suit": "lenormand", "number": 25, "name": "Ring", "polarity": "neutral", "altName": "25 · neutral", "keywords": ["commitment", "agreement", "obligations"], "meaning": "An agreement, partnership, or obligation. Its implications depend on the question and neighboring cards.", "timing": "", "page": 42},
+  {"deck": "lenormand", "suit": "lenormand", "number": 26, "name": "Book", "polarity": "neutral", "altName": "26 · neutral", "keywords": ["learning", "knowledge", "secrets"], "meaning": "Something to study, investigate, or uncover. It may describe specialized knowledge or information that is still private.", "timing": "", "page": 43},
+  {"deck": "lenormand", "suit": "lenormand", "number": 27, "name": "Letter", "polarity": "neutral", "altName": "27 · neutral", "keywords": ["messages", "paperwork", "documents"], "meaning": "Written communication or official paperwork. Neighboring cards describe what the news or document brings.", "timing": "", "page": 44},
+  {"deck": "lenormand", "suit": "lenormand", "number": 28, "name": "Man", "polarity": "neutral", "altName": "28 · neutral · Gentleman", "keywords": ["significator", "person", "querent"], "meaning": "A male querent or a relevant man in the reading. Surrounding cards supply context.", "timing": "", "page": 45},
+  {"deck": "lenormand", "suit": "lenormand", "number": 29, "name": "Woman", "polarity": "neutral", "altName": "29 · neutral · Lady", "keywords": ["significator", "person", "querent"], "meaning": "A female querent or a relevant woman in the reading. Surrounding cards supply context.", "timing": "", "page": 46},
+  {"deck": "lenormand", "suit": "lenormand", "number": 30, "name": "Lilies", "polarity": "positive", "altName": "30 · positive · Lily", "keywords": ["peace", "reconciliation", "maturity"], "meaning": "Harmony, reconciliation, and dignity. Passivity or lengthy development can also be relevant.", "timing": "May indicate a long timeframe.", "page": 47},
+  {"deck": "lenormand", "suit": "lenormand", "number": 31, "name": "Sun", "polarity": "positive", "altName": "31 · positive", "keywords": ["clarity", "vitality", "success"], "meaning": "Energy, clarity, recognition, and success. An adverse position or difficult neighbors can point to arrogance.", "timing": "", "page": 48},
+  {"deck": "lenormand", "suit": "lenormand", "number": 32, "name": "Moon", "polarity": "neutral", "altName": "32 · neutral", "keywords": ["intuition", "sensitivity", "imagination"], "meaning": "Heightened sensitivity and intuition can reveal a different side of a situation. Nearby cards help distinguish emotional insight from instability.", "timing": "", "page": 49},
+  {"deck": "lenormand", "suit": "lenormand", "number": 33, "name": "Key", "polarity": "positive", "altName": "33 · positive", "keywords": ["solution", "access", "opportunity"], "meaning": "A solution, discovery, or opening that makes something previously inaccessible possible.", "timing": "", "page": 51},
+  {"deck": "lenormand", "suit": "lenormand", "number": 34, "name": "Fish", "polarity": "positive", "altName": "34 · positive", "keywords": ["income", "resources", "abundance"], "meaning": "Material resources, financial well-being, or abundance. The surrounding cards may describe problems with these resources.", "timing": "", "page": 52},
+  {"deck": "lenormand", "suit": "lenormand", "number": 35, "name": "Anchor", "polarity": "positive", "altName": "35 · positive", "keywords": ["security", "persistence", "stability"], "meaning": "Reliable footing and stability. In a question about rapid change, it can indicate that things stay in place.", "timing": "Can slow development.", "page": 53},
+  {"deck": "lenormand", "suit": "lenormand", "number": 36, "name": "Cross", "polarity": "negative", "altName": "36 · negative", "keywords": ["burden", "trials", "fate"], "meaning": "A demanding responsibility or trial that requires endurance. Favorable neighbors can help show a way through it.", "timing": "", "page": 54}
+];
+const LENORMAND_BY_NAME = new Map(LENORMAND_CARDS.map(card => [card.name, card]));
 const ALL_CARDS = [];
 
 // Sailor Moon Major
@@ -5428,6 +5542,8 @@ HH_CARDS.forEach((c, i) => {
   });
 });
 
+ALL_CARDS.push(...LENORMAND_CARDS);
+
 // ============================================================
 // SPREAD TEMPLATES
 // ============================================================
@@ -5475,6 +5591,7 @@ function applyTemplate(idx) {
   const t = SPREAD_TEMPLATES[idx];
   document.getElementById('spreadName').value = t.name;
   document.getElementById('spreadCards').innerHTML = '';
+  syncLenormandFields();
   if(t.sections) {
     t.sections.forEach(sec => {
       addSpreadSection(sec.name);
@@ -5611,13 +5728,14 @@ function addSpreadCard(
           <option value="erotic" ${deckValue === 'erotic' ? 'selected' : ''}>Erotic Tarot</option>
           <option value="agr" ${deckValue === 'agr' ? 'selected' : ''}>African Goddess Rising</option>
           <option value="kimbition" ${deckValue === 'kimbition' ? 'selected' : ''}>Kimbition Oracle</option>
+          <option value="lenormand" ${deckValue === 'lenormand' ? 'selected' : ''}>Romantic Lenormand</option>
           <option value="hh" ${deckValue === 'hh' ? 'selected' : ''}>Heaven & Hell Oracle</option>
         </select>
       </div>
 
       <div class="form-group">
         <label class="form-label">Position</label>
-        <input class="form-input spread-position" placeholder="e.g. Past, Present, Advice, Card 1" value="${positionValue}">
+        <input class="form-input spread-position" placeholder="e.g. Past, Present, Advice, Card 1" value="${escapeSpreadHtml(positionValue)}">
       </div>
 
       <div class="form-group">
@@ -5639,13 +5757,13 @@ function addSpreadCard(
 
       <div class="form-group full">
         <label class="form-label">Card Notes</label>
-        <textarea class="form-textarea spread-notes" placeholder="Message or interpretation for this card...">${notesValue}</textarea>
+        <textarea class="form-textarea spread-notes" placeholder="Message or interpretation for this card...">${escapeSpreadHtml(notesValue)}</textarea>
       </div>
     </div>
 
     <div class="spread-card-actions">
       <button type="button" class="btn-duplicate" onclick="duplicateSpreadCard(this)" title="Duplicate this card row">Duplicate</button>
-      <button type="button" class="btn-remove" onclick="this.closest('.spread-card-row').remove()">Remove</button>
+      <button type="button" class="btn-remove" onclick="this.closest('.spread-card-row').remove(); syncLenormandFields()">Remove</button>
     </div>
       </div>
     </div>
@@ -5658,7 +5776,15 @@ function addSpreadCard(
     populateCardOptions(cardSelect, deckValue, cardValue);
   }
 
+  syncSpreadOrientation(row, deckValue);
   return row;
+}
+
+function syncSpreadOrientation(row, deck) {
+  const orientation = row.querySelector('.spread-orientation');
+  orientation.disabled = deck === 'lenormand';
+  orientation.closest('.form-group').hidden = orientation.disabled;
+  syncLenormandFields();
 }
 
 function populateCardOptions(cardSelect, deck, selectedCard = '') {
@@ -5675,7 +5801,9 @@ function populateCardOptions(cardSelect, deck, selectedCard = '') {
     const option = document.createElement('option');
     option.value = card.name;
 
-    if (deck === 'hh' && card.demon) {
+    if (deck === 'lenormand') {
+      option.textContent = `${card.number} · ${card.name}`;
+    } else if (deck === 'hh' && card.demon) {
       option.textContent = `${card.name} ⇄ ${card.demon}`;
     } else {
       option.textContent = card.name;
@@ -5690,6 +5818,7 @@ function updateSpreadRowCards(deckSelectEl) {
   const row = deckSelectEl.closest('.spread-card-row');
   const cardSelect = row.querySelector('.spread-card');
   populateCardOptions(cardSelect, deckSelectEl.value);
+  syncSpreadOrientation(row, deckSelectEl.value);
 }
 
 function logPull() {
@@ -5719,7 +5848,7 @@ function logPull() {
         section: currentSection,
         position: position || `Card ${cards.length + 1}`,
         card,
-        orientation,
+        ...(deck === 'lenormand' ? {} : { orientation }),
         notes
       });
     }
@@ -5732,6 +5861,28 @@ function logPull() {
     return;
   }
 
+  const lenormandCards = cards.filter(card => card.deck === 'lenormand');
+  let lenormand;
+  if (lenormandCards.length) {
+    const layout = document.getElementById('lenLayout').value;
+    const [label, expected] = LENORMAND_LAYOUTS[layout];
+    if (expected && (cards.length !== expected || lenormandCards.length !== expected)) {
+      alert(`${label} requires exactly ${expected} Lenormand cards. Choose Custom for a mixed-deck spread.`);
+      return;
+    }
+    const names = lenormandCards.map(card => card.card);
+    if (names.includes('Birds') && names.includes('Owls')) {
+      alert('Choose either Birds or Owls for card #12 in this reading.');
+      return;
+    }
+    lenormand = {
+      layout,
+      mode: document.getElementById('lenMode').value,
+      category: document.getElementById('lenCategory').value.trim(),
+      reflection: document.getElementById('lenReflection').value.trim()
+    };
+  }
+
   const payload = {
     id: editingPullId || Date.now(),
     spreadName,
@@ -5739,6 +5890,7 @@ function logPull() {
     question,
     synthesis,
     tags: [...activeTags],
+    ...(lenormand ? { lenormand } : {}),
     cards
   };
 
@@ -5763,8 +5915,11 @@ function logPull() {
   document.getElementById('pullQuestion').value = '';
   document.getElementById('spreadSynthesis').value = '';
   document.getElementById('spreadCards').innerHTML = '';
+  syncLenormandFields();
 
   editingPullId = null;
+  setLenormandFields();
+  syncLenormandFields();
 
   const btn = document.getElementById('saveSpreadBtn');
   if (btn) btn.textContent = '✦ Log This Spread';
@@ -5782,6 +5937,8 @@ function deletePull(id) {
 function cloneSpread(id) {
   const spread = pulls.find(p => p.id === id);
   if (!spread) return;
+  editingPullId = null;
+  document.getElementById('saveSpreadBtn').textContent = '✦ Log This Spread';
 
   showSection('tracker');
 
@@ -5790,7 +5947,10 @@ function cloneSpread(id) {
   document.getElementById('pullDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('spreadSynthesis').value = '';
   document.getElementById('spreadCards').innerHTML = '';
+  syncLenormandFields();
 
+  setLenormandFields(spread.lenormand);
+  syncLenormandFields();
   activeTags = [...(spread.tags || [])];
   document.querySelectorAll('#spreadTagWrap .tag-chip').forEach(t => t.classList.remove('selected'));
   activeTags.forEach(tag => {
@@ -5828,7 +5988,10 @@ function editSpread(id) {
   document.getElementById('pullDate').value = spread.date || new Date().toISOString().split('T')[0];
   document.getElementById('spreadSynthesis').value = spread.synthesis || '';
   document.getElementById('spreadCards').innerHTML = '';
+  syncLenormandFields();
 
+  setLenormandFields(spread.lenormand);
+  syncLenormandFields();
   activeTags = [...(spread.tags || [])];
   document.querySelectorAll('#spreadTagWrap .tag-chip').forEach(t => t.classList.remove('selected'));
   activeTags.forEach(tag => {
@@ -5886,7 +6049,7 @@ function openSpreadHistoryModal(id) {
     erotic: 'Erotic Tarot',
     agr: 'African Goddess Rising',
     kimbition: 'Kimbition Oracle',
-    hh: 'Heaven & Hell Oracle'
+    hh: 'Heaven & Hell Oracle', lenormand: 'Romantic Lenormand'
   };
   const tagLabels = {
     love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career',
@@ -5898,12 +6061,13 @@ function openSpreadHistoryModal(id) {
     checkin:'🔎 Check-In', decision:'🧭 Decision', forecast:'🗓️ Forecast', deity:'🕯️ Deity'
   };
 
+  const layout = LENORMAND_LAYOUTS[p.lenormand?.layout];
   const cardsHtml = (p.cards || []).map((c, i) => `
     <div class="spread-modal-card">
       <div class="spread-modal-position">${escapeSpreadHtml(c.position || `Card ${i + 1}`)}</div>
       <div class="spread-modal-cardname">${escapeSpreadHtml(c.card || '')}</div>
       <div class="spread-modal-cardmeta">
-        ${escapeSpreadHtml(deckNames[c.deck] || c.deck || '')} · ${escapeSpreadHtml(orientationLabel(c.orientation))}
+        ${escapeSpreadHtml(deckNames[c.deck] || c.deck || '')} ${c.deck === 'lenormand' ? '' : '· ' + escapeSpreadHtml(orientationLabel(c.orientation))}
       </div>
       ${c.notes ? `<div class="spread-modal-cardnote">${escapeSpreadHtml(c.notes)}</div>` : ''}
     </div>
@@ -5922,7 +6086,11 @@ function openSpreadHistoryModal(id) {
       ${tagHtml}
       <span class="meta-pill pill-deck">${(p.cards || []).length} cards</span>
     </div>
-    <div>${cardsHtml}</div>
+    ${layout ? `<p>${layout[0]} · ${p.lenormand.mode === 'positional' ? 'Positional' : 'Continuous sentence'}${p.lenormand.category ? ' · ' + escapeSpreadHtml(p.lenormand.category) : ''}</p>` : ''}
+    ${layout && layout[2] > 1
+      ? `<div class="len-layout-scroll"><div class="len-layout-grid" style="--len-columns:${layout[2]}">${cardsHtml}</div></div>`
+      : `<div>${cardsHtml}</div>`}
+    ${p.lenormand?.reflection ? `<div class="spread-modal-synthesis"><div class="modal-section-label">Reflections</div><div class="spread-modal-synthesis-text">${escapeSpreadHtml(p.lenormand.reflection)}</div></div>` : ''}
     ${p.synthesis ? `
       <div class="spread-modal-synthesis">
         <div class="modal-section-label">✦ Overall Synthesis</div>
@@ -5948,7 +6116,7 @@ function renderPullLog() {
 
   const deckNames = {
     sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
-    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell'
+    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
   };
 
   const tagLabels = {
@@ -6075,8 +6243,8 @@ function renderSpreadCards(cards, deckNames, spreadId) {
     // Flat render — no sections
     return cards.map(c => `
       <div style="margin-bottom:10px;">
-        <strong>${c.position}</strong>: ${c.card}
-        <em>(${orientationLabel(c.orientation)})</em>
+        <strong>${escapeSpreadHtml(c.position)}</strong>: ${escapeSpreadHtml(c.card)}
+        ${c.deck === 'lenormand' ? '' : `<em>(${orientationLabel(c.orientation)})</em>`}
         <span style="display:inline-block;margin-left:6px;font-size:11px;color:var(--lavender-dark);">[${deckNames[c.deck]||c.deck}]</span>
         ${c.notes ? `<div style="margin-top:4px;font-style:italic;">${c.notes}</div>` : ''}
       </div>
@@ -6099,8 +6267,8 @@ function renderSpreadCards(cards, deckNames, spreadId) {
     const groupId = `section-${spreadId}-${gi}`;
     const cardHtml = group.cards.map(c => `
       <div style="margin-bottom:10px;">
-        <strong>${c.position}</strong>: ${c.card}
-        <em>(${orientationLabel(c.orientation)})</em>
+        <strong>${escapeSpreadHtml(c.position)}</strong>: ${escapeSpreadHtml(c.card)}
+        ${c.deck === 'lenormand' ? '' : `<em>(${orientationLabel(c.orientation)})</em>`}
         <span style="display:inline-block;margin-left:6px;font-size:11px;color:var(--lavender-dark);">[${deckNames[c.deck]||c.deck}]</span>
         ${c.notes ? `<div style="margin-top:4px;font-style:italic;">${c.notes}</div>` : ''}
       </div>
@@ -6133,7 +6301,7 @@ function renderStats() {
     erotic: 'Erotic',
     agr: 'AGR',
     kimbition: 'Kimbition',
-    hh: 'H&H'
+    hh: 'H&H', lenormand: 'Lenormand'
   };
 
   const counts = {};
@@ -6165,7 +6333,7 @@ function renderMostPulled() {
 
   pulls.forEach(p => {
     (p.cards || []).forEach(c => {
-      if(!c.card) return;
+      if(!c.card || c.deck === 'lenormand') return;
       const key = c.card;
       cardCounts[key] = (cardCounts[key] || 0) + 1;
       cardDecks[key] = c.deck;
@@ -6188,7 +6356,7 @@ function renderMostPulled() {
     return;
   }
 
-  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', hh:'Heaven & Hell' };
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', lenormand:'Romantic Lenormand', hh:'Heaven & Hell' };
   const max = sorted[0][1];
 
   container.innerHTML = sorted.map(([name, count], i) => {
@@ -6235,7 +6403,7 @@ function renderCardHistory() {
     return;
   }
 
-  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', hh:'Heaven & Hell' };
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition', lenormand:'Romantic Lenormand', hh:'Heaven & Hell' };
   const tagLabels = {
     love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career', spirit:'🌸 Spirit',
     body:'🌿 Body', ancestors:'🌊 Ancestors', timing:'⏳ Timing', general:'🔮 General',
@@ -6292,7 +6460,7 @@ function renderCardHistory() {
           ${matchCards.map(c => `
             <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
               <span style="font-size:12px;font-weight:500;color:var(--text);">${c.card}</span>
-              <span class="meta-pill ${orientationPillClass(c.orientation)}">${escapeSpreadHtml(orientationLabel(c.orientation))}</span>
+              ${c.deck === 'lenormand' ? '' : `<span class="meta-pill ${orientationPillClass(c.orientation)}">${escapeSpreadHtml(orientationLabel(c.orientation))}</span>`}
               <span style="font-size:10px;color:var(--text-muted);">${c.position}</span>
               <span style="font-size:10px;color:var(--lavender-dark);margin-left:auto;">[${deckNames[c.deck]||c.deck}]</span>
             </div>
@@ -6321,7 +6489,7 @@ function renderHomeRecent() {
     erotic: 'Erotic Tarot',
     agr: 'AGR Oracle',
     kimbition: 'Kimbition',
-    hh: 'Heaven & Hell'
+    hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
   };
 
   container.innerHTML = pulls.slice(0, 5).map(p => `
@@ -6340,7 +6508,7 @@ function renderHomeRecent() {
       <div class="pull-entry-notes" style="font-style:normal;">
         ${p.cards.slice(0, 3).map(c => `
           <div>
-            <strong>${c.position}</strong>: ${c.card} <em>(${orientationLabel(c.orientation)})</em>
+            <strong>${escapeSpreadHtml(c.position)}</strong>: ${escapeSpreadHtml(c.card)} ${c.deck === 'lenormand' ? '' : `<em>(${orientationLabel(c.orientation)})</em>`}
             <span style="margin-left:6px;font-size:11px;color:var(--lavender-dark);">
               [${deckNames[c.deck] || c.deck}]
             </span>
@@ -6376,8 +6544,8 @@ function filterLookup() {
     container.innerHTML = `<div class="empty-state" style="padding:30px 0"><div class="es-icon">✿</div><p>No cards found</p></div>`;
     return;
   }
-  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
-  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition Oracle', hh:'Heaven & Hell' };
+  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️', lenormand:'✿' };
+  const deckNames = { sailor:'Sailor Moon', erotic:'Erotic Tarot', agr:'AGR Oracle', kimbition:'Kimbition Oracle', lenormand:'Romantic Lenormand', hh:'Heaven & Hell' };
   container.innerHTML = cards.slice(0, 60).map(c => {
     const idx = ALL_CARDS.indexOf(c);
     return `
@@ -6412,7 +6580,7 @@ function openModal(card) {
     erotic:'Erotic Tarot',
     agr:'AGR Oracle',
     kimbition:'Kimbition Oracle',
-    hh:'Heaven & Hell Oracle'
+    lenormand:'Romantic Lenormand', hh:'Heaven & Hell Oracle'
   };
 
   const deckColors = {
@@ -6445,7 +6613,16 @@ function openModal(card) {
 
   const source = getSourceDetails(card);
 
-  if (card.deck === 'hh') {
+  if (card.deck === 'lenormand') {
+    content += `
+      <div class="source-reference">
+        <div class="source-reference-title">Romantic Lenormand guidebook · p. ${card.page}</div>
+        ${sourceField('Keywords', card.keywords.join(' · '))}
+        ${sourceField('Guidebook meaning (paraphrased)', card.meaning)}
+        ${card.timing ? sourceField('Symbolic timing in the guidebook', card.timing) : ''}
+      </div>
+    `;
+  } else if (card.deck === 'hh') {
   content += `
     <div class="two-col" style="margin-top:8px;">
       <div style="background:var(--surface2);padding:16px;border:1px solid var(--border);border-radius:14px;">
@@ -6588,7 +6765,7 @@ function openModal(card) {
   content += `
     <div class="modal-divider"></div>
     <div class="modal-section-label">✦ Your Personal Notes</div>
-    <textarea class="modal-notes" id="noteFor_${card.deck}_${card.name.replace(/[^a-z0-9]/gi,'_')}" placeholder="Your personal associations, pulls, feelings, messages received..." onchange="saveNote(this, '${card.deck}')">${getNote(card.deck, card.name)}</textarea>
+    <textarea class="modal-notes" id="noteFor_${card.deck}_${card.name.replace(/[^a-z0-9]/gi,'_')}" placeholder="Your personal associations, pulls, feelings, messages received..." onchange="saveNote(this, '${card.deck}')">${escapeSpreadHtml(getNote(card.deck, card.name))}</textarea>
   `;
 
   document.getElementById('modalContent').innerHTML = content;
@@ -6665,7 +6842,9 @@ function exportData() {
     deckMeanings: deckMeanings,
     favoriteCards: favoriteCards,
     exportedAt: new Date().toISOString(),
-    version: "1.3"
+    lenormandCombinations,
+    theme: localStorage.getItem(THEME_STORAGE_KEY),
+    version: "14"
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -6687,6 +6866,9 @@ function importData(event) {
     try {
       const imported = JSON.parse(e.target.result);
       if (!imported || typeof imported !== "object") throw new Error("Invalid file format.");
+      if (Object.hasOwn(imported, 'lenormandCombinations') && !validLenormandCombinations(imported.lenormandCombinations)) {
+        throw new Error('Invalid Lenormand combinations.');
+      }
       if (Array.isArray(imported.pulls)) {
         pulls = imported.pulls;
         localStorage.setItem("marcyDeckPulls", JSON.stringify(pulls));
@@ -6707,6 +6889,15 @@ function importData(event) {
       renderStats();
       renderMostPulled();
       renderHomeRecent();
+      if (imported.lenormandCombinations) {
+        lenormandCombinations = imported.lenormandCombinations;
+        localStorage.setItem('marcyLenormandCombinations', JSON.stringify(lenormandCombinations));
+      }
+      if (['light', 'dark'].includes(imported.theme)) {
+        localStorage.setItem(THEME_STORAGE_KEY, imported.theme);
+        applyTheme(imported.theme);
+      }
+      renderLenormandDashboard();
       alert("Import successful.");
     } catch (error) {
       alert("That file could not be imported. Make sure it is a valid backup JSON.");
@@ -6718,9 +6909,12 @@ function importData(event) {
 }
 
 function clearAllData() {
-  const confirmed = confirm("This will delete all saved spreads, card notes, deck meanings, and favorites from this browser. Are you sure?");
+  const confirmed = confirm("This will delete all saved spreads, card notes, deck meanings, favorites, and combination interpretations from this browser. Are you sure?");
   if (!confirmed) return;
   pulls = [];
+  lenormandCombinations = {};
+  localStorage.removeItem('marcyLenormandCombinations');
+  renderLenormandDashboard();
   cardNotes = {};
   deckMeanings = {};
   favoriteCards = [];
@@ -6741,7 +6935,7 @@ function clearAllData() {
 function renderCardList(containerId, cards, deck) {
   const container = document.getElementById(containerId);
   if(!container) return;
-  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️' };
+  const deckIcons = { sailor:'🌙', erotic:'🌹', agr:'🌺', kimbition:'🔥', hh:'⚖️', lenormand:'✿' };
   container.innerHTML = cards.map(c => {
     const idx = ALL_CARDS.indexOf(c);
     return `
@@ -7081,7 +7275,201 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+const LENORMAND_LAYOUTS = {
+  single: ['Single card', 1, 1],
+  line3: ['Three-card line', 3, 3],
+  line5: ['Five-card line', 5, 5],
+  box: ['Nine-card box (3 × 3)', 9, 3],
+  tableau: ['Grand Tableau (8 × 4 + 4)', 36, 8],
+  custom: ['Custom spread', 0, 1]
+};
+let lenormandCombinations = JSON.parse(localStorage.getItem('marcyLenormandCombinations') || '{}');
+
+function filterLenormand() {
+  const query = document.getElementById('lenSearch').value.trim().toLowerCase();
+  const polarity = document.getElementById('lenPolarity').value;
+  const matches = LENORMAND_CARDS.filter(card =>
+    (!polarity || card.polarity === polarity) &&
+    [card.name, card.altName, card.meaning, card.timing, ...card.keywords]
+      .some(value => value.toLowerCase().includes(query))
+  );
+  renderCardList('lenCards', matches, 'lenormand');
+  if (!matches.length) document.getElementById('lenCards').textContent = 'No cards found.';
+}
+
+function setLenormandFields(details = {}) {
+  document.getElementById('lenLayout').value = details.layout || 'custom';
+  document.getElementById('lenMode').value = details.mode || 'sentence';
+  document.getElementById('lenCategory').value = details.category || '';
+  document.getElementById('lenReflection').value = details.reflection || '';
+}
+
+function syncLenormandFields() {
+  const hasLenormand = [...document.querySelectorAll('.spread-deck')].some(select => select.value === 'lenormand');
+  document.getElementById('lenFields').hidden = !hasLenormand;
+}
+
+function addLenormandLayout() {
+  const layout = document.getElementById('lenPreset').value;
+  const [, count] = LENORMAND_LAYOUTS[layout];
+  const rows = document.getElementById('spreadCards');
+  if (rows.children.length && !confirm('Replace the current card rows with the selected Lenormand layout?')) return;
+  rows.replaceChildren();
+  document.getElementById('lenLayout').value = layout;
+  for (let i = 0; i < (count || 1); i++) addSpreadCard('lenormand');
+  showSection('tracker');
+  rows.scrollIntoView({ block: 'start' });
+}
+
+function lenormandSequenceKey(names) {
+  return JSON.stringify(names);
+}
+
+function lenormandAnalytics(readings) {
+  const combinations = new Map();
+  const counts = new Map();
+  const categories = new Map();
+  const distribution = { positive: 0, negative: 0, neutral: 0 };
+  const history = [];
+  let total = 0;
+  readings.forEach(reading => {
+    const cards = reading.cards || [];
+    const names = cards.filter(card => card.deck === 'lenormand').map(card => card.card);
+    if (!names.length) return;
+    history.push(reading);
+    const category = reading.lenormand?.category || 'Uncategorized';
+    if (!categories.has(category)) categories.set(category, new Map());
+    const categoryCounts = categories.get(category);
+    names.forEach(name => {
+      total++;
+      counts.set(name, (counts.get(name) || 0) + 1);
+      categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+      const polarity = LENORMAND_BY_NAME.get(name)?.polarity;
+      if (polarity) distribution[polarity]++;
+    });
+    cards.forEach((card, start) => {
+      if (card.deck !== 'lenormand' || !LENORMAND_BY_NAME.has(card.card)) return;
+      const sequence = [card.card];
+      for (let end = start + 1; end < cards.length && end - start < 37 && cards[end].deck === 'lenormand' && LENORMAND_BY_NAME.has(cards[end].card); end++) {
+        sequence.push(cards[end].card);
+        const key = lenormandSequenceKey(sequence);
+        if (!combinations.has(key)) combinations.set(key, { count: 0, readings: new Set() });
+        const entry = combinations.get(key);
+        entry.count++;
+        entry.readings.add(reading);
+      }
+    });
+  });
+  return { combinations, counts, categories, distribution, history, total };
+}
+
+function lenormandHistoryButton(reading) {
+  return `<button type="button" class="filter-pill" data-len-reading="${escapeSpreadHtml(reading.id)}">${escapeSpreadHtml(reading.date || '')} · ${escapeSpreadHtml(reading.spreadName || 'Untitled Spread')}</button>`;
+}
+
+function renderLenormandDashboard() {
+  const { combinations, counts, categories, distribution, history, total } = lenormandAnalytics(pulls);
+  const sortedCounts = data => [...data].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const showCounts = data => sortedCounts(data).map(([name, count]) => `${escapeSpreadHtml(name)} (${count})`).join(', ');
+  const allCounts = new Map(LENORMAND_CARDS.map(card => [card.name, counts.get(card.name) || 0]));
+  document.getElementById('lenStats').innerHTML = `
+    <div class="card-sub">${history.length} readings · ${total} cards pulled</div>
+    <p>${Object.entries(distribution).map(([key, value]) => `${key}: ${value}`).join(' · ')}</p>
+    <p><strong>Most pulled</strong> ${showCounts(new Map(sortedCounts(counts).slice(0, 5))) || 'No cards logged yet.'}</p>
+    <details><summary>All card frequencies</summary><p>${showCounts(allCounts)}</p></details>
+    <details><summary>Frequencies by category</summary>${[...categories].map(([name, tally]) =>
+      `<p><strong>${escapeSpreadHtml(name)}</strong> ${showCounts(tally)}</p>`).join('')}</details>
+  `;
+  document.getElementById('lenHistory').innerHTML = history.map(lenormandHistoryButton).join(' ') || 'No Lenormand readings yet.';
+  const query = document.getElementById('lenComboSearch').value.trim().toLowerCase();
+  const type = document.getElementById('lenComboType').value;
+  const keys = [...new Set([...Object.keys(lenormandCombinations), ...combinations.keys()])];
+  const entries = keys.map(key => ({ key, names: JSON.parse(key), ...combinations.get(key) }))
+    .filter(({ names, key, count }) => (!type ||
+      (type === 'recurring' ? count > 1 : type === 'extended' ? names.length > 3 : names.length === Number(type))) &&
+      (!query || [names.join(' → '), lenormandCombinations[key] || ''].some(value => value.toLowerCase().includes(query))))
+    .sort((a, b) => (b.count || 0) - (a.count || 0) || a.names.length - b.names.length);
+  const results = document.getElementById('lenComboResults');
+  results.replaceChildren();
+  let rendered = 0;
+  const appendPage = () => {
+    results.querySelector('[data-more]')?.remove();
+    entries.slice(rendered, rendered + 25).forEach(({ key, names, count, readings }) => {
+      const item = document.createElement('details');
+      item.className = 'card';
+      item.innerHTML = `<summary>${escapeSpreadHtml(names.join(' → '))} · ${count || 0} occurrences</summary>
+        <p style="white-space:pre-wrap;">${escapeSpreadHtml(lenormandCombinations[key] || 'No personal interpretation saved.')}</p>
+        <button type="button" class="filter-pill" data-edit>Edit interpretation</button>
+        <div>${readings ? [...readings].map(lenormandHistoryButton).join(' ') : ''}</div>`;
+      item.querySelector('[data-edit]').onclick = () => {
+        document.getElementById('lenComboNames').value = names.join(' → ');
+        document.getElementById('lenComboMeaning').value = lenormandCombinations[key] || '';
+        document.getElementById('lenComboNames').focus();
+      };
+      results.append(item);
+    });
+    rendered += 25;
+    if (rendered < entries.length) {
+      const more = document.createElement('button');
+      more.className = 'filter-pill';
+      more.dataset.more = '';
+      more.textContent = 'Show more combinations';
+      more.onclick = appendPage;
+      results.append(more);
+    }
+  };
+  if (entries.length) appendPage();
+  else results.textContent = 'No matching combinations.';
+}
+
+function saveLenormandCombination(event) {
+  event.preventDefault();
+  const names = document.getElementById('lenComboNames').value.split(/[,→+]/).map(part =>
+    LENORMAND_CARDS.find(card => card.name.toLowerCase() === part.trim().toLowerCase())?.name
+  );
+  const status = document.getElementById('lenComboStatus');
+  if (names.length < 2 || names.length > 37 || names.some(name => !name)) {
+    status.textContent = 'Enter 2 to 37 card names separated by commas or arrows.';
+    return;
+  }
+  const meaning = document.getElementById('lenComboMeaning').value.trim();
+  const key = lenormandSequenceKey(names);
+  const updated = { ...lenormandCombinations };
+  if (meaning) updated[key] = meaning;
+  else delete updated[key];
+  localStorage.setItem('marcyLenormandCombinations', JSON.stringify(updated));
+  lenormandCombinations = updated;
+  status.textContent = meaning ? 'Interpretation saved.' : 'Personal interpretation removed.';
+  renderLenormandDashboard();
+}
+
+function validLenormandCombinations(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) &&
+    Object.entries(value).every(([key, meaning]) => {
+      try {
+        const names = JSON.parse(key);
+        return typeof meaning === 'string' && Array.isArray(names) &&
+          names.length >= 2 && names.length <= 37 &&
+          names.every(name => LENORMAND_BY_NAME.has(name)) && lenormandSequenceKey(names) === key;
+      } catch {
+        return false;
+      }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  const options = Object.entries(LENORMAND_LAYOUTS).map(([id, [label]]) => `<option value="${id}">${label}</option>`).join('');
+  document.getElementById('lenPreset').innerHTML = options;
+  document.getElementById('lenPreset').value = 'line3';
+  document.getElementById('lenLayout').innerHTML = options;
+  setLenormandFields();
+  filterLenormand();
+  document.getElementById('lenormand').addEventListener('click', event => {
+    const link = event.target.closest('[data-len-reading]');
+    if (!link) return;
+    const reading = pulls.find(pull => String(pull.id) === link.dataset.lenReading);
+    if (reading) openSpreadHistoryModal(reading.id);
+  });
   loadSavedTheme();
   document.getElementById('pullDate').value = new Date().toISOString().split('T')[0];
   renderTemplates();
