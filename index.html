@@ -1238,6 +1238,9 @@ footer {
 #lenTrackerLayouts .form-select, #lenTrackerPanels :is(.form-input,.form-select,.form-textarea) { width: 100%; }
 #lenTrackerLayouts .btn-primary, #lenTrackerPanels .btn-primary { margin-top: 10px; }
 .lenormand-tracker .form-group:has(> .spread-orientation) { display: none; }
+.len-category-stats > summary { cursor: pointer; color: var(--rose); }
+.len-category-stats h4 { margin: 16px 0 8px; }
+.len-category-stats .mp-item { justify-content: space-between; gap: 12px; }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -7420,7 +7423,6 @@ function lenormandHistoryButton(reading) {
 function renderLenormandDashboard() {
   const { combinations, counts, categories, distribution, history, total } = lenormandAnalytics(pulls);
   const sortedCounts = data => [...data].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  const showCounts = data => sortedCounts(data).map(([name, count]) => `${escapeSpreadHtml(name)} (${count})`).join(', ');
   const ranked = sortedCounts(counts);
   document.getElementById('lenMostPulledList').innerHTML = ranked.length
     ? ranked.map(([name, count], index) => `
@@ -7433,14 +7435,25 @@ function renderLenormandDashboard() {
         <div class="mp-count">${count}×</div>
       </div>`).join('')
     : '<div class="empty-state"><p>Cards you pull most will appear here.</p></div>';
-  const allCounts = new Map(LENORMAND_CARDS.map(card => [card.name, counts.get(card.name) || 0]));
-  document.getElementById('lenStats').innerHTML = `
-    <div class="card-sub">${history.length} readings · ${total} cards pulled</div>
-    <p>${Object.entries(distribution).map(([key, value]) => `${key}: ${value}`).join(' · ')}</p>
-    <details><summary>All card frequencies</summary><p>${showCounts(allCounts)}</p></details>
-    <details><summary>Frequencies by category</summary>${[...categories].map(([name, tally]) =>
-      `<p><strong>${escapeSpreadHtml(name)}</strong> ${showCounts(tally)}</p>`).join('')}</details>
-  `;
+  document.getElementById('lenStats').innerHTML = total ? `
+    <div class="stats-row">
+      ${Object.entries(distribution).map(([polarity, count]) => `
+        <div class="stat-card">
+          <div class="stat-number">${count}</div>
+          <div class="stat-label">${polarity}</div>
+        </div>`).join('')}
+    </div>
+    ${categories.size ? `<details class="len-category-stats">
+      <summary>Pulls by category</summary>
+      ${[...categories].map(([name, tally]) => `
+        <h4 class="card-sub">${escapeSpreadHtml(name)}</h4>
+        <div class="most-pulled-list">
+          ${sortedCounts(tally).map(([card, count]) => `
+            <div class="mp-item"><span class="mp-name">${escapeSpreadHtml(card)}</span><span class="mp-count">${count}×</span></div>
+          `).join('')}
+        </div>`).join('')}
+    </details>` : ''}
+  ` : '<div class="empty-state"><p>Log a Lenormand pull to see polarity and category stats.</p></div>';
   document.getElementById('lenHistory').innerHTML = history.map(lenormandHistoryButton).join(' ') || 'No Lenormand readings yet.';
   const query = document.getElementById('lenComboSearch').value.trim().toLowerCase();
   const type = document.getElementById('lenComboType').value;
