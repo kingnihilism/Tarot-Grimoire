@@ -1732,15 +1732,18 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div class="card-sub">Lenormand · 37 Cards · 36 Numbered Positions</div>
     <div class="card" style="background:rgba(168,90,100,0.1);border-color:rgba(168,90,100,0.3);margin-bottom:18px;">
       <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
-      <div class="deck-desc-content">Anna Oginsky · Art by Marina Miranova<br>Read the cards in pull order. Choose Birds or Owls for number 12.</div>
+      <div id="deckDesc-lenormand" class="deck-desc-content"></div>
     </div>
+    <details class="len-card-filters"><summary>Filter cards</summary>
     <div class="len-wiki-filters"><div><label class="form-label" for="lenSearch">Search the deck wiki</label>
     <input id="lenSearch" class="form-input" type="search" oninput="filterLenormand()" placeholder="Number, card, keyword or meaning">
     </div><div><label class="form-label" for="lenPolarity">Polarity</label>
     <select id="lenPolarity" class="form-select" onchange="filterLenormand()">
       <option value="">All polarities</option><option>positive</option><option>negative</option><option>neutral</option>
     </select>
-    </div></div><div class="card-list" id="lenCards"></div>
+    </div></div>
+    </details>
+    <div class="card-list" id="lenCards"></div>
   </div>
 </div>
 
@@ -6951,8 +6954,8 @@ function renderCardList(containerId, cards, deck) {
     <div class="card-item" onclick="openModalByIndex(${idx})">
       <div class="card-item-badge badge-${deck}">${deckIcons[deck]}</div>
       <div>
-        <div class="card-item-name">${c.name}</div>
-        ${c.altName && c.altName !== c.name ? `<div class="card-item-sub">${c.altName}</div>` : ''}
+        <div class="card-item-name">${deck === 'lenormand' ? `${c.number}. ` : ''}${c.name}</div>
+        ${deck !== 'lenormand' && c.altName && c.altName !== c.name ? `<div class="card-item-sub">${c.altName}</div>` : ''}
       </div>
       <span class="card-item-arrow">›</span>
     </div>`;
@@ -7052,6 +7055,15 @@ function openHHModal(i) {
 // DECK DESCRIPTIONS
 // ============================================================
 const DECK_DESCRIPTIONS = {
+  lenormand: {
+    icon: '✿',
+    use: ['Focused questions about relationships and everyday situations', 'Reading cards together as a phrase or sentence', 'Tracking combinations that recur in your readings'],
+    useSummary: 'Anna Oginsky · Art by Marina Miranova',
+    rulesHeading: 'Reading rules',
+    notFor: ['Read every card upright.', 'Keep the cards in pull order.', 'Choose Birds or Owls for card 12.'],
+    howTo: 'Start with a clear question. Read the line in order, paying attention to how surrounding cards shape each symbol. Use the position labels when the spread assigns them.',
+    systemRole: '✿ Card combinations tell the story of the pull.',
+  },
   sailor: {
     icon: '🐚',
     use: [
@@ -7173,16 +7185,16 @@ function renderDeckDesc(deck) {
     <h4>${d.icon} What it's used for</h4>
     <ul>${d.use.map(u => `<li>${u}</li>`).join('')}</ul>
     <p style="font-size:12px;color:var(--gold);">${d.useSummary}</p>
-    <h4>🚫 What it's not used for</h4>
+    <h4>${d.rulesHeading || "🚫 What it's not used for"}</h4>
     <ul>${d.notFor.map(u => `<li>${u}</li>`).join('')}</ul>
-    <p style="font-size:12px;color:var(--text-muted);font-style:italic;">${d.notForNote}</p>
+    ${d.notForNote ? `<p style="font-size:12px;color:var(--text-muted);font-style:italic;">${d.notForNote}</p>` : ''}
     <h4>✦ How to work with it</h4>
     <p>${d.howTo}</p>
     <div class="deck-system-role">${d.systemRole}</div>
   `;}
 
 function renderAllDeckDescs() {
-  ['sailor','erotic','agr','kimbition','hh'].forEach(renderDeckDesc);
+  ['sailor','erotic','agr','kimbition','hh','lenormand'].forEach(renderDeckDesc);
 }
 
 // ============================================================
