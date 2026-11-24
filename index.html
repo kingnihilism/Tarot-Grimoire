@@ -1237,6 +1237,7 @@ footer {
 #lenTrackerLayouts .form-label, #lenTrackerPanels .form-label { display: block; margin: 12px 0 5px; }
 #lenTrackerLayouts .form-select, #lenTrackerPanels :is(.form-input,.form-select,.form-textarea) { width: 100%; }
 #lenTrackerLayouts .btn-primary, #lenTrackerPanels .btn-primary { margin-top: 10px; }
+.lenormand-tracker .form-group:has(> .spread-orientation) { display: none; }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -1454,7 +1455,11 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
   <button class="btn-primary" id="saveSpreadBtn" onclick="logPull()">✦ Log This Spread</button>
 </div>
 
-  <div id="lenTrackerPanels" hidden>  <div class="card">
+  <div id="lenTrackerPanels" hidden>
+    <div class="card">
+      <div class="card-title">Most Pulled Cards</div>
+      <div class="most-pulled-list" id="lenMostPulledList"></div>
+    </div>  <div class="card">
     <div class="card-title">Lenormand Combinations</div>
     <form onsubmit="saveLenormandCombination(event)">
       <label class="form-label" for="lenComboNames">Card names in order</label>
@@ -5950,6 +5955,7 @@ function logPull() {
 function deletePull(id) {
   pulls = pulls.filter(p => p.id !== id);
   savePulls();
+  if (lenormandTrackerActive) renderLenormandDashboard();
   renderPullLog();
   renderStats();
   renderMostPulled();
@@ -7345,6 +7351,8 @@ let lenormandTrackerActive = false;
 
 function showTrackerMode(isLenormand) {
   lenormandTrackerActive = isLenormand;
+  document.getElementById('tracker').classList.toggle('lenormand-tracker', isLenormand);
+  document.querySelector('#tracker .pull-form > .card-title').textContent = isLenormand ? 'Log a Lenormand Spread' : 'Log a Spread';
   document.getElementById('lenTrackerLayouts').hidden = !isLenormand;
   document.getElementById('lenTrackerPanels').hidden = !isLenormand;
   document.getElementById('tarotTrackerLayouts').hidden = isLenormand;
@@ -7413,11 +7421,22 @@ function renderLenormandDashboard() {
   const { combinations, counts, categories, distribution, history, total } = lenormandAnalytics(pulls);
   const sortedCounts = data => [...data].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   const showCounts = data => sortedCounts(data).map(([name, count]) => `${escapeSpreadHtml(name)} (${count})`).join(', ');
+  const ranked = sortedCounts(counts);
+  document.getElementById('lenMostPulledList').innerHTML = ranked.length
+    ? ranked.map(([name, count], index) => `
+      <div class="mp-item">
+        <div class="mp-rank">${index + 1}</div>
+        <div style="flex:1;min-width:0">
+          <div class="mp-name">${escapeSpreadHtml(name)}</div>
+          <div class="mp-deck">${escapeSpreadHtml(LENORMAND_BY_NAME.get(name)?.polarity || '')}</div>
+        </div>
+        <div class="mp-count">${count}×</div>
+      </div>`).join('')
+    : '<div class="empty-state"><p>Cards you pull most will appear here.</p></div>';
   const allCounts = new Map(LENORMAND_CARDS.map(card => [card.name, counts.get(card.name) || 0]));
   document.getElementById('lenStats').innerHTML = `
     <div class="card-sub">${history.length} readings · ${total} cards pulled</div>
     <p>${Object.entries(distribution).map(([key, value]) => `${key}: ${value}`).join(' · ')}</p>
-    <p><strong>Most pulled</strong> ${showCounts(new Map(sortedCounts(counts).slice(0, 5))) || 'No cards logged yet.'}</p>
     <details><summary>All card frequencies</summary><p>${showCounts(allCounts)}</p></details>
     <details><summary>Frequencies by category</summary>${[...categories].map(([name, tally]) =>
       `<p><strong>${escapeSpreadHtml(name)}</strong> ${showCounts(tally)}</p>`).join('')}</details>
