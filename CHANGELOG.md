@@ -3,7 +3,15 @@
 All notable changes to this project are documented here.
 
 ---
-## v12 (Current)
+## v14 — Romantic Lenormand Expansion
+
+- Added Romantic Lenormand as the sixth deck, with 37 searchable, guidebook-based profiles and polarity filters.
+- Added manual, ordered Lenormand logging, six layouts, reading styles, categories, and reflections.
+- Added an editable combination encyclopedia with occurrence counts and links to prior readings.
+- Added Lenormand history, card frequencies, polarity distribution, and category statistics.
+- Extended JSON backup and restore for combination notes and theme while retaining support for older backups.
+
+## v12
 
 ### Added
 - Added light and dark mode with persistent theme preference
