@@ -1227,6 +1227,11 @@ footer {
 .len-layout-grid .spread-modal-card { overflow-wrap: anywhere; }
 .len-layout-grid:has(> :nth-child(36)) > :nth-child(33) { grid-column: 3; }
 #lenormand summary { cursor: pointer; }
+#lenormand .form-label { display:block; margin:12px 0 5px; }
+#lenormand :is(.form-input,.form-select) { width:100%; }
+#lenCards { margin-top:14px; }
+.len-wiki-filters { display:grid; gap:0 1rem; grid-template-columns:minmax(0,1fr); }
+@media (min-width: 680px) { .len-wiki-filters { grid-template-columns:minmax(0,2fr) minmax(0,1fr); } }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -1237,7 +1242,7 @@ function showSection(id) {
   const el = document.getElementById(id);
   if(el) el.classList.add('active');
   const ids = ['home','lookup','tracker','sailor','erotic','agr','kimbition','hh','lenormand'];
-  if (id === 'lenormand') renderLenormandDashboard();
+  if (id === 'tracker' || id === 'lenormand') renderLenormandDashboard();
   const idx = ids.indexOf(id);
   if(idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   // Keep the current viewport position. The selected section swaps into the page
@@ -1347,6 +1352,34 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
 
 <!-- ======== PULL TRACKER ======== -->
 <div id="tracker" class="section">
+<details class="card"><summary class="card-title">Lenormand reading tools</summary>  <div class="card">
+    <div class="card-title">Log a Lenormand reading</div>
+    <label class="form-label" for="lenPreset">Spread layout</label>
+    <select id="lenPreset" class="form-select"></select>
+    <button class="btn-primary" type="button" onclick="addLenormandLayout()">Start reading</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Combination Encyclopedia</div>
+    <form onsubmit="saveLenormandCombination(event)">
+      <label class="form-label" for="lenComboNames">Card names in order</label>
+      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
+      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
+      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
+      <button type="submit" class="btn-primary">Save interpretation</button>
+      <span id="lenComboStatus" role="status"></span>
+    </form>
+    <label class="form-label" for="lenComboSearch">Search combinations</label>
+    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
+    <label class="form-label" for="lenComboType">Sequence type</label>
+    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
+      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
+      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
+    </select>
+    <div id="lenComboResults"></div>
+  </div>
+  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
+  <div class="card"><div class="card-title">Lenormand Reading History</div><div id="lenHistory"></div></div></details>
+
   <div class="stats-row" id="statsRow"></div>
 
   <div class="pull-form card">
@@ -1696,43 +1729,19 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
 <div id="lenormand" class="section">
   <div class="card">
     <div class="card-title">Romantic Lenormand</div>
-    <div class="card-sub">Anna Oginsky · Art by Marina Miranova · 37 cards</div>
-    <p>Choose either Birds or Owls for #12. Enter your physical pulls in order.</p>
-    <label class="form-label" for="lenSearch">Search the deck wiki</label>
+    <div class="card-sub">Lenormand · 37 Cards · 36 Numbered Positions</div>
+    <div class="card" style="background:rgba(168,90,100,0.1);border-color:rgba(168,90,100,0.3);margin-bottom:18px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Deck Profile</div>
+      <div class="deck-desc-content">Anna Oginsky · Art by Marina Miranova<br>Read the cards in pull order. Choose Birds or Owls for number 12.</div>
+    </div>
+    <div class="len-wiki-filters"><div><label class="form-label" for="lenSearch">Search the deck wiki</label>
     <input id="lenSearch" class="form-input" type="search" oninput="filterLenormand()" placeholder="Number, card, keyword or meaning">
-    <label class="form-label" for="lenPolarity">Polarity</label>
+    </div><div><label class="form-label" for="lenPolarity">Polarity</label>
     <select id="lenPolarity" class="form-select" onchange="filterLenormand()">
       <option value="">All polarities</option><option>positive</option><option>negative</option><option>neutral</option>
     </select>
-    <div id="lenCards"></div>
+    </div></div><div class="card-list" id="lenCards"></div>
   </div>
-  <div class="card">
-    <div class="card-title">Log a Lenormand reading</div>
-    <label class="form-label" for="lenPreset">Spread layout</label>
-    <select id="lenPreset" class="form-select"></select>
-    <button class="btn-primary" type="button" onclick="addLenormandLayout()">Open in Pull Tracker</button>
-  </div>
-  <div class="card">
-    <div class="card-title">Combination Encyclopedia</div>
-    <form onsubmit="saveLenormandCombination(event)">
-      <label class="form-label" for="lenComboNames">Card names in order</label>
-      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
-      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
-      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
-      <button type="submit" class="btn-primary">Save interpretation</button>
-      <span id="lenComboStatus" role="status"></span>
-    </form>
-    <label class="form-label" for="lenComboSearch">Search combinations</label>
-    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
-    <label class="form-label" for="lenComboType">Sequence type</label>
-    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
-      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
-      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
-    </select>
-    <div id="lenComboResults"></div>
-  </div>
-  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
-  <div class="card"><div class="card-title">Lenormand Reading History</div><div id="lenHistory"></div></div>
 </div>
 
 </div><!-- end wrapper -->
