@@ -1241,6 +1241,10 @@ footer {
 .len-category-stats > summary { cursor: pointer; color: var(--rose); }
 .len-category-stats h4 { margin: 16px 0 8px; }
 .len-category-stats .mp-item { justify-content: space-between; gap: 12px; }
+.len-extra > summary { cursor:pointer; }
+#lenTrackerExtras .form-label { display:block; margin:12px 0 5px; }
+#lenTrackerExtras :is(.form-input,.form-select,.form-textarea) { width:100%; }
+#lenTemplateGrid .template-card { font:inherit; color:inherit; text-align:center; }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -1375,11 +1379,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
   <!-- TEMPLATE PICKER -->
   <div id="tarotTrackerLayouts"><div class="card-sub" style="margin-bottom:10px;">Quick Templates</div>
   <div class="template-grid" id="templateGrid"></div></div>
-  <div id="lenTrackerLayouts" hidden>
-    <label class="form-label" for="lenPreset">Spread layout</label>
-    <select id="lenPreset" class="form-select"></select>
-    <button class="btn-primary" type="button" onclick="addLenormandLayout()">Start reading</button>
-  </div>
+  <div id="lenTrackerLayouts" hidden><div class="card-sub" style="margin-bottom:10px;">Quick Templates</div><div class="template-grid" id="lenTemplateGrid"></div></div>
 
 
   <div class="form-grid">
@@ -1462,33 +1462,13 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div class="card">
       <div class="card-title">Most Pulled Cards</div>
       <div class="most-pulled-list" id="lenMostPulledList"></div>
-    </div>  <div class="card">
-    <div class="card-title">Lenormand Combinations</div>
-    <form onsubmit="saveLenormandCombination(event)">
-      <label class="form-label" for="lenComboNames">Card names in order</label>
-      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
-      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
-      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
-      <button type="submit" class="btn-primary">Save interpretation</button>
-      <span id="lenComboStatus" role="status"></span>
-    </form>
-    <label class="form-label" for="lenComboSearch">Search combinations</label>
-    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
-    <label class="form-label" for="lenComboType">Sequence type</label>
-    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
-      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
-      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
-    </select>
-    <div id="lenComboResults"></div>
-  </div>
-  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
-  <div class="card"><div class="card-title">Lenormand Reading History</div><div id="lenHistory"></div></div></div>
+    </div></div>
   <div class="card" data-tarot-tracker>
     <div class="card-title">Most Pulled Cards</div>
     <div class="most-pulled-list" id="mostPulledList"></div>
   </div>
 
-  <div class="card" data-tarot-tracker>
+  <div class="card">
     <div class="card-title">Card History Search</div>
     <div class="card-sub">Find every spread a specific card appeared in</div>
     <div class="search-wrap">
@@ -1498,7 +1478,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div id="cardHistoryResults"></div>
   </div>
 
-  <div class="card" data-tarot-tracker>
+  <div class="card">
     <div class="card-title">Pull History</div>
 
 <div class="form-group" style="max-width:220px;margin-bottom:16px;">
@@ -1521,7 +1501,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       />
     </div>
 
-    <div class="filter-wrap">
+    <div class="filter-wrap" id="tarotHistoryDeckFilters">
       <span class="filter-pill active" onclick="filterLog(this,'all')">All</span>
       <span class="filter-pill f-sailor" onclick="filterLog(this,'sailor')">🌙 Sailor Moon</span>
       <span class="filter-pill f-erotic" onclick="filterLog(this,'erotic')">🌹 Erotic</span>
@@ -1561,6 +1541,26 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div id="pullPagination"></div>
   </div>
 
+<div id="lenTrackerExtras" hidden>
+  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
+  <details class="card len-extra"><summary class="card-title">Lenormand Combinations</summary>
+    <form onsubmit="saveLenormandCombination(event)">
+      <label class="form-label" for="lenComboNames">Card names in order</label>
+      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
+      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
+      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
+      <button type="submit" class="btn-primary">Save interpretation</button>
+      <span id="lenComboStatus" role="status"></span>
+    </form>
+    <label class="form-label" for="lenComboSearch">Search combinations</label>
+    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
+    <label class="form-label" for="lenComboType">Sequence type</label>
+    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
+      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
+      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
+    </select>
+    <div id="lenComboResults"></div>
+  </details></div>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;margin-bottom:20px;">
     <button type="button" class="btn-primary" onclick="exportData()">Export Data</button>
     <label class="btn-primary" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;">
@@ -6141,15 +6141,7 @@ function closeSpreadHistoryModal(event) {
   document.body.style.overflow = '';
 }
 
-function renderPullLog() {
-  const container = document.getElementById('pullLog');
-  const search = (document.getElementById('pullHistorySearch')?.value || '').toLowerCase().trim();
-
-  const deckNames = {
-    sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
-    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
-  };
-
+function renderHistoryEntries(readings) {
   const tagLabels = {
     love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career',
     spirit:'🌸 Spirit', body:'🌿 Body', ancestors:'🌊 Ancestors',
@@ -6159,9 +6151,48 @@ function renderPullLog() {
     health:'🌱 Health', past:'📋 Past', future:'🌠 Future', dream:'💜 Dream',
     checkin:'🔎 Check-In', decision:'🧭 Decision', forecast:'🗓️ Forecast', deity:'🕯️ Deity'
   };
+  return readings.map(p => `
+  <div class="pull-entry" onclick="openSpreadHistoryModal(${p.id})" title="Open spread details">
+    <div class="pull-entry-top">
+      <div class="pull-entry-summary" style="flex:1;">
+        ${p.spreadName ? `<div class="pull-question">✦ ${escapeSpreadHtml(p.spreadName)}</div>` : ''}
+        ${p.question ? `<div class="pull-question">${escapeSpreadHtml(p.question)}</div>` : ''}
+        <div class="pull-entry-card" style="display:flex;align-items:center;gap:8px;">
+          <span>${p.cards.length} card spread</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); editSpread(${p.id})" title="Edit spread">✎</button>
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); cloneSpread(${p.id})" title="Clone spread">⧉</button>
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); deletePull(${p.id})" title="Delete spread">✕</button>
+      </div>
+    </div>
+
+    <div class="pull-entry-meta">
+      <span class="meta-pill pill-date">${escapeSpreadHtml(p.date)}</span>
+      ${(p.tags || []).map(t => `<span class="meta-pill pill-tag">${escapeSpreadHtml(tagLabels[t] || t)}</span>`).join('')}
+    </div>
+
+    <div style="margin-top:8px;font-size:11px;color:var(--text-light);letter-spacing:.4px;">Click to view full spread</div>
+  </div>
+`).join('');
+
+}
+
+function renderPullLog() {
+  const container = document.getElementById('pullLog');
+  const search = (document.getElementById('pullHistorySearch')?.value || '').toLowerCase().trim();
+
+  const deckNames = {
+    sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
+    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
+  };
+
+
 
   let filtered = pulls.filter(p => (p.cards || []).some(card =>
-    card.deck !== 'lenormand' && (logFilter === 'all' || card.deck === logFilter)));
+    (card.deck === 'lenormand') === lenormandTrackerActive && (lenormandTrackerActive || logFilter === 'all' || card.deck === logFilter)));
 
   if(tagLogFilter) {
     filtered = filtered.filter(p => p.tags && p.tags.includes(tagLogFilter));
@@ -6203,33 +6234,7 @@ if (pullSort === 'newest') {
   const start = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginated = filtered.slice(start, start + ITEMS_PER_PAGE);
 
-  container.innerHTML = paginated.map(p => `
-  <div class="pull-entry" onclick="openSpreadHistoryModal(${p.id})" title="Open spread details">
-    <div class="pull-entry-top">
-      <div class="pull-entry-summary" style="flex:1;">
-        ${p.spreadName ? `<div class="pull-question">✦ ${p.spreadName}</div>` : ''}
-        ${p.question ? `<div class="pull-question">${p.question}</div>` : ''}
-        <div class="pull-entry-card" style="display:flex;align-items:center;gap:8px;">
-          <span>${p.cards.length} card spread</span>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;">
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); editSpread(${p.id})" title="Edit spread">✎</button>
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); cloneSpread(${p.id})" title="Clone spread">⧉</button>
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); deletePull(${p.id})" title="Delete spread">✕</button>
-      </div>
-    </div>
-
-    <div class="pull-entry-meta">
-      <span class="meta-pill pill-date">${p.date}</span>
-      ${(p.tags || []).map(t => `<span class="meta-pill pill-tag">${tagLabels[t] || t}</span>`).join('')}
-    </div>
-
-    <div style="margin-top:8px;font-size:11px;color:var(--text-light);letter-spacing:.4px;">Click to view full spread</div>
-  </div>
-`).join('');
-
+  container.innerHTML = renderHistoryEntries(paginated);
   // Pagination controls
   const pagination = document.getElementById('pullPagination');
   if(totalPages <= 1) { pagination.innerHTML = ''; return; }
@@ -6448,7 +6453,7 @@ function renderCardHistory() {
   const matches = [];
   pulls.forEach(p => {
     const matchingCards = (p.cards || []).filter(c =>
-      c.card && c.card.toLowerCase().includes(q)
+      (c.deck === 'lenormand') === lenormandTrackerActive && c.card && c.card.toLowerCase().includes(q)
     );
     if(matchingCards.length > 0) {
       matches.push({ spread: p, cards: matchingCards });
@@ -6472,7 +6477,7 @@ function renderCardHistory() {
         Found in <strong>${matches.length}</strong> spread${matches.length !== 1 ? 's' : ''} · 
         <strong>${totalAppearances}</strong> total appearance${totalAppearances !== 1 ? 's' : ''}
       </div>
-      <div style="display:flex;gap:14px;margin-top:6px;">
+      <div style="display:flex;gap:14px;margin-top:6px;" ${lenormandTrackerActive ? 'hidden' : ''}>
         <span style="font-size:11px;color:var(--lavender-dark);">↑ ${upCount} upright</span>
         <span style="font-size:11px;color:var(--rose);">↓ ${rxCount} reversed</span>
         ${otherCount ? `<span style="font-size:11px;color:var(--gold-dark);">↔ ${otherCount} other rotation</span>` : ''}
@@ -7358,17 +7363,22 @@ function showTrackerMode(isLenormand) {
   document.querySelector('#tracker .pull-form > .card-title').textContent = isLenormand ? 'Log a Lenormand Spread' : 'Log a Spread';
   document.getElementById('lenTrackerLayouts').hidden = !isLenormand;
   document.getElementById('lenTrackerPanels').hidden = !isLenormand;
+  document.getElementById('lenTrackerExtras').hidden = !isLenormand;
+  document.getElementById('tarotHistoryDeckFilters').hidden = isLenormand;
+  currentPage = 1;
   document.getElementById('tarotTrackerLayouts').hidden = isLenormand;
   document.querySelectorAll('[data-tarot-tracker]').forEach(panel => { panel.hidden = isLenormand; });
   renderStats();
+  renderPullLog();
+  renderCardHistory();
 }
 
-function addLenormandLayout() {
-  const layout = document.getElementById('lenPreset').value;
+function addLenormandLayout(layout) {
   const [, count] = LENORMAND_LAYOUTS[layout];
   const rows = document.getElementById('spreadCards');
   if (rows.children.length && !confirm('Replace the current card rows with the selected Lenormand layout?')) return;
   rows.replaceChildren();
+  if (!document.getElementById('spreadName').value.trim()) document.getElementById('spreadName').value = LENORMAND_LAYOUTS[layout][0];
   document.getElementById('lenLayout').value = layout;
   for (let i = 0; i < (count || 1); i++) addSpreadCard('lenormand');
   rows.scrollIntoView({ block: 'start' });
@@ -7423,7 +7433,7 @@ function lenormandHistoryButton(reading) {
 function renderLenormandDashboard() {
   const { combinations, counts, categories, distribution, history, total } = lenormandAnalytics(pulls);
   const sortedCounts = data => [...data].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  const ranked = sortedCounts(counts);
+  const ranked = sortedCounts(counts).slice(0, 8);
   document.getElementById('lenMostPulledList').innerHTML = ranked.length
     ? ranked.map(([name, count], index) => `
       <div class="mp-item">
@@ -7454,7 +7464,6 @@ function renderLenormandDashboard() {
         </div>`).join('')}
     </details>` : ''}
   ` : '<div class="empty-state"><p>Log a Lenormand pull to see polarity and category stats.</p></div>';
-  document.getElementById('lenHistory').innerHTML = history.map(lenormandHistoryButton).join(' ') || 'No Lenormand readings yet.';
   const query = document.getElementById('lenComboSearch').value.trim().toLowerCase();
   const type = document.getElementById('lenComboType').value;
   const keys = [...new Set([...Object.keys(lenormandCombinations), ...combinations.keys()])];
@@ -7533,8 +7542,11 @@ function validLenormandCombinations(value) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const options = Object.entries(LENORMAND_LAYOUTS).map(([id, [label]]) => `<option value="${id}">${label}</option>`).join('');
-  document.getElementById('lenPreset').innerHTML = options;
-  document.getElementById('lenPreset').value = 'line3';
+  document.getElementById('lenTemplateGrid').innerHTML = Object.entries(LENORMAND_LAYOUTS).map(([key, [label, count]]) => `
+    <button type="button" class="template-card" onclick="addLenormandLayout('${key}')">
+      <div class="template-card-name">${label}</div>
+      <div class="template-card-count">${count ? count + ' cards' : 'Flexible'}</div>
+    </button>`).join('');
   document.getElementById('lenLayout').innerHTML = options;
   setLenormandFields();
   filterLenormand();
