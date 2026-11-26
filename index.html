@@ -1463,6 +1463,26 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       <div class="card-title">Most Pulled Cards</div>
       <div class="most-pulled-list" id="lenMostPulledList"></div>
     </div></div>
+<div id="lenTrackerExtras" hidden>
+  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
+  <details class="card len-extra"><summary class="card-title">Lenormand Combinations</summary>
+    <form onsubmit="saveLenormandCombination(event)">
+      <label class="form-label" for="lenComboNames">Card names in order</label>
+      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
+      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
+      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
+      <button type="submit" class="btn-primary">Save interpretation</button>
+      <span id="lenComboStatus" role="status"></span>
+    </form>
+    <label class="form-label" for="lenComboSearch">Search combinations</label>
+    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
+    <label class="form-label" for="lenComboType">Sequence type</label>
+    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
+      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
+      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
+    </select>
+    <div id="lenComboResults"></div>
+  </details></div>
   <div class="card" data-tarot-tracker>
     <div class="card-title">Most Pulled Cards</div>
     <div class="most-pulled-list" id="mostPulledList"></div>
@@ -1542,26 +1562,6 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div id="pullPagination"></div>
   </div>
 
-<div id="lenTrackerExtras" hidden>
-  <div class="card"><div class="card-title">Lenormand Statistics</div><div id="lenStats"></div></div>
-  <details class="card len-extra"><summary class="card-title">Lenormand Combinations</summary>
-    <form onsubmit="saveLenormandCombination(event)">
-      <label class="form-label" for="lenComboNames">Card names in order</label>
-      <input id="lenComboNames" class="form-input" required placeholder="Heart → Letter → Ring">
-      <label class="form-label" for="lenComboMeaning">Personal interpretation</label>
-      <textarea id="lenComboMeaning" class="form-textarea" placeholder="Leave blank to remove a saved interpretation."></textarea>
-      <button type="submit" class="btn-primary">Save interpretation</button>
-      <span id="lenComboStatus" role="status"></span>
-    </form>
-    <label class="form-label" for="lenComboSearch">Search combinations</label>
-    <input id="lenComboSearch" class="form-input" type="search" oninput="renderLenormandDashboard()">
-    <label class="form-label" for="lenComboType">Sequence type</label>
-    <select id="lenComboType" class="form-select" onchange="renderLenormandDashboard()">
-      <option value="">All sequences</option><option value="2">Two cards</option><option value="3">Three cards</option>
-      <option value="extended">Four or more cards</option><option value="recurring">Recurring sequences</option>
-    </select>
-    <div id="lenComboResults"></div>
-  </details></div>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;margin-bottom:20px;">
     <button type="button" class="btn-primary" onclick="exportData()">Export Data</button>
     <label class="btn-primary" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;">
