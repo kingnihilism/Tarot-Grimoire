@@ -1498,7 +1498,7 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
     <div id="cardHistoryResults"></div>
   </div>
 
-  <div class="card" data-tarot-tracker>
+  <div class="card">
     <div class="card-title">Pull History</div>
 
 <div class="form-group" style="max-width:220px;margin-bottom:16px;">
@@ -1528,7 +1528,6 @@ function toggleFilter(el, f)   { if(window._toggleFilter) window._toggleFilter(e
       <span class="filter-pill f-agr" onclick="filterLog(this,'agr')">🌺 AGR</span>
       <span class="filter-pill f-kimbition" onclick="filterLog(this,'kimbition')">🔥 Kimbition</span>
       <span class="filter-pill f-hh" onclick="filterLog(this,'hh')">⚖️ H&H</span>
-      <span class="filter-pill" onclick="filterLog(this,'lenormand')">✿ Lenormand</span>
     </div>
 
     <div class="filter-wrap" style="margin-top:-8px;">
@@ -6192,7 +6191,9 @@ function renderPullLog() {
 
 
 
-  let filtered = pulls.filter(p => logFilter === 'all' || (p.cards || []).some(card => card.deck === logFilter));
+  let filtered = pulls.filter(p => (p.cards || []).some(card =>
+    (card.deck === 'lenormand') === lenormandTrackerActive &&
+    (lenormandTrackerActive || logFilter === 'all' || card.deck === logFilter)));
 
   if(tagLogFilter) {
     filtered = filtered.filter(p => p.tags && p.tags.includes(tagLogFilter));
@@ -7358,6 +7359,18 @@ function syncLenormandFields() {
 let lenormandTrackerActive = false;
 
 function showTrackerMode(isLenormand) {
+  if (lenormandTrackerActive !== isLenormand) {
+    logFilter = 'all';
+    tagLogFilter = '';
+    document.getElementById('pullHistorySearch').value = '';
+    document.getElementById('cardHistorySearch').value = '';
+    document.querySelectorAll('#tracker .filter-pill').forEach(pill => {
+      const action = pill.getAttribute('onclick');
+      if (action?.startsWith('filterLog(') || action?.startsWith('filterTag(')) {
+        pill.classList.toggle('active', action === "filterLog(this,'all')" || action === "filterTag(this,'')");
+      }
+    });
+  }
   lenormandTrackerActive = isLenormand;
   document.getElementById('tracker').classList.toggle('lenormand-tracker', isLenormand);
   document.querySelector('#tracker .pull-form > .card-title').textContent = isLenormand ? 'Log a Lenormand Spread' : 'Log a Spread';
