@@ -1245,6 +1245,7 @@ footer {
 #lenTrackerExtras .form-label { display:block; margin:12px 0 5px; }
 #lenTrackerExtras :is(.form-input,.form-select,.form-textarea) { width:100%; }
 #lenTemplateGrid .template-card { font:inherit; color:inherit; text-align:center; }
+.deck-system-list { padding-left: 1.5em; line-height: 1.8; color: var(--text-muted); }
 </style>
 <script>
 // Stub functions available immediately for inline onclick handlers.
@@ -7082,13 +7083,45 @@ function openHHModal(i) {
 // ============================================================
 const DECK_DESCRIPTIONS = {
   lenormand: {
-    icon: '✿',
-    use: ['Choices and decisions', 'Conversations and relationships', 'Travel and how a situation is developing'],
-    useSummary: 'Art by Marina Miranova',
-    rulesHeading: 'Reading rules',
-    notFor: ['Read every card upright.', 'Each card has its own meaning and a guidebook classification of positive, negative, or neutral.', 'Birds and Owls each have their own entry as card 12. Use one per reading.'],
-    howTo: 'Enter the cards in the order you pulled them. For a three-card line, read the first two cards together, then the last two. Use the middle card to connect the pairs.',
-    systemRole: '✿ Example pull · Crossroads → Ship → Owls. Read Crossroads + Ship and Ship + Owls, then use Ship to connect the two pairs.',
+    "icon": "🦉",
+    "use": [
+      "Everyday life and circumstances",
+      "Romantic and interpersonal relationships",
+      "Career and financial matters",
+      "Communication and social dynamics",
+      "Decisions and alternative pathways",
+      "Travel and relocation",
+      "Obstacles and potential complications",
+      "How situations develop over time"
+    ],
+    "useSummary": "Lenormand's straightforward symbolism creates combinations that can describe situations in surprisingly specific ways. We got a deck that is giving Metatron here.",
+    "notFor": [
+      "Deep psychological exploration",
+      "Shadow work",
+      "Deity communication",
+      "Extensive spiritual guidance",
+      "Emotional reassurance",
+      "Reassurance spirals"
+    ],
+    "notForNote": "My other decks already handle a lot of the psychological, emotional, and spiritual aspects of my readings. Lenormand introduces the practical circumstances surrounding those experiences.",
+    "howTo": "Lenormand feels like constructing sentences with symbols. Card placement, neighboring cards, and combinations are incredibly important. Enter cards in the order you pulled them and connect neighboring pairs in a three-card line.",
+    "systemRole": "🦉 Explores practical circumstances, interactions, and developments within the situation.",
+    "systemRoles": [
+      "🌙 Sailor Moon sets the story.",
+      "💋 Erotic Tarot reveals the mechanism.",
+      "😇😈 Heaven and Hell examines alignment and distortion.",
+      "🌶️ Kimbition shows how desire manifests.",
+      "🦉 Romantic Lenormand explores how the situation develops.",
+      "🇨🇩 African Goddess Rising closes and integrates."
+    ],
+    "systemNote": "Each has a job and no one is freelancing. We are apparently expanding the company.",
+    "readingRules": [
+      "REVERSALS DO NOT EXIST FOR THIS TYPE OF DECK.",
+      "🟢 Positive · 🟡 Neutral · 🔴 Negative. Each card has its own explicit meaning and classification.",
+      "The surrounding cards influence how these meanings manifest within a reading.",
+      "Romantic Lenormand contains 37 physical cards, including Birds and Owls as alternatives for card 12. Choose one per reading; both variants are available in the Grimoire."
+    ],
+    "readingNote": "As someone who enjoys analyzing systems, patterns, and relationships between information, I can already see why this deck interests me as I could pick it up faster."
   },
   sailor: {
     icon: '🐚',
@@ -7217,6 +7250,13 @@ function renderDeckDesc(deck) {
     <h4>✦ How to work with it</h4>
     <p>${d.howTo}</p>
     <div class="deck-system-role">${d.systemRole}</div>
+    ${d.systemRoles ? `<h4>🌷 How this deck fits into my system</h4>
+      <p>Now my collection has grown into six decks. <strong>Yes you read right, SIX.</strong></p>
+      <ol class="deck-system-list">${d.systemRoles.map(role => `<li>${role}</li>`).join('')}</ol>
+      <p>${d.systemNote}</p>` : ''}
+    ${d.readingRules ? `<h4>🧠 Important things about this deck</h4>
+      <ul>${d.readingRules.map(rule => `<li>${rule}</li>`).join('')}</ul>
+      <p>${d.readingNote}</p>` : ''}
   `;}
 
 function renderAllDeckDescs() {
