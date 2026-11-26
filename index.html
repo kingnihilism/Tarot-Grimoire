@@ -6141,15 +6141,7 @@ function closeSpreadHistoryModal(event) {
   document.body.style.overflow = '';
 }
 
-function renderPullLog() {
-  const container = document.getElementById('pullLog');
-  const search = (document.getElementById('pullHistorySearch')?.value || '').toLowerCase().trim();
-
-  const deckNames = {
-    sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
-    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
-  };
-
+function renderHistoryEntries(readings) {
   const tagLabels = {
     love:'💗 Love', shadow:'🌑 Shadow', career:'✨ Career',
     spirit:'🌸 Spirit', body:'🌿 Body', ancestors:'🌊 Ancestors',
@@ -6159,6 +6151,45 @@ function renderPullLog() {
     health:'🌱 Health', past:'📋 Past', future:'🌠 Future', dream:'💜 Dream',
     checkin:'🔎 Check-In', decision:'🧭 Decision', forecast:'🗓️ Forecast', deity:'🕯️ Deity'
   };
+  return readings.map(p => `
+  <div class="pull-entry" onclick="openSpreadHistoryModal(${p.id})" title="Open spread details">
+    <div class="pull-entry-top">
+      <div class="pull-entry-summary" style="flex:1;">
+        ${p.spreadName ? `<div class="pull-question">✦ ${escapeSpreadHtml(p.spreadName)}</div>` : ''}
+        ${p.question ? `<div class="pull-question">${escapeSpreadHtml(p.question)}</div>` : ''}
+        <div class="pull-entry-card" style="display:flex;align-items:center;gap:8px;">
+          <span>${p.cards.length} card spread</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); editSpread(${p.id})" title="Edit spread">✎</button>
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); cloneSpread(${p.id})" title="Clone spread">⧉</button>
+        <button class="pull-entry-delete" onclick="event.stopPropagation(); deletePull(${p.id})" title="Delete spread">✕</button>
+      </div>
+    </div>
+
+    <div class="pull-entry-meta">
+      <span class="meta-pill pill-date">${escapeSpreadHtml(p.date)}</span>
+      ${(p.tags || []).map(t => `<span class="meta-pill pill-tag">${escapeSpreadHtml(tagLabels[t] || t)}</span>`).join('')}
+    </div>
+
+    <div style="margin-top:8px;font-size:11px;color:var(--text-light);letter-spacing:.4px;">Click to view full spread</div>
+  </div>
+`).join('');
+
+}
+
+function renderPullLog() {
+  const container = document.getElementById('pullLog');
+  const search = (document.getElementById('pullHistorySearch')?.value || '').toLowerCase().trim();
+
+  const deckNames = {
+    sailor: 'Sailor Moon', erotic: 'Erotic Tarot',
+    agr: 'AGR Oracle', kimbition: 'Kimbition', hh: 'Heaven & Hell', lenormand: 'Romantic Lenormand'
+  };
+
+
 
   let filtered = pulls.filter(p => (p.cards || []).some(card =>
     card.deck !== 'lenormand' && (logFilter === 'all' || card.deck === logFilter)));
@@ -6203,33 +6234,7 @@ if (pullSort === 'newest') {
   const start = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginated = filtered.slice(start, start + ITEMS_PER_PAGE);
 
-  container.innerHTML = paginated.map(p => `
-  <div class="pull-entry" onclick="openSpreadHistoryModal(${p.id})" title="Open spread details">
-    <div class="pull-entry-top">
-      <div class="pull-entry-summary" style="flex:1;">
-        ${p.spreadName ? `<div class="pull-question">✦ ${p.spreadName}</div>` : ''}
-        ${p.question ? `<div class="pull-question">${p.question}</div>` : ''}
-        <div class="pull-entry-card" style="display:flex;align-items:center;gap:8px;">
-          <span>${p.cards.length} card spread</span>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;">
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); editSpread(${p.id})" title="Edit spread">✎</button>
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); cloneSpread(${p.id})" title="Clone spread">⧉</button>
-        <button class="pull-entry-delete" onclick="event.stopPropagation(); deletePull(${p.id})" title="Delete spread">✕</button>
-      </div>
-    </div>
-
-    <div class="pull-entry-meta">
-      <span class="meta-pill pill-date">${p.date}</span>
-      ${(p.tags || []).map(t => `<span class="meta-pill pill-tag">${tagLabels[t] || t}</span>`).join('')}
-    </div>
-
-    <div style="margin-top:8px;font-size:11px;color:var(--text-light);letter-spacing:.4px;">Click to view full spread</div>
-  </div>
-`).join('');
-
+  container.innerHTML = renderHistoryEntries(paginated);
   // Pagination controls
   const pagination = document.getElementById('pullPagination');
   if(totalPages <= 1) { pagination.innerHTML = ''; return; }
@@ -7454,7 +7459,7 @@ function renderLenormandDashboard() {
         </div>`).join('')}
     </details>` : ''}
   ` : '<div class="empty-state"><p>Log a Lenormand pull to see polarity and category stats.</p></div>';
-  document.getElementById('lenHistory').innerHTML = history.map(lenormandHistoryButton).join(' ') || 'No Lenormand readings yet.';
+  document.getElementById('lenHistory').innerHTML = renderHistoryEntries([...history].sort((a, b) => new Date(b.date) - new Date(a.date))) || '<div class="empty-state"><p>No Lenormand readings yet.</p></div>';
   const query = document.getElementById('lenComboSearch').value.trim().toLowerCase();
   const type = document.getElementById('lenComboType').value;
   const keys = [...new Set([...Object.keys(lenormandCombinations), ...combinations.keys()])];
