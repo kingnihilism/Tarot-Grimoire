@@ -1,11 +1,12 @@
 # 🌿 Marcy's Deck Grimoire
 
-A browser-based tarot and oracle reference, spread logging, and pattern-tracking application built with **HTML, CSS, and vanilla JavaScript**.
+A browser-based tarot, oracle, and Lenormand reference, spread logging, and pattern-tracking application built with **HTML, CSS, and vanilla JavaScript**.
 
 The project supports a six-deck practice with different card structures, meanings, and roles while remaining fully offline. It includes searchable card references, customizable spread logging, deck-specific notes and meanings, statistics, filtering, JSON backups, and a documented GitHub Wiki.
 
 ## Live Project
 
+- **Live application:** https://kingnihilism.github.io/Tarot-Grimoire/
 - **Repository:** https://github.com/kingnihilism/Tarot-Grimoire
 - **Wiki:** https://github.com/kingnihilism/Tarot-Grimoire/wiki
 - **Current Version:** v14 — Romantic Lenormand Expansion
@@ -14,9 +15,9 @@ The project supports a six-deck practice with different card structures, meaning
 
 Open **Romantic Lenormand** to browse 37 card profiles by name, number, keyword, or polarity. The deck has 36 numbered positions and two alternatives for #12. Select either Birds or Owls for a reading. The profiles paraphrase the Lo Scarabeo guidebook (Anna Oginsky, March 2024) and label supported timing separately from your personal notes.
 
-Choose a layout, then enter the cards you physically pulled in order. Available layouts are single card, three- and five-card lines, nine-card box, Grand Tableau (four rows of eight plus four), and custom. Use positions for positional readings or Overall Synthesis for a continuous sentence. The saved reading also retains individual card notes, reflections, tags, and category.
+Open **Lenormand Pull Tracker**, choose a quick template, then enter the cards you physically pulled in order. Lenormand is upright-only and has positive, negative, and neutral guidebook classifications. Available layouts are single card, three- and five-card lines, nine-card box, Grand Tableau (four rows of eight plus four), and custom. Use positions for positional readings or Overall Synthesis for a continuous sentence. The saved reading also retains individual card notes, reflections, tags, and category.
 
-The combination encyclopedia counts contiguous sequences in their recorded order. Sequences inside mixed-deck readings stop at non-Lenormand cards. Add or edit personal combination interpretations and open the associated readings directly. The Lenormand dashboard tracks card and combination frequencies, polarity, and categories.
+The combination encyclopedia counts contiguous sequences in their recorded order. Sequences inside mixed-deck readings stop at non-Lenormand cards. Add or edit personal combination interpretations and open the associated readings directly. The Lenormand tracker displays its eight most frequently pulled cards, polarity totals, category frequencies, and a collapsible combination encyclopedia. Its Card History Search and paginated Pull History provide editing, duplication, deletion, sorting, and tag filters. The regular Pull Tracker handles Tarot and Oracle. Mixed-deck readings remain accessible in both relevant views.
 
 JSON backups include the new reading fields, combination interpretations, and theme. Earlier backups can still be restored. The application runs from the single HTML file without a network connection.
 
@@ -40,8 +41,11 @@ Marcy's Deck Grimoire was created to solve several practical problems:
 | African Goddess Rising Oracle | Oracle | 44 | Goddess archetypes organized across 9 Temples |
 | Kimbition Oracle | Oracle | 45 | Desire, fantasy, kink, and power archetypes |
 | Heaven & Hell Oracle | Oracle | 72 | Angel and demon pairs representing alignment and distortion |
+| Romantic Lenormand | Lenormand | 37 | Practical circumstances, interactions, and developments |
 
 ## Features
+
+Both tracker views share a consistent responsive interface. Lenormand statistics and combinations appear below its ranked cards, followed by Card History Search and Pull History.
 
 ### Card Reference
 
@@ -59,7 +63,7 @@ Marcy's Deck Grimoire was created to solve several practical problems:
 
 ### Deck-Specific Meanings and Source References
 
-Version 12 expands the deck-specific reference system while keeping personal notes separate from published and source-based meanings.
+Version 14 builds on the deck-specific reference system while keeping personal notes separate from published and source-based meanings.
 
 The application includes:
 
@@ -68,6 +72,7 @@ The application includes:
 - African Goddess Rising source-reference fields
 - Kimbition source-reference fields
 - Heaven & Hell angel/demon light and shadow meanings audited against the provided source PDF
+- Romantic Lenormand guidebook-based meanings, keywords, polarity, and supported timing associations
 - Deck-specific personal notes stored locally
 
 Shared card names remain separated by deck so notes, statistics, and reference context do not merge incorrectly.
@@ -77,7 +82,8 @@ Shared card names remain separated by deck so notes, statistics, and reference c
 - Search across all six decks
 - Filter results by deck
 - Search by card name, alternate name, theme, and meaning
-- Keyword search for African Goddess Rising, Kimbition, and Erotic Tarot cards
+- Keyword search for African Goddess Rising, Kimbition, Erotic Tarot, and Romantic Lenormand cards
+- Lenormand reference filters for card number, name, meaning, keywords, and polarity
 - Matching keywords display beneath relevant search results
 - Erotic Tarot keyword chips derived from each card's Core Erotic Function
 - Index-based modal opening for safer rendering of card data containing apostrophes
@@ -94,8 +100,11 @@ Example thematic searches include:
 
 - Log spreads with a date, name, question, tags, and overall synthesis
 - Add cards from any of the six decks
-- Record position, orientation, and card-level notes
-- Orientation options include Upright, Reversed, Sideways, and Unclear
+- Use dedicated Tarot/Oracle and Lenormand tracker views
+- Record positions and card-level notes in pull order
+- Tarot and Oracle orientation options include Upright, Reversed, Sideways, and Unclear
+- Lenormand entries use upright-only card meanings and omit orientation data
+- Lenormand readings support positional or continuous-sentence interpretation, categories, and reflections
 - Add custom section headers
 - Reorder cards and sections
 - Duplicate card rows for faster entry
@@ -112,6 +121,8 @@ The application includes reusable templates for common reading structures, inclu
 - Soul Map
 - Future Spouse spread
 - Sectioned custom layouts
+
+Lenormand quick templates include single card, three-card line, five-card line, nine-card box, Grand Tableau (8 × 4 + 4), and custom spreads. Fixed layouts validate the expected card count, and custom layouts support mixed-deck readings.
 
 Templates can use either a simple position array or grouped sections.
 
@@ -136,7 +147,8 @@ Tags can be combined with deck filters, sorting, and free-text search.
 ### Pull History
 
 - Search across spread names, questions, cards, positions, notes, decks, and tags
-- Filter by deck
+- Filter by deck in the Tarot/Oracle tracker
+- Dedicated Lenormand history with its own reading filter
 - Filter by tag
 - Sort by newest, oldest, most cards, or least cards
 - Pagination with 8 spreads per page
@@ -147,22 +159,20 @@ Tags can be combined with deck filters, sorting, and free-text search.
 
 ### Statistics
 
-- Total spread count
-- Per-deck card counts
+- Total spread count for the selected tracker
+- Per-deck spread counts
 - Most Pulled Cards
 - Upright and reversed percentages
 - Orientation breakdown bars with an Other category for Sideways and Unclear cards
 - Gold styling for the Other orientation category
+- Lenormand top-eight ranked cards with positive, negative, or neutral polarity
+- Separate Birds and Owls frequency counts
+- Lenormand polarity totals and card frequencies by reading category
+- Ordered combination frequencies and links to related readings
 - Card History Search
 - Spread-by-spread appearance history for individual cards
 
-Cards with matching names across decks are keyed using:
-
-```text
-deck::cardname
-```
-
-This prevents Sailor Moon and Erotic Tarot Major Arcana statistics and notes from merging incorrectly.
+Personal card notes and favorites use deck-specific identifiers (`deck::cardname`). The current Tarot/Oracle frequency ranking groups identical card names, which remains a limitation for shared Major Arcana names.
 
 ### Data Management
 
@@ -174,11 +184,14 @@ All user data is stored in browser `localStorage`.
 | `marcyCardNotes` | Deck-specific personal card notes |
 | `marcyFavoriteCards` | Favorited card keys |
 | `marcyOpenPulls` | Expanded pull-history entries |
+| `marcyDeckMeanings` | Personal deck-specific meanings |
+| `marcyLenormandCombinations` | Editable ordered combination interpretations |
+| `marcyDeckTheme` | Light/dark theme preference |
 
 The application also supports:
 
-- JSON export
-- JSON import
+- Version 14 JSON export including readings, card notes, personal meanings, favorites, combination interpretations, and theme
+- JSON import with support for earlier backups
 - Full data clearing
 - Offline use
 - Browser-session persistence
@@ -249,13 +262,13 @@ Click a card to open its modal. Personal notes save automatically in the browser
 
 ### Log a Spread
 
-1. Open **Pull Tracker**
-2. Choose a template or add cards manually
-3. Add sections when needed
-4. Select each deck, card, position, and orientation (`Upright`, `Reversed`, `Sideways`, or `Unclear`)
-5. Add notes and tags
-6. Write an overall synthesis
-7. Save the spread
+1. Open **Pull Tracker** for Tarot/Oracle or **Lenormand Pull Tracker** for Lenormand.
+2. Choose a quick template or add cards manually.
+3. Add sections when needed.
+4. Select the deck, card, and optional position. Assign orientation for Tarot/Oracle cards.
+5. Add notes, tags, and, for Lenormand, a reading style, category, and reflections.
+6. Write an overall synthesis and save the spread.
+7. Open the relevant Pull History to view, edit, or duplicate it.
 
 ### Back Up Your Data
 
@@ -295,13 +308,12 @@ The application is intentionally maintained as a lightweight front-end project.
 
 ```text
 Tarot-Grimoire/
-├── application HTML file
+├── index.html
 ├── README.md
-├── QUICKSTART.md
+├── quickstart.html
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
-├── .gitignore
 └── _config.yml
 ```
 
@@ -338,6 +350,16 @@ localStorage keeps the application private and easy to use without authenticatio
 
 The tradeoff is that data does not automatically sync across browsers or devices.
 
+## Version 14 — Romantic Lenormand Expansion
+
+- Sixth deck with 37 searchable profiles, including distinct Birds and Owls entries
+- Expanded personal deck profile describing the six-deck reading system
+- Dedicated Lenormand Pull Tracker with manual, ordered card entry and six quick templates
+- Upright-only logging, guidebook polarity, source references, and personal notes
+- Ranked card frequencies, polarity totals, category statistics, and editable combination encyclopedia
+- Matching tracker layouts with searchable card histories and editable, paginated reading histories
+- JSON backup support for Lenormand reading metadata, combinations, and theme
+
 ## Version 12 Highlights
 
 ### Added
@@ -365,11 +387,11 @@ See [CHANGELOG.md](CHANGELOG.md) for the full project history.
 
 ## Documentation
 
-The GitHub Wiki contains 16 connected pages covering:
+The GitHub Wiki documents the application, including:
 
 - Architecture
 - Card data models
-- Five-deck system
+- Deck system (original five-deck documentation)
 - Spread logger
 - Spread templates
 - Search and filtering
@@ -405,7 +427,8 @@ The GitHub Wiki contains 16 connected pages covering:
 - Clearing browser storage deletes local data unless it was exported
 - There is no cloud sync or user authentication
 - The growing single-file architecture may become harder to maintain
-- The application does not currently include automated tests
+- There is no automated test suite in the repository
+- Tarot/Oracle card frequency rankings can combine identical card names across decks
 - Deck content remains dependent on manually maintained data objects and source-reference updates
 
 ## Future Improvements
